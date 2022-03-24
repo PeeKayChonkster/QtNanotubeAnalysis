@@ -2,16 +2,19 @@
 #define TOOLS_HPP
 
 #include <string>
-#include <sstream>
 #include <iomanip>
+#include <QColor>
+#include "mainwindow.h"
 
-namespace nano
+namespace tools
 {
+static MainWindow* mw = nullptr;
+static bool initialized = false;
 
+void init(MainWindow* mainWindow);
 std::string floatToString(float f, uint8_t precision);
-void print(std::string line);
-void printLine(std::string line);
+void print(std::string line, QColor colorj = QColorConstants::White);
 
-}   // namespace nano
+}   // namespace tools
 
 #endif // TOOLS_HPP

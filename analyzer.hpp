@@ -4,7 +4,9 @@
 #include <vector>
 #include <QImage>
 #include "nanotube.hpp"
+#include <functional>
 
+class MainWindow;
 
 namespace nano
 {
@@ -17,19 +19,20 @@ private:
     const QColor maskColorNeg = { 0, 0, 0, 0 };
     const QImage::Format maskFormat = QImage::Format_RGBA8888;
 
+    MainWindow* parent = nullptr;
     const QImage* targetImg = nullptr;
     QImage mask;
     QImage tubeMask;
-    float progressReport = 0.0f;
     std::vector<Nanotube> nanotubes;
+    int progressReport = 0;
 
     std::vector<Point> checkPixel(int x, int y, bool* checkArray);
-    void setProgress(float prog);
+    void setProgress(int prog);
 
     bool analysisCancelled = false;
 public:
-    Analyzer();
-    Analyzer(const QImage* targetImg);
+    Analyzer(MainWindow* parent);
+    Analyzer(MainWindow* parent, const QImage* targetImg);
     Analyzer(const Analyzer& other) = delete;
 
     // analysis config
@@ -48,9 +51,9 @@ public:
     const QImage* getMask() const;
     const QImage* getTubeMask() const;
     const std::vector<Nanotube>* getTubes() const;
-    float getProgress() const;
     float getImageArea();
     float getDensity();
+    int getProgress();
     bool areTubesCalculated() const;
     void cancelAnalysis();
 

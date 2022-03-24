@@ -26,6 +26,8 @@ set(PROJECT_SOURCES
         prim_exception.hpp
         tools.cpp
         tools.hpp
+        console.h console.cpp console.ui
+        autoanalysisconfig.h autoanalysisconfig.cpp autoanalysisconfig.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
