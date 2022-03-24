@@ -28,6 +28,7 @@ set(PROJECT_SOURCES
         tools.hpp
         console.h console.cpp console.ui
         autoanalysisconfig.h autoanalysisconfig.cpp autoanalysisconfig.ui
+        manualanalysisconfig.h manualanalysisconfig.cpp manualanalysisconfig.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       console(this),
       autoAnalysisConfig(this),
-      ui(new Ui::MainWindow),
-      screen(QApplication::primaryScreen())
+      manualAnalysisConfig(this),
+      ui(new Ui::MainWindow)
 {
     setWindowTitle("NanotubeAnalysis");
     ui->setupUi(this);
@@ -42,6 +42,18 @@ void MainWindow::startAutoAnalysis()
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }
 
+void MainWindow::startManualAnalysis(float threshold)
+{
+    console.show();
+    console.print();
+    console.print("<<<<< Starting manual analysis >>>>>", QColorConstants::Green);
+    startProgressDialog();
+    auto workerLambda = [this, threshold]() -> void {
+        analyzer.startManualAnalysis(threshold);
+    };
+    futureWatcher.setFuture(QtConcurrent::run(workerLambda));
+}
+
 
 void MainWindow::on_actionOpen_image_triggered()
 {
@@ -60,7 +72,7 @@ void MainWindow::fastOpenImage()
 {
     currImg.load("../QNanotubeAnalysis/img/SamplesJPEG/S1-ZnAg_02.jpg");
     currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
-    renderCurrImg();
+    renderImages();
     analyzer.setTargetImg(&currImg);
     resize(currImg.width(), currImg.height());
 }
@@ -71,19 +83,38 @@ void MainWindow::startProgressDialog()
     progressDialog->setMinimumDuration(0);
     progressDialog->setMinimumWidth(400);
     progressDialog->setFixedSize(progressDialog->size());
-    progressDialog->move((screen->availableSize().width() - progressDialog->width()) / 2, (screen->availableSize().height() - progressDialog->height()) / 2);
+    QSize screenSize = QApplication::primaryScreen()->availableSize();
+    progressDialog->move((screenSize.width() - progressDialog->width()) / 2, (screenSize.height() - progressDialog->height()) / 2);
     progressDialog->setWindowModality(Qt::WindowModal);
     progressDialog->setAutoClose(false);
     progressDialog->setAutoReset(false);
 }
 
-void MainWindow::renderCurrImg()
+void MainWindow::setMask()
 {
-    if(!currImg.isNull())
+    mask = analyzer.getMask();
+}
+
+void MainWindow::setTubeMask()
+{
+    tubeMask = analyzer.getTubeMask();
+}
+
+void MainWindow::renderImages()
+{
+    scene.clear();
+    if(!currImg.isNull() && currImgVisible)
     {
-        scene.clear();
         scene.addPixmap(QPixmap::fromImage(currImg));
         ui->graphicsView->setScene(&scene);
+    }
+    if(mask && maskVisible)
+    {
+        scene.addPixmap(QPixmap::fromImage(*mask));
+    }
+    if(tubeMask && tubeMaskVisible)
+    {
+        scene.addPixmap(QPixmap::fromImage(*tubeMask));
     }
 }
 
@@ -148,10 +179,21 @@ void MainWindow::on_actionStart_extremum_analysis_triggered()
     }
 }
 
+void MainWindow::on_actionStart_manual_analysis_triggered()
+{
+    if(!currImg.isNull())
+    {
+        manualAnalysisConfig.show();
+    }
+    else
+    {
+        QMessageBox::warning(this, "No image!", "There is no image to analyze!");
+    }
+}
+
 void MainWindow::sl_progress_changed(int progress)
 {
     progressDialog->setValue(progress);
-    progressDialog->move((screen->availableSize().width() - progressDialog->width()) / 2, (screen->availableSize().height() - progressDialog->height()) / 2);
 }
 
 void MainWindow::sl_worker_finished()
@@ -160,4 +202,9 @@ void MainWindow::sl_worker_finished()
     progressDialog->close();
     delete progressDialog;
     progressDialog = nullptr;
+    setMask();
+    setTubeMask();
+    maskVisible = tubeMaskVisible = currImgVisible = true;
+    renderImages();
 }
+

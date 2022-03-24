@@ -21,6 +21,7 @@ void Console::print(QString line, QColor textColor)
 {
     ui->textBrowser->setTextColor(textColor);
     ui->textBrowser->append(line);
+    ui->textBrowser->ensureCursorVisible();
 }
 
 void Console::on_actionClear_triggered()

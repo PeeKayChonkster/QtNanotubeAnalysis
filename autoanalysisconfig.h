@@ -12,6 +12,7 @@ class AutoAnalysisConfig : public QDialog
     Q_OBJECT
 
 public:
+    AutoAnalysisConfig() = delete;
     explicit AutoAnalysisConfig(class MainWindow *parent = nullptr);
     ~AutoAnalysisConfig();
 

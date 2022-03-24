@@ -9,7 +9,8 @@
 
 nano::Analyzer::Analyzer()
 {
-    mask = mask.convertToFormat(maskFormat); tubeMask = tubeMask.convertToFormat(maskFormat);
+    mask = mask.convertToFormat(maskFormat);
+    tubeMask = tubeMask.convertToFormat(maskFormat);
 }
 
 nano::Analyzer::Analyzer(const QImage* targetImg):
@@ -24,12 +25,13 @@ nano::Analyzer::Analyzer(const QImage* targetImg):
 void nano::Analyzer::setTargetImg(const QImage* targetImg)
 {
     this->targetImg = targetImg;
+    tubeMask = QImage(targetImg->width(), targetImg->height(), maskFormat);
+    mask = QImage(targetImg->width(), targetImg->height(), maskFormat);
 }
 
 void nano::Analyzer::calculateMask(float threshold)
 {
     if(!targetImg) throw PRIM_EXCEPTION("Trying to calculate mask without target image.");
-    if(mask.isNull()) mask = QImage(targetImg->width(), targetImg->height(), maskFormat);
 
     for(int y = 0; y < targetImg->height(); ++y)
     {
@@ -52,7 +54,7 @@ void nano::Analyzer::scanMaskForTubes()
 {
     if(!targetImg) throw PRIM_EXCEPTION("Trying to scan mask without target image.");
     if(mask.isNull()) throw PRIM_EXCEPTION("Trying to scan mask for tubes before creating mask.");
-    if(tubeMask.isNull()) tubeMask = QImage(targetImg->width(), targetImg->height(), maskFormat);
+
     tubeMask.fill(maskColorNeg);
     setProgress(0);
     nanotubes.clear();
@@ -70,7 +72,10 @@ void nano::Analyzer::scanMaskForTubes()
                 std::vector<Point> points = checkPixel(x, y, checkArray);
                 if(points.size() >= minPixelsInTube)
                 {
-                    for(const auto& point : points) { tubeMask.setPixelColor(x, y, maskColorPos); }
+                    for(const auto& point : points)
+                    {
+                        tubeMask.setPixelColor(point.x, point.y, tubeMaskColorPos);
+                    }
                     nanotubes.push_back(std::move(points));
                 }
             }

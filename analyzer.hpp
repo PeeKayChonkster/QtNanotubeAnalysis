@@ -17,8 +17,8 @@ class Analyzer: public QObject
      Q_OBJECT
 
 private:
-    const QColor maskColorPos = { 0, 230, 0, 180 };
-    const QColor tubeMaskColorPos = { 230, 0, 0, 180 };
+    const QColor maskColorPos = { 0, 230, 0, 150 };
+    const QColor tubeMaskColorPos = { 230, 0, 0, 150 };
     const QColor maskColorNeg = { 0, 0, 0, 0 };
     const QImage::Format maskFormat = QImage::Format_RGBA8888;
 

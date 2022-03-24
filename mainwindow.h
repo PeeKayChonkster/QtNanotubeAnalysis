@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "analyzer.hpp"
 #include "autoanalysisconfig.h"
+#include "manualanalysisconfig.h"
 #include "console.h"
 #include <QGraphicsScene>
 #include <QFutureWatcher>
@@ -25,6 +26,9 @@ public:
     Console console;
 
     void startAutoAnalysis();
+    void startManualAnalysis(float threshold);
+
+    friend class ManualAnalysisConfig;
 
 private slots:
     void on_actionOpen_image_triggered();
@@ -37,6 +41,8 @@ private slots:
 
     void sl_progress_changed(int progress);
 
+    void on_actionStart_manual_analysis_triggered();
+
 protected:
     void wheelEvent(QWheelEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
@@ -47,16 +53,25 @@ protected:
 private:
     Ui::MainWindow *ui;
     QImage currImg;
+    const QImage* mask = nullptr;
+    const QImage* tubeMask = nullptr;
     AutoAnalysisConfig autoAnalysisConfig;
+    ManualAnalysisConfig manualAnalysisConfig;
     QGraphicsScene scene;
     float imgScaleDelta = 0.01f;
     bool holdingRightButton = false;
     QFutureWatcher<void> futureWatcher;
     QProgressDialog* progressDialog = nullptr;
-    QScreen* screen = nullptr;
 
-    void renderCurrImg();
+    // flags
+    bool currImgVisible = true;
+    bool maskVisible = true;
+    bool tubeMaskVisible = true;
+
+    void renderImages();
     void fastOpenImage(); // DEBUG
     void startProgressDialog();
+    void setMask();
+    void setTubeMask();
 };
 #endif // MAINWINDOW_H
