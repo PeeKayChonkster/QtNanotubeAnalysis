@@ -7,6 +7,7 @@
 #include "console.h"
 #include <QGraphicsScene>
 #include <QFutureWatcher>
+#include <QProgressDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,7 +25,6 @@ public:
     Console console;
 
     void startAutoAnalysis();
-    void setProgress(int progress);
 
 private slots:
     void on_actionOpen_image_triggered();
@@ -52,8 +52,11 @@ private:
     float imgScaleDelta = 0.01f;
     bool holdingRightButton = false;
     QFutureWatcher<void> futureWatcher;
+    QProgressDialog* progressDialog = nullptr;
+    QScreen* screen = nullptr;
 
     void renderCurrImg();
     void fastOpenImage(); // DEBUG
+    void startProgressDialog();
 };
 #endif // MAINWINDOW_H

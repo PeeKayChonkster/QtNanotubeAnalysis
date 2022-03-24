@@ -14,12 +14,12 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       console(this),
       autoAnalysisConfig(this),
-      ui(new Ui::MainWindow)
+      ui(new Ui::MainWindow),
+      screen(QApplication::primaryScreen())
 {
     setWindowTitle("NanotubeAnalysis");
     ui->setupUi(this);
     ui->graphicsView->setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
-    ui->progressBar->hide();
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
     tools::init(this);
@@ -35,7 +35,7 @@ void MainWindow::startAutoAnalysis()
     console.show();
     console.print();
     console.print("<<<<< Starting auto analysis >>>>>", QColorConstants::Green);
-    ui->progressBar->show();
+    startProgressDialog();
     auto workerLambda = [this]() -> void {
         analyzer.startExtremumAnalysis();
     };
@@ -63,6 +63,18 @@ void MainWindow::fastOpenImage()
     renderCurrImg();
     analyzer.setTargetImg(&currImg);
     resize(currImg.width(), currImg.height());
+}
+
+void MainWindow::startProgressDialog()
+{
+    progressDialog = new QProgressDialog("Calculating", "Cancel", 0, 100, this);
+    progressDialog->setMinimumDuration(0);
+    progressDialog->setMinimumWidth(400);
+    progressDialog->setFixedSize(progressDialog->size());
+    progressDialog->move((screen->availableSize().width() - progressDialog->width()) / 2, (screen->availableSize().height() - progressDialog->height()) / 2);
+    progressDialog->setWindowModality(Qt::WindowModal);
+    progressDialog->setAutoClose(false);
+    progressDialog->setAutoReset(false);
 }
 
 void MainWindow::renderCurrImg()
@@ -124,12 +136,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     autoAnalysisConfig.close();
 }
 
-void MainWindow::setProgress(int progress)
-{
-    ui->progressBar->setValue(progress);
-}
-
-
 void MainWindow::on_actionStart_extremum_analysis_triggered()
 {
     if(!currImg.isNull())
@@ -144,11 +150,14 @@ void MainWindow::on_actionStart_extremum_analysis_triggered()
 
 void MainWindow::sl_progress_changed(int progress)
 {
-    ui->progressBar->setValue(progress);
+    progressDialog->setValue(progress);
+    progressDialog->move((screen->availableSize().width() - progressDialog->width()) / 2, (screen->availableSize().height() - progressDialog->height()) / 2);
 }
 
 void MainWindow::sl_worker_finished()
 {
     futureWatcher.waitForFinished();
-    ui->progressBar->hide();
+    progressDialog->close();
+    delete progressDialog;
+    progressDialog = nullptr;
 }
