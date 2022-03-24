@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
       manualAnalysisConfig(this),
       ui(new Ui::MainWindow)
 {
-    setWindowTitle("NanotubeAnalysis");
     ui->setupUi(this);
+    setWindowTitle("NanotubeAnalysis");
     ui->graphicsView->setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
@@ -131,6 +131,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
         if(event->angleDelta().y() < 0.0f) delta *= -1.0f;
         if(QApplication::keyboardModifiers().testFlag(Qt::KeyboardModifier::ShiftModifier)) delta *= 5.0f;
         ui->graphicsView->scale(1.0f + delta, 1.0f + delta);
+        ui->graphicsView->centerOn(event->position());
     }
 }
 
