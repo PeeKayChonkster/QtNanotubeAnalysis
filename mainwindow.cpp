@@ -14,14 +14,14 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       console(this),
       autoAnalysisConfig(this),
-      ui(new Ui::MainWindow),
-      analyzer(this)
+      ui(new Ui::MainWindow)
 {
     setWindowTitle("NanotubeAnalysis");
     ui->setupUi(this);
     ui->graphicsView->setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
     ui->progressBar->hide();
-    connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::worker_finished);
+    connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
+    connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
     tools::init(this);
 }
 
@@ -45,8 +45,20 @@ void MainWindow::startAutoAnalysis()
 
 void MainWindow::on_actionOpen_image_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
-    currImg.load(fileName);
+//    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
+//    currImg.load(fileName);
+//    currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
+//    renderCurrImg();
+//    analyzer.setTargetImg(&currImg);
+//    resize(currImg.width(), currImg.height());
+
+    // DEBUG //
+    fastOpenImage();
+}
+
+void MainWindow::fastOpenImage()
+{
+    currImg.load("../QNanotubeAnalysis/img/SamplesJPEG/S1-ZnAg_02.jpg");
     currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     renderCurrImg();
     analyzer.setTargetImg(&currImg);
@@ -130,9 +142,13 @@ void MainWindow::on_actionStart_extremum_analysis_triggered()
     }
 }
 
-void MainWindow::worker_finished()
+void MainWindow::sl_progress_changed(int progress)
+{
+    ui->progressBar->setValue(progress);
+}
+
+void MainWindow::sl_worker_finished()
 {
     futureWatcher.waitForFinished();
     ui->progressBar->hide();
 }
-

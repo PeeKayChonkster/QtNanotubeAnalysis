@@ -33,7 +33,9 @@ private slots:
 
     void on_actionStart_extremum_analysis_triggered();
 
-    void worker_finished();
+    void sl_worker_finished();
+
+    void sl_progress_changed(int progress);
 
 protected:
     void wheelEvent(QWheelEvent* event) override;
@@ -52,5 +54,6 @@ private:
     QFutureWatcher<void> futureWatcher;
 
     void renderCurrImg();
+    void fastOpenImage(); // DEBUG
 };
 #endif // MAINWINDOW_H

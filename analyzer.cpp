@@ -7,13 +7,12 @@
 #include "tools.hpp"
 
 
-nano::Analyzer::Analyzer(MainWindow* parent) : parent(parent)
+nano::Analyzer::Analyzer()
 {
-    mask = mask.convertToFormat(maskFormat); tubeMask = tubeMask.convertToFormat(maskFormat); \
+    mask = mask.convertToFormat(maskFormat); tubeMask = tubeMask.convertToFormat(maskFormat);
 }
 
-nano::Analyzer::Analyzer(MainWindow* parent, const QImage* targetImg):
-        parent(parent),
+nano::Analyzer::Analyzer(const QImage* targetImg):
         targetImg(targetImg),
         mask(targetImg->width(), targetImg->height(), maskFormat),
         tubeMask(targetImg->width(), targetImg->height(), maskFormat),
@@ -163,7 +162,7 @@ void nano::Analyzer::startExtremumAnalysis()
             setProgress(0);
             mask = QImage();
             nanotubes.clear();
-            tools::print("<<<<< Analysis cancelled >>>>>");
+            tools::print("<<<<< Analysis cancelled >>>>>", QColorConstants::Red);
             return;
         }
 
@@ -191,7 +190,7 @@ void nano::Analyzer::startExtremumAnalysis()
             calculateMask(extremumThreshold);
             scanMaskForTubes();
 
-            tools::print("<<<<< Results >>>>>");
+            tools::print("<<<<< Results >>>>>", QColorConstants::Green);
             tools::print("Extremum threshold = " + tools::floatToString(extremumThreshold, 3u));
             tools::print("Extremum number of tubes = " + std::to_string(extremumNumberOfTubes));
             tools::print("Min pixels in nanotube = " + std::to_string(minPixelsInTube));
@@ -240,8 +239,12 @@ const std::vector<nano::Nanotube>* nano::Analyzer::getTubes() const
 
 void nano::Analyzer::setProgress(int prog)
 {
-    progressReport = prog;
-    parent->setProgress(prog);
+    static int lastProgress = 0;
+    if(prog != lastProgress)
+    {
+        lastProgress = prog;
+        emit si_progress_changed(prog);
+    }
 }
 
 float nano::Analyzer::getImageArea()
@@ -253,11 +256,6 @@ float nano::Analyzer::getImageArea()
 float nano::Analyzer::getDensity()
 {
     return nanotubes.size() / getImageArea();
-}
-
-int nano::Analyzer::getProgress()
-{
-    return progressReport;
 }
 
 void nano::Analyzer::resetAll()
