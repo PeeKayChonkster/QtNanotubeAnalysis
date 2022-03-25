@@ -33,7 +33,7 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item row="3" column="0">
+    <item row="2" column="0">
      <widget class="QGraphicsView" name="graphicsView">
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAsNeeded</enum>

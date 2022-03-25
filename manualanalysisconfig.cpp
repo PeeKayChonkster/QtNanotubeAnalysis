@@ -8,6 +8,7 @@ ManualAnalysisConfig::ManualAnalysisConfig(MainWindow *parent) :
     ui(new Ui::ManualAnalysisConfig)
 {
     ui->setupUi(this);
+    setLocale(QLocale::C);
 }
 
 ManualAnalysisConfig::~ManualAnalysisConfig()

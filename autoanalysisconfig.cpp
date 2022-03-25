@@ -8,6 +8,7 @@ AutoAnalysisConfig::AutoAnalysisConfig(MainWindow* parent) :
     ui(new Ui::AutoAnalysisConfig)
 {
     ui->setupUi(this);
+    setLocale(QLocale::C);
 }
 
 AutoAnalysisConfig::~AutoAnalysisConfig()
