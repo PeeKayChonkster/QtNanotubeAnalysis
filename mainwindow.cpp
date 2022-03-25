@@ -23,11 +23,20 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
     tools::init(this);
+    progressDialog = new QProgressDialog("Calculating", "Cancel", 0, 100, this);
+    progressDialog->setMinimumDuration(0);
+    progressDialog->setMinimumWidth(400);
+    progressDialog->setFixedSize(progressDialog->size());
+    progressDialog->setWindowModality(Qt::WindowModal);
+    progressDialog->setAutoClose(false);
+    progressDialog->setAutoReset(false);
+    progressDialog->close();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete progressDialog;
 }
 
 void MainWindow::startAutoAnalysis()
@@ -79,15 +88,9 @@ void MainWindow::fastOpenImage()
 
 void MainWindow::startProgressDialog()
 {
-    progressDialog = new QProgressDialog("Calculating", "Cancel", 0, 100, this);
-    progressDialog->setMinimumDuration(0);
-    progressDialog->setMinimumWidth(400);
-    progressDialog->setFixedSize(progressDialog->size());
     QSize screenSize = QApplication::primaryScreen()->availableSize();
     progressDialog->move((screenSize.width() - progressDialog->width()) / 2, (screenSize.height() - progressDialog->height()) / 2);
-    progressDialog->setWindowModality(Qt::WindowModal);
-    progressDialog->setAutoClose(false);
-    progressDialog->setAutoReset(false);
+    progressDialog->show();
 }
 
 void MainWindow::setMask()
@@ -201,8 +204,6 @@ void MainWindow::sl_worker_finished()
 {
     futureWatcher.waitForFinished();
     progressDialog->close();
-    delete progressDialog;
-    progressDialog = nullptr;
     setMask();
     setTubeMask();
     maskVisible = tubeMaskVisible = currImgVisible = true;
