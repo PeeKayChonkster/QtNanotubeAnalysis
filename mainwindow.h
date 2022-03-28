@@ -9,6 +9,7 @@
 #include <QGraphicsScene>
 #include <QFutureWatcher>
 #include <QProgressDialog>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -73,5 +74,7 @@ private:
     void startProgressDialog();
     void setMask();
     void setTubeMask();
+
+    bool eventFilter(QObject* object, QEvent* event) override;
 };
 #endif // MAINWINDOW_H

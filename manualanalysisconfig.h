@@ -26,7 +26,7 @@ private slots:
 private:
     Ui::ManualAnalysisConfig *ui;
     MainWindow* parent = nullptr;
-    const int maxSliderValue = 10000;
+    const int maxSliderValue = 1000;
 };
 
 #endif // MANUALANALYSISCONFIG_H

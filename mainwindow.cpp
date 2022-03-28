@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <functional>
 #include <QtConcurrent/QtConcurrent>
+#include <QScrollBar>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -31,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent)
     progressDialog->setAutoClose(false);
     progressDialog->setAutoReset(false);
     progressDialog->close();
+    ui->graphicsView->verticalScrollBar()->installEventFilter(this);
+    ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 }
 
 MainWindow::~MainWindow()
@@ -103,9 +106,22 @@ void MainWindow::setTubeMask()
     tubeMask = analyzer.getTubeMask();
 }
 
+bool MainWindow::eventFilter(QObject *object, QEvent *event)
+{
+    if(object == ui->graphicsView->verticalScrollBar() && event->type() == QEvent::Wheel)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void MainWindow::renderImages()
 {
     scene.clear();
+    QPen pen;
+    pen.setColor(QColorConstants::Blue);
+    pen.setWidth(10);
     if(!currImg.isNull() && currImgVisible)
     {
         scene.addPixmap(QPixmap::fromImage(currImg));
@@ -119,6 +135,7 @@ void MainWindow::renderImages()
     {
         scene.addPixmap(QPixmap::fromImage(*tubeMask));
     }
+    scene.addLine(10.0f, 20.0f, 200.0f, 200.0f, pen);
 }
 
 void MainWindow::on_actionShow_console_triggered()

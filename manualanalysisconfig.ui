@@ -35,7 +35,10 @@
      <item>
       <widget class="QSlider" name="thresholdSlider">
        <property name="maximum">
-        <number>10000</number>
+        <number>1000</number>
+       </property>
+       <property name="value">
+        <number>1000</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
