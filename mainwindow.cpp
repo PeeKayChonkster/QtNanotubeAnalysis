@@ -82,7 +82,7 @@ void MainWindow::on_actionOpen_image_triggered()
 
 void MainWindow::fastOpenImage()
 {
-    currImg.load("../QNanotubeAnalysis/img/SamplesJPEG/S1-ZnAg_02.jpg");
+    currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
     currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     renderImages();
     analyzer.setTargetImg(&currImg);

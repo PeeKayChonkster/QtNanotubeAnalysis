@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/icons/ruler.png</file>
+        <file>res/icons/brush.png</file>
+        <file>res/icons/eraser.png</file>
+        <file>res/icons/plus.png</file>
+        <file>res/icons/rulerBlue.png</file>
+    </qresource>
+</RCC>

@@ -14,6 +14,7 @@ static bool initialized = false;
 void init(MainWindow* mainWindow);
 std::string floatToString(float f, uint8_t precision);
 void print(std::string line, QColor colorj = QColorConstants::White);
+void registerEvent(QEvent* event);
 
 }   // namespace tools
 

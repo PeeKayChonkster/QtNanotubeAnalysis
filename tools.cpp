@@ -1,6 +1,7 @@
 #include "tools.hpp"
 #include "prim_exception.hpp"
 #include <QApplication>
+#include <QMouseEvent>
 
 std::string tools::floatToString(float f, uint8_t precision)
 {
@@ -19,4 +20,13 @@ void tools::init(MainWindow* mainWindow)
 {
     initialized = true;
     mw = mainWindow;
+}
+
+void tools::registerEvent(QEvent *event)
+{
+    if(event->type() == QEvent::MouseButtonPress)
+    {
+        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+
+    }
 }

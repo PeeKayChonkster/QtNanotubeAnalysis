@@ -87,6 +87,21 @@
    <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionRuler"/>
+   <addaction name="actionAdd"/>
+   <addaction name="actionMaskBrush"/>
+   <addaction name="actionMaskEraser"/>
+  </widget>
   <action name="actionStart_extremum_analysis">
    <property name="text">
     <string>Start extremum analysis</string>
@@ -107,7 +122,57 @@
     <string>Show console</string>
    </property>
   </action>
+  <action name="actionRuler">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/res/icons/rulerBlue.png</normaloff>:/res/icons/rulerBlue.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ruler</string>
+   </property>
+   <property name="toolTip">
+    <string>Measure with ruler</string>
+   </property>
+  </action>
+  <action name="actionAdd">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/res/icons/plus.png</normaloff>:/res/icons/plus.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add</string>
+   </property>
+   <property name="toolTip">
+    <string>Add tube manually</string>
+   </property>
+  </action>
+  <action name="actionMaskBrush">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/res/icons/brush.png</normaloff>:/res/icons/brush.png</iconset>
+   </property>
+   <property name="text">
+    <string>MaskBrush</string>
+   </property>
+   <property name="toolTip">
+    <string>Paint mask with brush</string>
+   </property>
+  </action>
+  <action name="actionMaskEraser">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/res/icons/eraser.png</normaloff>:/res/icons/eraser.png</iconset>
+   </property>
+   <property name="text">
+    <string>MaskEraser</string>
+   </property>
+   <property name="toolTip">
+    <string>Erase mask with eraser</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
