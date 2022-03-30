@@ -13,13 +13,14 @@ public:
 private:
     bool dragging = false;
     const Qt::MouseButton dragButton = Qt::RightButton;
+    const float zoomDelta = 1.05f;
 
     bool eventFilter(QObject *object, QEvent *event) override;
 protected:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-    void enterEvent(QEvent *event);
+    void wheelEvent(QWheelEvent* event) override;
 };
 
 #endif // MYGRAPHICSVIEW_H
