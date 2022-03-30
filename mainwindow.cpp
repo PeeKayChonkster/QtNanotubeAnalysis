@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("NanotubeAnalysis");
-    ui->graphicsView->setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
     tools::init(this);
@@ -104,16 +103,6 @@ void MainWindow::setMask()
 void MainWindow::setTubeMask()
 {
     tubeMask = analyzer.getTubeMask();
-}
-
-bool MainWindow::eventFilter(QObject *object, QEvent *event)
-{
-    if(object == ui->graphicsView->verticalScrollBar() && event->type() == QEvent::Wheel)
-    {
-        return true;
-    }
-
-    return false;
 }
 
 void MainWindow::renderImages()

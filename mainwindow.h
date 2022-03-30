@@ -74,7 +74,5 @@ private:
     void startProgressDialog();
     void setMask();
     void setTubeMask();
-
-    bool eventFilter(QObject* object, QEvent* event) override;
 };
 #endif // MAINWINDOW_H

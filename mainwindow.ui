@@ -34,7 +34,10 @@
      <number>0</number>
     </property>
     <item row="2" column="0">
-     <widget class="QGraphicsView" name="graphicsView">
+     <widget class="MyGraphicsView" name="graphicsView">
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
@@ -48,7 +51,7 @@
        <bool>true</bool>
       </property>
       <property name="dragMode">
-       <enum>QGraphicsView::ScrollHandDrag</enum>
+       <enum>QGraphicsView::NoDrag</enum>
       </property>
      </widget>
     </item>
@@ -171,6 +174,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MyGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>mygraphicsview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="Resources.qrc"/>
  </resources>

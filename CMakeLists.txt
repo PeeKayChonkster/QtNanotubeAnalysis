@@ -30,6 +30,7 @@ set(PROJECT_SOURCES
         autoanalysisconfig.h autoanalysisconfig.cpp autoanalysisconfig.ui
         manualanalysisconfig.h manualanalysisconfig.cpp manualanalysisconfig.ui
         Resources.qrc
+        mygraphicsview.h mygraphicsview.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
