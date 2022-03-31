@@ -32,3 +32,7 @@ void AutoAnalysisConfig::on_buttonBox_accepted()
      tools::getMainWindow()->startAutoAnalysis();
 }
 
+void AutoAnalysisConfig::showEvent(QShowEvent *event)
+{
+    ui->pixelSizeInput->setValue(tools::getMainWindow()->analyzer.pixelSize_nm);
+}

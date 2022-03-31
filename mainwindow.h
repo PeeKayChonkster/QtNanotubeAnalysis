@@ -65,7 +65,7 @@ private slots:
 
 protected:
     void closeEvent(QCloseEvent* event) override;
-    void mouseMoveGraphicsViewEvent(QMouseEvent* event);
+    void graphicsSceneMouseMoveEvent(QMouseEvent* event);
 
     enum class Tool { None, Ruler, MaskBrush, MaskEraser, TubeAdder };
 
@@ -105,8 +105,9 @@ private:
     void startProgressDialog();
     void setMask();
     void setTubeMask();
-    void setRulerPoint(QPoint point);
+    void addRulerPoint(QPoint point);
     void clearAllRulerLines();
     void setActiveTool(Tool tool);
+    void addTubeAtPos(QPoint pos);
 };
 #endif // MAINWINDOW_H

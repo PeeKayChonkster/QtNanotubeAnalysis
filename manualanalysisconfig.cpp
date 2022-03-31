@@ -16,14 +16,13 @@ ManualAnalysisConfig::~ManualAnalysisConfig()
     delete ui;
 }
 
-void ManualAnalysisConfig::accept()
+void ManualAnalysisConfig::on_buttonBox_accepted()
 {
     tools::getMainWindow()->analyzer.pixelSize_nm = ui->pixelSizeInput->value();
     tools::getMainWindow()->analyzer.minPixelsInTube = ui->minPixelsInput->value();
     tools::getMainWindow()->startManualAnalysis(ui->thresholdInput->value());
     if(!ui->leaveWindowOpenCheckbox->isChecked()) close();
 }
-
 
 void ManualAnalysisConfig::on_thresholdSlider_valueChanged(int value)
 {
@@ -40,3 +39,7 @@ void ManualAnalysisConfig::on_thresholdInput_valueChanged(double arg1)
     ui->thresholdSlider->setValue(static_cast<int>(arg1 * maxSliderValue));
 }
 
+void ManualAnalysisConfig::showEvent(QShowEvent *event)
+{
+    ui->pixelSizeInput->setValue(tools::getMainWindow()->analyzer.pixelSize_nm);
+}

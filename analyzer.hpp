@@ -49,6 +49,7 @@ public:
     void scanMaskForTubes();
     void startExtremumAnalysis();
     void startManualAnalysis(float threshold);
+    void addTubeAtPos(QPoint pos);
     const QImage* getMask() const;
     const QImage* getTubeMask() const;
     const std::vector<Nanotube>* getTubes() const;
@@ -56,6 +57,7 @@ public:
     float getDensity();
     bool areTubesCalculated() const;
     void cancelAnalysis();
+
 
     void resetAll();
 

@@ -153,15 +153,13 @@ void MainWindow::setTubeMask()
     tubeMask = analyzer.getTubeMask();
 }
 
-void MainWindow::setRulerPoint(QPoint point)
+void MainWindow::addRulerPoint(QPoint point)
 {
     if(currImg.isNull()) return;
 
-    QPointF scenePoint = ui->graphicsView->mapToScene(point);
-
     if(firstRulerLinePoint)
     {
-        QLineF line(firstRulerLinePoint.value(), scenePoint);
+        QLineF line(firstRulerLinePoint.value(), point);
         float lineRealLength = line.length() * analyzer.pixelSize_nm;
         QString unitOfMeasure = " nm";
         if(lineRealLength > 1000.0f)
@@ -171,15 +169,26 @@ void MainWindow::setRulerPoint(QPoint point)
         }
         QLabel* label = new QLabel(QString::number(lineRealLength) + unitOfMeasure);
         label->setStyleSheet("background-color: " + rulerLabelBgColor);
-        label->move(scenePoint.toPoint());
+        label->move(point);
         QGraphicsLineItem* sceneLine = scene.addLine(line, rulerLinePen);
         QGraphicsProxyWidget* sceneWidget = scene.addWidget(label);
+        sceneLine->setZValue(1.0f);
+        sceneWidget->setZValue(1.0f);
         rulerLineItems.push_back(RulerPair(sceneLine, sceneWidget));
         firstRulerLinePoint = std::nullopt;
     }
     else
     {
-        firstRulerLinePoint = ui->graphicsView->mapToScene(point);
+        firstRulerLinePoint = point;
+    }
+}
+
+void MainWindow::addTubeAtPos(QPoint pos)
+{
+    if(mask && tubeMask)
+    {
+        analyzer.addTubeAtPos(pos);
+        renderImages();
     }
 }
 
@@ -245,7 +254,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     autoAnalysisConfig.close();
 }
 
-void MainWindow::mouseMoveGraphicsViewEvent(QMouseEvent *event)
+void MainWindow::graphicsSceneMouseMoveEvent(QMouseEvent *event)
 {
     QPointF scenePos = ui->graphicsView->mapToScene(event->pos());
     coordLabel.setText(QString("x:%1|y:%2").arg(scenePos.x(), 5).arg(scenePos.y(), 5));
@@ -311,14 +320,17 @@ void MainWindow::on_actionStart_manual_analysis_triggered()
 
 void MainWindow::sl_graphicsScene_mousePressLeft(QPoint pos)
 {
+    QPoint scenePos = ui->graphicsView->mapToScene(pos).toPoint();
+
     switch(activeTool)
     {
         case Tool::None:
             break;
         case Tool::Ruler:
-            setRulerPoint(pos);
+            addRulerPoint(scenePos);
             break;
         case Tool::TubeAdder:
+            addTubeAtPos(scenePos);
             break;
         case Tool::MaskBrush:
             break;

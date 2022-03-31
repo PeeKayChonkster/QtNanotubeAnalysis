@@ -17,15 +17,17 @@ public:
     ~ManualAnalysisConfig();
 
 private slots:
-    void accept() override;
-
     void on_thresholdSlider_valueChanged(int value);
 
     void on_thresholdInput_valueChanged(double arg1);
 
+    void on_buttonBox_accepted();
+
 private:
     Ui::ManualAnalysisConfig *ui;
     const int maxSliderValue = 1000;
+
+    void showEvent(QShowEvent* event) override;
 };
 
 #endif // MANUALANALYSISCONFIG_H

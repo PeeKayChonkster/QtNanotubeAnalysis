@@ -227,6 +227,37 @@ void nano::Analyzer::startManualAnalysis(float threshold)
     tools::print("Nanotube density = " + tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
+void nano::Analyzer::addTubeAtPos(QPoint pos)
+{
+    if(!mask.isNull() && !tubeMask.isNull())
+    {
+        if(mask.pixelColor(pos).alphaF())
+        {
+            // search for pos in existing nanotubes
+            for(const Nanotube& tube : nanotubes)
+            {
+                for(const nano::Point& p : tube.points)
+                {
+                    if(p == pos) return;
+                }
+            }
+
+            // didn't find pos in existing tubes
+            // pos can be added as the new nanotube
+            uint32_t numberOfPixels = targetImg->width() * targetImg->height();
+            bool* checkArray = new bool[numberOfPixels] { false };
+            std::vector<Point> points = checkPixel(pos.x(), pos.y(), checkArray);
+            for(const auto& point : points)
+            {
+                tubeMask.setPixelColor(point.x, point.y, tubeMaskColorPos);
+            }
+            nanotubes.push_back(std::move(points));
+            tools::print("Added nanotube; Number of tubes: " + std::to_string(nanotubes.size()));
+            delete[] checkArray;
+        }
+    }
+}
+
 const QImage* nano::Analyzer::getMask() const
 {
     return &mask;

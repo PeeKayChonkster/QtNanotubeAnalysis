@@ -23,6 +23,8 @@ private slots:
 
 private:
     Ui::AutoAnalysisConfig *ui;
+
+    void showEvent(QShowEvent *event) override;
 };
 
 #endif // AUTOANALYSISCONFIG_H

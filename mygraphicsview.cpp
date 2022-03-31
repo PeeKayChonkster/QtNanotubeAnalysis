@@ -46,7 +46,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
         verticalScrollBar()->setValue(verticalScrollBar()->value() + delta.y());
     }
     lastPos = event->pos();
-    tools::getMainWindow()->mouseMoveGraphicsViewEvent(event);
+    tools::getMainWindow()->graphicsSceneMouseMoveEvent(event);
 }
 
 void MyGraphicsView::wheelEvent(QWheelEvent *event)
