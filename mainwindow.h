@@ -61,6 +61,10 @@ private slots:
 
     void on_actionMaskEraser_toggled(bool arg1);
 
+    void on_actionShow_Hide_mask_toggled(bool arg1);
+
+    void on_actionShow_Hide_tube_mask_toggled(bool arg1);
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 
@@ -95,12 +99,13 @@ private:
     const QColor rulerLineColor = QColorConstants::Blue;
     const uint rulerLIneWidth = 2u;
     const QString rulerLabelBgColor = "rgba(0,0,0,0.7);";
+    const Qt::MouseButton actionButton = Qt::LeftButton;
 
     // flags
     bool currImgVisible = true;
     bool maskVisible = true;
     bool tubeMaskVisible = true;
-    bool pressingLeftButtonGV = false;
+    bool pressingActionButtonGV = false;
 
     void renderImages();
     void fastOpenImage(); // DEBUG

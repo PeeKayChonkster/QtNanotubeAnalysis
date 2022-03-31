@@ -194,11 +194,19 @@ void MainWindow::addTubeAtPos(QPoint pos)
 void MainWindow::paintMaskAtPos(QPoint pos)
 {
     // TBI
+    if(mask)
+    {
+        qDebug() << "Painting mask at pos: " << pos;
+    }
 }
 
 void MainWindow::eraseMaskAtPos(QPoint pos)
 {
     // TBI
+    if(mask)
+    {
+        qDebug() << "Erasing mask at pos: " << pos;
+    }
 }
 
 void MainWindow::clearAllRulerLines()
@@ -261,6 +269,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     console.close();
     autoAnalysisConfig.close();
+    manualAnalysisConfig.close();
 }
 
 void MainWindow::mouseMoveEventGV(QMouseEvent *event)
@@ -273,41 +282,54 @@ void MainWindow::mouseMoveEventGV(QMouseEvent *event)
         case Tool::None:
             break;
         case Tool::Ruler:
+        {
+            static QGraphicsLineItem* tempRulerLineItem = nullptr;
+            if(firstRulerLinePoint)
             {
-                static QGraphicsLineItem* tempRulerLineItem = nullptr;
-                if(firstRulerLinePoint)
-                {
 
-                    if(tempRulerLineItem)
-                    {
-                        scene.removeItem(tempRulerLineItem);
-                        delete tempRulerLineItem;
-                    }
-                    QLineF line(firstRulerLinePoint.value(), scenePos);
-                    tempRulerLineItem = scene.addLine(line, rulerLinePen);
-                }
-                else if(tempRulerLineItem)
+                if(tempRulerLineItem)
                 {
                     scene.removeItem(tempRulerLineItem);
                     delete tempRulerLineItem;
-                    tempRulerLineItem = nullptr;
                 }
-                break;
+                QLineF line(firstRulerLinePoint.value(), scenePos);
+                tempRulerLineItem = scene.addLine(line, rulerLinePen);
             }
+            else if(tempRulerLineItem)
+            {
+                scene.removeItem(tempRulerLineItem);
+                delete tempRulerLineItem;
+                tempRulerLineItem = nullptr;
+            }
+            break;
+        }
         case Tool::TubeAdder:
             break;
         case Tool::MaskBrush:
+        {
+            if(pressingActionButtonGV)
+            {
+                paintMaskAtPos(scenePos.toPoint());
+            }
             break;
+        }
+
         case Tool::MaskEraser:
+        {
+            if(pressingActionButtonGV)
+            {
+                eraseMaskAtPos(scenePos.toPoint());
+            }
             break;
+        }
     }
 }
 
 void MainWindow::mousePressEventGV(QMouseEvent *event)
 {
-    if(event->button() == Qt::LeftButton)
+    if(event->button() == actionButton)
     {
-        pressingLeftButtonGV = true;
+        pressingActionButtonGV = true;
         QPoint scenePos = ui->graphicsView->mapToScene(event->pos()).toPoint();
         switch(activeTool)
         {
@@ -331,7 +353,10 @@ void MainWindow::mousePressEventGV(QMouseEvent *event)
 
 void MainWindow::mouseReleaseEventGV(QMouseEvent *event)
 {
-    pressingLeftButtonGV = false;
+    if(event->button() == actionButton)
+    {
+        pressingActionButtonGV = false;
+    }
 }
 
 void MainWindow::on_actionStart_extremum_analysis_triggered()
@@ -369,7 +394,6 @@ void MainWindow::sl_worker_finished()
     progressDialog->close();
     setMask();
     setTubeMask();
-    maskVisible = tubeMaskVisible = currImgVisible = true;
     renderImages();
 }
 
@@ -400,5 +424,19 @@ void MainWindow::on_actionMaskBrush_toggled(bool arg1)
 void MainWindow::on_actionMaskEraser_toggled(bool arg1)
 {
     setActiveTool(arg1? Tool::MaskEraser : Tool::None);
+}
+
+
+void MainWindow::on_actionShow_Hide_mask_toggled(bool arg1)
+{
+    maskVisible = arg1;
+    renderImages();
+}
+
+
+void MainWindow::on_actionShow_Hide_tube_mask_toggled(bool arg1)
+{
+    tubeMaskVisible = arg1;
+    renderImages();
 }
 

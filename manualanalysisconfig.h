@@ -28,6 +28,9 @@ private:
     const int maxSliderValue = 1000;
 
     void showEvent(QShowEvent* event) override;
+
+private slots:
+    void accept()override;
 };
 
 #endif // MANUALANALYSISCONFIG_H

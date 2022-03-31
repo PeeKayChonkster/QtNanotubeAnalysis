@@ -21,8 +21,13 @@ void ManualAnalysisConfig::on_buttonBox_accepted()
     tools::getMainWindow()->analyzer.pixelSize_nm = ui->pixelSizeInput->value();
     tools::getMainWindow()->analyzer.minPixelsInTube = ui->minPixelsInput->value();
     tools::getMainWindow()->startManualAnalysis(ui->thresholdInput->value());
+}
+
+void ManualAnalysisConfig::accept()
+{
     if(!ui->leaveWindowOpenCheckbox->isChecked()) close();
 }
+
 
 void ManualAnalysisConfig::on_thresholdSlider_valueChanged(int value)
 {
@@ -30,7 +35,7 @@ void ManualAnalysisConfig::on_thresholdSlider_valueChanged(int value)
     ui->thresholdInput->setValue(fValue);
     tools::getMainWindow()->analyzer.calculateMask(fValue);
     tools::getMainWindow()->setMask();
-    tools::getMainWindow()->tubeMaskVisible = false;
+    tools::getMainWindow()->tubeMask = nullptr;
     tools::getMainWindow()->renderImages();
 }
 
