@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
-    connect(ui->graphicsView, &MyGraphicsView::si_mousePressLeft, this, &MainWindow::sl_graphicsScene_mousePressLeft);
 
     tools::init(this);
 
@@ -169,7 +168,7 @@ void MainWindow::addRulerPoint(QPoint point)
         }
         QLabel* label = new QLabel(QString::number(lineRealLength) + unitOfMeasure);
         label->setStyleSheet("background-color: " + rulerLabelBgColor);
-        label->move(point);
+        label->move(line.center().toPoint());
         QGraphicsLineItem* sceneLine = scene.addLine(line, rulerLinePen);
         QGraphicsProxyWidget* sceneWidget = scene.addWidget(label);
         sceneLine->setZValue(1.0f);
@@ -190,6 +189,16 @@ void MainWindow::addTubeAtPos(QPoint pos)
         analyzer.addTubeAtPos(pos);
         renderImages();
     }
+}
+
+void MainWindow::paintMaskAtPos(QPoint pos)
+{
+    // TBI
+}
+
+void MainWindow::eraseMaskAtPos(QPoint pos)
+{
+    // TBI
 }
 
 void MainWindow::clearAllRulerLines()
@@ -254,7 +263,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     autoAnalysisConfig.close();
 }
 
-void MainWindow::graphicsSceneMouseMoveEvent(QMouseEvent *event)
+void MainWindow::mouseMoveEventGV(QMouseEvent *event)
 {
     QPointF scenePos = ui->graphicsView->mapToScene(event->pos());
     coordLabel.setText(QString("x:%1|y:%2").arg(scenePos.x(), 5).arg(scenePos.y(), 5));
@@ -294,6 +303,37 @@ void MainWindow::graphicsSceneMouseMoveEvent(QMouseEvent *event)
     }
 }
 
+void MainWindow::mousePressEventGV(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        pressingLeftButtonGV = true;
+        QPoint scenePos = ui->graphicsView->mapToScene(event->pos()).toPoint();
+        switch(activeTool)
+        {
+            case Tool::None:
+                break;
+            case Tool::Ruler:
+                addRulerPoint(scenePos);
+                break;
+            case Tool::TubeAdder:
+                addTubeAtPos(scenePos);
+                break;
+            case Tool::MaskBrush:
+                paintMaskAtPos(scenePos);
+                break;
+            case Tool::MaskEraser:
+                eraseMaskAtPos(scenePos);
+                break;
+        }
+    }
+}
+
+void MainWindow::mouseReleaseEventGV(QMouseEvent *event)
+{
+    pressingLeftButtonGV = false;
+}
+
 void MainWindow::on_actionStart_extremum_analysis_triggered()
 {
     if(!currImg.isNull())
@@ -315,27 +355,6 @@ void MainWindow::on_actionStart_manual_analysis_triggered()
     else
     {
         QMessageBox::warning(this, "No image!", "There is no image to analyze!");
-    }
-}
-
-void MainWindow::sl_graphicsScene_mousePressLeft(QPoint pos)
-{
-    QPoint scenePos = ui->graphicsView->mapToScene(pos).toPoint();
-
-    switch(activeTool)
-    {
-        case Tool::None:
-            break;
-        case Tool::Ruler:
-            addRulerPoint(scenePos);
-            break;
-        case Tool::TubeAdder:
-            addTubeAtPos(scenePos);
-            break;
-        case Tool::MaskBrush:
-            break;
-        case Tool::MaskEraser:
-            break;
     }
 }
 

@@ -17,12 +17,14 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *event)
     if(event->button() == dragButton)
     {
         setCursor(Qt::ClosedHandCursor);
-        dragging = true;
+        pressingDragButton = true;
     }
     if(event->button() == Qt::LeftButton)
     {
         emit si_mousePressLeft(event->pos());
     }
+
+    tools::getMainWindow()->mousePressEventGV(event);
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
@@ -31,22 +33,25 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     if(event->button() == dragButton)
     {
         setCursor(Qt::ArrowCursor);
-        dragging = false;
+        pressingDragButton = false;
     }
+
+    tools::getMainWindow()->mouseReleaseEventGV(event);
 }
 
 void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     //qDebug() << "Move event";
     static QPoint lastPos;
-    if(dragging)
+    if(pressingDragButton)
     {
         QPoint delta = lastPos - event->pos();
         horizontalScrollBar()->setValue(horizontalScrollBar()->value() + delta.x());
         verticalScrollBar()->setValue(verticalScrollBar()->value() + delta.y());
     }
     lastPos = event->pos();
-    tools::getMainWindow()->graphicsSceneMouseMoveEvent(event);
+
+    tools::getMainWindow()->mouseMoveEventGV(event);
 }
 
 void MyGraphicsView::wheelEvent(QWheelEvent *event)

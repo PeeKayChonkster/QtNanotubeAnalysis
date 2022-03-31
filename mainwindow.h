@@ -51,8 +51,6 @@ private slots:
 
     void on_actionStart_manual_analysis_triggered();
 
-    void sl_graphicsScene_mousePressLeft(QPoint pos);
-
     void on_actionClear_all_ruler_lines_triggered();
 
     void on_actionRuler_toggled(bool arg1);
@@ -65,7 +63,11 @@ private slots:
 
 protected:
     void closeEvent(QCloseEvent* event) override;
-    void graphicsSceneMouseMoveEvent(QMouseEvent* event);
+
+    // Work with MyGraphicsView mouse events
+    void mouseMoveEventGV(QMouseEvent* event);
+    void mousePressEventGV(QMouseEvent* event);
+    void mouseReleaseEventGV(QMouseEvent* event);
 
     enum class Tool { None, Ruler, MaskBrush, MaskEraser, TubeAdder };
 
@@ -98,6 +100,7 @@ private:
     bool currImgVisible = true;
     bool maskVisible = true;
     bool tubeMaskVisible = true;
+    bool pressingLeftButtonGV = false;
 
     void renderImages();
     void fastOpenImage(); // DEBUG
@@ -109,5 +112,7 @@ private:
     void clearAllRulerLines();
     void setActiveTool(Tool tool);
     void addTubeAtPos(QPoint pos);
+    void paintMaskAtPos(QPoint pos);
+    void eraseMaskAtPos(QPoint pos);
 };
 #endif // MAINWINDOW_H

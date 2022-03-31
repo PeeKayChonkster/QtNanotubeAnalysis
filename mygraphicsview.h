@@ -11,7 +11,7 @@ public:
     MyGraphicsView(QWidget* parent);
 
 private:
-    bool dragging = false;
+    bool pressingDragButton = false;
     const Qt::MouseButton dragButton = Qt::RightButton;
     const float zoomDelta = 1.05f;
 
