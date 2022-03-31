@@ -45,24 +45,26 @@ private slots:
     void on_actionStart_manual_analysis_triggered();
 
 protected:
-    void wheelEvent(QWheelEvent* event) override;
-    void mousePressEvent(QMouseEvent* event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
     void closeEvent(QCloseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+
+    enum class Tool { None, Ruler, MaskBrush, MaskEraser, TubeAdder };
+
 
 private:
     Ui::MainWindow *ui;
     QImage currImg;
     const QImage* mask = nullptr;
     const QImage* tubeMask = nullptr;
+    QGraphicsPixmapItem* currImgPixmapItem = nullptr;
+    QGraphicsPixmapItem* maskPixmapItem = nullptr;
+    QGraphicsPixmapItem* tubeMaskPixmapItem = nullptr;
     AutoAnalysisConfig autoAnalysisConfig;
     ManualAnalysisConfig manualAnalysisConfig;
     QGraphicsScene scene;
-    float imgScaleDelta = 0.01f;
-    bool holdingRightButton = false;
     QFutureWatcher<void> futureWatcher;
     QProgressDialog* progressDialog = nullptr;
+    Tool activeTool = Tool::None;
 
     // flags
     bool currImgVisible = true;

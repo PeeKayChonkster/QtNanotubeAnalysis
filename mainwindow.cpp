@@ -9,6 +9,7 @@
 #include <functional>
 #include <QtConcurrent/QtConcurrent>
 #include <QScrollBar>
+#include <QGraphicsPixmapItem>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -33,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     progressDialog->close();
     ui->graphicsView->verticalScrollBar()->installEventFilter(this);
     ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    ui->graphicsView->setScene(&scene);
 }
 
 MainWindow::~MainWindow()
@@ -44,7 +46,7 @@ MainWindow::~MainWindow()
 void MainWindow::startAutoAnalysis()
 {
     console.show();
-    console.print();
+    console.print();    scene.update();
     console.print("<<<<< Starting auto analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
     auto workerLambda = [this]() -> void {
@@ -107,22 +109,35 @@ void MainWindow::setTubeMask()
 
 void MainWindow::renderImages()
 {
-    scene.clear();
     QPen pen;
     pen.setColor(QColorConstants::Blue);
     pen.setWidth(10);
     if(!currImg.isNull() && currImgVisible)
     {
-        scene.addPixmap(QPixmap::fromImage(currImg));
-        ui->graphicsView->setScene(&scene);
+        if(currImgPixmapItem)
+        {
+            scene.removeItem(currImgPixmapItem);
+            delete currImgPixmapItem;
+        }
+        currImgPixmapItem = scene.addPixmap(QPixmap::fromImage(currImg));
     }
     if(mask && maskVisible)
     {
-        scene.addPixmap(QPixmap::fromImage(*mask));
+        if(maskPixmapItem)
+        {
+            scene.removeItem(maskPixmapItem);
+            delete maskPixmapItem;
+        }
+        maskPixmapItem = scene.addPixmap(QPixmap::fromImage(*mask));
     }
     if(tubeMask && tubeMaskVisible)
     {
-        scene.addPixmap(QPixmap::fromImage(*tubeMask));
+        if(tubeMaskPixmapItem)
+        {
+            scene.removeItem(tubeMaskPixmapItem);
+            delete tubeMaskPixmapItem;
+        }
+        tubeMaskPixmapItem = scene.addPixmap(QPixmap::fromImage(*tubeMask));
     }
     scene.addLine(10.0f, 20.0f, 200.0f, 200.0f, pen);
 }
@@ -132,36 +147,10 @@ void MainWindow::on_actionShow_console_triggered()
     console.show();
 }
 
-void MainWindow::wheelEvent(QWheelEvent *event)
-{
-    if(!currImg.isNull())
-    {
-        float delta = imgScaleDelta;
-        if(event->angleDelta().y() < 0.0f) delta *= -1.0f;
-        if(QApplication::keyboardModifiers().testFlag(Qt::KeyboardModifier::ShiftModifier)) delta *= 5.0f;
-        ui->graphicsView->scale(1.0f + delta, 1.0f + delta);
-        ui->graphicsView->centerOn(event->position());
-    }
-}
-
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-    if(event->button() == Qt::RightButton)
-    {
-        holdingRightButton = true;
-    }
-}
-
-void MainWindow::mouseReleaseEvent(QMouseEvent *event)
-{
-    if(event->button() == Qt::RightButton)
-    {
-        holdingRightButton = false;
-    }
-}
-
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    statusBar()->clearMessage();
+    statusBar()->showMessage((std::to_string(event->pos().x()) + "|" + std::to_string(event->pos().y())).c_str());
 //    static QPoint oldMousePos(0, 0);
 //    if(holdingRightButton)
 //    {

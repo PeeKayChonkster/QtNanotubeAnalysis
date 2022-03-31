@@ -2,8 +2,9 @@
 #include <QDebug>
 #include <QScrollBar>
 #include <QWidget>
+#include "mainwindow.h"
 
-MyGraphicsView::MyGraphicsView(QWidget *parent) : QGraphicsView(parent)
+MyGraphicsView::MyGraphicsView(QWidget* parent) : QGraphicsView(parent)
 {
     installEventFilter(this);
     setRenderHint(QPainter::Antialiasing, true);

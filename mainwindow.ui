@@ -17,14 +17,14 @@
    </size>
   </property>
   <property name="mouseTracking">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
@@ -152,7 +152,7 @@
      <normaloff>:/res/icons/plus.png</normaloff>:/res/icons/plus.png</iconset>
    </property>
    <property name="text">
-    <string>Add</string>
+    <string>TubeAdder</string>
    </property>
    <property name="toolTip">
     <string>Add tube manually</string>

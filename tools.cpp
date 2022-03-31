@@ -21,12 +21,3 @@ void tools::init(MainWindow* mainWindow)
     initialized = true;
     mw = mainWindow;
 }
-
-void tools::registerEvent(QEvent *event)
-{
-    if(event->type() == QEvent::MouseButtonPress)
-    {
-        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-
-    }
-}
