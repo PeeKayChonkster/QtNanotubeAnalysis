@@ -61,6 +61,8 @@ private slots:
 
     void on_actionMaskEraser_toggled(bool arg1);
 
+    void on_actionTubeRemover_toggled(bool arg1);
+
     void on_actionShow_Hide_mask_toggled(bool arg1);
 
     void on_actionShow_Hide_tube_mask_toggled(bool arg1);
@@ -73,7 +75,7 @@ protected:
     void mousePressEventGV(QMouseEvent* event);
     void mouseReleaseEventGV(QMouseEvent* event);
 
-    enum class Tool { None, Ruler, MaskBrush, MaskEraser, TubeAdder };
+    enum class Tool { None, Ruler, MaskBrush, MaskEraser, TubeAdder, TubeRemover };
 
 private:
     Ui::MainWindow *ui;
@@ -117,6 +119,7 @@ private:
     void clearAllRulerLines();
     void setActiveTool(Tool tool);
     void addTubeAtPos(QPoint pos);
+    void removeTubeAtPos(QPoint pos);
     void paintMaskAtPos(QPoint pos);
     void eraseMaskAtPos(QPoint pos);
 };

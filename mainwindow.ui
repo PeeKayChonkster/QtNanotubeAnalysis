@@ -140,6 +140,7 @@
    </attribute>
    <addaction name="actionRuler"/>
    <addaction name="actionTubeAdder"/>
+   <addaction name="actionTubeRemover"/>
    <addaction name="actionMaskBrush"/>
    <addaction name="actionMaskEraser"/>
   </widget>
@@ -221,6 +222,21 @@
      <string>Add tube manually</string>
     </property>
    </action>
+   <action name="actionTubeRemover">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/res/icons/minus.png</normaloff>:/res/icons/minus.png</iconset>
+   </property>
+   <property name="text">
+    <string>TubeRemover</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove tube manually</string>
+   </property>
+  </action>
    <action name="actionMaskBrush">
     <property name="checkable">
      <bool>true</bool>

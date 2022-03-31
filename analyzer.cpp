@@ -258,6 +258,49 @@ void nano::Analyzer::addTubeAtPos(QPoint pos)
     }
 }
 
+void nano::Analyzer::removeTubeAtPos(QPoint pos)
+{
+    if(!mask.isNull() && !tubeMask.isNull())
+    {
+        if(mask.pixelColor(pos).alphaF())
+        {
+            // search for pos in existing nanotubes
+            for(int i = 0; i < nanotubes.size(); ++i)
+            {
+                for(int j = 0; j < nanotubes[i].points.size(); ++j)
+                {
+                    if(nanotubes[i].points[j] == pos)
+                    {
+                        for(const Point& p : nanotubes[i].points)
+                        {
+                            tubeMask.setPixelColor(p.x, p.y, maskColorNeg);
+                        }
+                        nanotubes.erase(nanotubes.begin() + i);
+                        tools::print("Removed tube. Remaining tubes: " + std::to_string(nanotubes.size()));
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void nano::Analyzer::paintMaskAtPos(QPoint pos)
+{
+    if(!mask.isNull())
+    {
+        mask.setPixelColor(pos, maskColorPos);
+    }
+}
+
+void nano::Analyzer::eraseMaskAtPos(QPoint pos)
+{
+    if(!mask.isNull())
+    {
+        mask.setPixelColor(pos, maskColorNeg);
+    }
+}
+
 const QImage* nano::Analyzer::getMask() const
 {
     return &mask;

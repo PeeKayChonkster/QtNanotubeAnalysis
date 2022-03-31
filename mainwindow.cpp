@@ -97,6 +97,8 @@ void MainWindow::on_actionOpen_image_triggered()
 //    currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
 //    renderImages();
 //    analyzer.setTargetImg(&currImg);
+//    setMask();
+//    setTubeMask();
 //    resize(currImg.width(), currImg.height());
 //    tools::print("Loaded image file: " + fileName);
 
@@ -115,8 +117,10 @@ void MainWindow::fastOpenImage()
     currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
     tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
     currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
-    renderImages();
     analyzer.setTargetImg(&currImg);
+    setMask();
+    setTubeMask();
+    renderImages();
     resize(currImg.width(), currImg.height());
 }
 
@@ -191,21 +195,35 @@ void MainWindow::addTubeAtPos(QPoint pos)
     }
 }
 
+void MainWindow::removeTubeAtPos(QPoint pos)
+{
+    if(mask && tubeMask)
+    {
+        analyzer.removeTubeAtPos(pos);
+        renderImages();
+    }
+}
+
 void MainWindow::paintMaskAtPos(QPoint pos)
 {
     // TBI
-    if(mask)
+    if(!currImg.isNull())
     {
+        if(!mask) setMask();
         qDebug() << "Painting mask at pos: " << pos;
+        analyzer.paintMaskAtPos(pos);
+        renderImages();
     }
 }
 
 void MainWindow::eraseMaskAtPos(QPoint pos)
 {
     // TBI
-    if(mask)
+    if(!currImg.isNull())
     {
         qDebug() << "Erasing mask at pos: " << pos;
+        analyzer.eraseMaskAtPos(pos);
+        renderImages();
     }
 }
 
@@ -305,6 +323,8 @@ void MainWindow::mouseMoveEventGV(QMouseEvent *event)
         }
         case Tool::TubeAdder:
             break;
+        case Tool::TubeRemover:
+            break;
         case Tool::MaskBrush:
         {
             if(pressingActionButtonGV)
@@ -340,6 +360,9 @@ void MainWindow::mousePressEventGV(QMouseEvent *event)
                 break;
             case Tool::TubeAdder:
                 addTubeAtPos(scenePos);
+                break;
+            case Tool::TubeRemover:
+                removeTubeAtPos(scenePos);
                 break;
             case Tool::MaskBrush:
                 paintMaskAtPos(scenePos);
@@ -426,6 +449,10 @@ void MainWindow::on_actionMaskEraser_toggled(bool arg1)
     setActiveTool(arg1? Tool::MaskEraser : Tool::None);
 }
 
+void MainWindow::on_actionTubeRemover_toggled(bool arg1)
+{
+    setActiveTool(arg1? Tool::TubeRemover : Tool::None);
+}
 
 void MainWindow::on_actionShow_Hide_mask_toggled(bool arg1)
 {
@@ -433,10 +460,11 @@ void MainWindow::on_actionShow_Hide_mask_toggled(bool arg1)
     renderImages();
 }
 
-
 void MainWindow::on_actionShow_Hide_tube_mask_toggled(bool arg1)
 {
     tubeMaskVisible = arg1;
     renderImages();
 }
+
+
 
