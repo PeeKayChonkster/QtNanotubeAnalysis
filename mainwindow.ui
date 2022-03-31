@@ -98,7 +98,7 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionAdd"/>
+    <addaction name="actionTubeAdder"/>
     <addaction name="actionMaskBrush"/>
     <addaction name="actionMaskEraser"/>
     <addaction name="actionClear_all_ruler_lines"/>
@@ -136,7 +136,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionRuler"/>
-   <addaction name="actionAdd"/>
+   <addaction name="actionTubeAdder"/>
    <addaction name="actionMaskBrush"/>
    <addaction name="actionMaskEraser"/>
   </widget>
@@ -181,7 +181,7 @@
      <string>Measure with ruler</string>
     </property>
    </action>
-   <action name="actionAdd">
+   <action name="actionTubeAdder">
     <property name="checkable">
      <bool>true</bool>
     </property>

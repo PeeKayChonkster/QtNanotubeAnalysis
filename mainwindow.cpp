@@ -3,6 +3,7 @@
 #include "tools.hpp"
 #include "mygraphicsview.h"
 #include "imageconfig.h"
+#include <nameof.hpp>
 #include <QFileDialog>
 #include <QPixmap>
 #include <QWheelEvent>
@@ -22,13 +23,18 @@ MainWindow::MainWindow(QWidget *parent)
       autoAnalysisConfig(this),
       manualAnalysisConfig(this),
       coordLabel(this),
+      toolLabel(this),
       ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setWindowTitle("NanotubeAnalysis");
+
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
+    connect(ui->graphicsView, &MyGraphicsView::si_mousePressLeft, this, &MainWindow::sl_graphicsScene_mousePressLeft);
+
     tools::init(this);
+
     progressDialog = new QProgressDialog("Calculating", "Cancel", 0, 100, this);
     progressDialog->setMinimumDuration(0);
     progressDialog->setMinimumWidth(400);
@@ -37,17 +43,21 @@ MainWindow::MainWindow(QWidget *parent)
     progressDialog->setAutoClose(false);
     progressDialog->setAutoReset(false);
     progressDialog->close();
+
     ui->graphicsView->verticalScrollBar()->installEventFilter(this);
     ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     ui->graphicsView->setScene(&scene);
-    connect(ui->graphicsView, &MyGraphicsView::si_mousePressLeft, this, &MainWindow::sl_graphicsScene_mousePressLeft);
+
     rulerLinePen.setColor(rulerLineColor);
     rulerLinePen.setWidth(rulerLIneWidth);
     rulerLinePen.setCapStyle(Qt::RoundCap);
+
     ui->toolsGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
-    coordLabel.setFrameShape(QFrame::Panel);
-    coordLabel.setFrameShadow(QFrame::Raised);
-    statusBar()->addPermanentWidget(&coordLabel);
+
+    coordLabel.setAlignment(Qt::AlignRight);
+    toolLabel.setText("Active tool: None");
+    statusBar()->addPermanentWidget(&toolLabel);
+    statusBar()->addPermanentWidget(&coordLabel, 1);
 }
 
 MainWindow::~MainWindow()
@@ -184,6 +194,13 @@ void MainWindow::clearAllRulerLines()
 
     }
     rulerLineItems.clear();
+}
+
+void MainWindow::setActiveTool(Tool tool)
+{
+    activeTool = tool;
+    std::string toolString = "Active tool: " + std::string(NAMEOF_ENUM(activeTool));
+    toolLabel.setText(toolString.c_str());
 }
 
 void MainWindow::renderImages()
@@ -328,8 +345,7 @@ void MainWindow::sl_worker_finished()
 
 void MainWindow::on_actionRuler_toggled(bool arg1)
 {
-    if(arg1) activeTool = Tool::Ruler;
-    else activeTool = Tool::None;
+    setActiveTool(arg1? Tool::Ruler : Tool::None);
 }
 
 
@@ -338,4 +354,20 @@ void MainWindow::on_actionClear_all_ruler_lines_triggered()
     clearAllRulerLines();
 }
 
+void MainWindow::on_actionTubeAdder_toggled(bool arg1)
+{
+    setActiveTool(arg1? Tool::TubeAdder : Tool::None);
+}
+
+
+void MainWindow::on_actionMaskBrush_toggled(bool arg1)
+{
+    setActiveTool(arg1? Tool::MaskBrush : Tool::None);
+}
+
+
+void MainWindow::on_actionMaskEraser_toggled(bool arg1)
+{
+    setActiveTool(arg1? Tool::MaskEraser : Tool::None);
+}
 

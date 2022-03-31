@@ -13,6 +13,8 @@
 #include <optional>
 #include <QLabel>
 
+#define NAMEOF(name) #name
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -55,6 +57,12 @@ private slots:
 
     void on_actionRuler_toggled(bool arg1);
 
+    void on_actionTubeAdder_toggled(bool arg1);
+
+    void on_actionMaskBrush_toggled(bool arg1);
+
+    void on_actionMaskEraser_toggled(bool arg1);
+
 protected:
     void closeEvent(QCloseEvent* event) override;
     void mouseMoveGraphicsViewEvent(QMouseEvent* event);
@@ -75,6 +83,7 @@ private:
     QFutureWatcher<void> futureWatcher;
     QProgressDialog* progressDialog = nullptr;
     QLabel coordLabel;
+    QLabel toolLabel;
     Tool activeTool = Tool::None;
     std::vector<RulerPair> rulerLineItems;
     std::optional<QPointF> firstRulerLinePoint = std::nullopt;
@@ -98,5 +107,6 @@ private:
     void setTubeMask();
     void setRulerPoint(QPoint point);
     void clearAllRulerLines();
+    void setActiveTool(Tool tool);
 };
 #endif // MAINWINDOW_H
