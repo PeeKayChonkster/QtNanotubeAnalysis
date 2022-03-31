@@ -106,10 +106,17 @@
     <addaction name="actionMaskEraser"/>
     <addaction name="actionClear_all_ruler_lines"/>
    </widget>
+   <widget class="QMenu" name="menuConfig">
+    <property name="title">
+     <string>Config</string>
+    </property>
+    <addaction name="actionImage_config"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAnalyze"/>
    <addaction name="menuView"/>
    <addaction name="menuTools"/>
+   <addaction name="menuConfig"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="sizePolicy">
@@ -191,6 +198,11 @@
     <string>Show/Hide tube mask</string>
    </property>
   </action>
+  <action name="actionImage_config">
+   <property name="text">
+    <string>Image config</string>
+   </property>
+  </action>
   <actiongroup name="toolsGroup">
    <action name="actionRuler">
     <property name="checkable">
@@ -223,20 +235,20 @@
     </property>
    </action>
    <action name="actionTubeRemover">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/res/icons/minus.png</normaloff>:/res/icons/minus.png</iconset>
-   </property>
-   <property name="text">
-    <string>TubeRemover</string>
-   </property>
-   <property name="toolTip">
-    <string>Remove tube manually</string>
-   </property>
-  </action>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="icon">
+     <iconset resource="Resources.qrc">
+      <normaloff>:/res/icons/minus.png</normaloff>:/res/icons/minus.png</iconset>
+    </property>
+    <property name="text">
+     <string>TubeRemover</string>
+    </property>
+    <property name="toolTip">
+     <string>Remove tube manually</string>
+    </property>
+   </action>
    <action name="actionMaskBrush">
     <property name="checkable">
      <bool>true</bool>

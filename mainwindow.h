@@ -67,6 +67,8 @@ private slots:
 
     void on_actionShow_Hide_tube_mask_toggled(bool arg1);
 
+    void on_actionImage_config_triggered();
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 

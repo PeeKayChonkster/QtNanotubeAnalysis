@@ -466,5 +466,15 @@ void MainWindow::on_actionShow_Hide_tube_mask_toggled(bool arg1)
     renderImages();
 }
 
-
+void MainWindow::on_actionImage_config_triggered()
+{
+    if(!currImg.isNull())
+    {
+        ImageConfig(this).exec();
+    }
+    else
+    {
+        QMessageBox::warning(this, "No image!", "There is no image to analyze!");
+    }
+}
 

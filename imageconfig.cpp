@@ -22,3 +22,8 @@ void ImageConfig::on_buttonBox_accepted()
     tools::getMainWindow()->analyzer.pixelSize_nm = ui->pixelSizeInput->value();
 }
 
+void ImageConfig::showEvent(QShowEvent *event)
+{
+    ui->pixelSizeInput->setValue(tools::getMainWindow()->analyzer.pixelSize_nm);
+}
+
