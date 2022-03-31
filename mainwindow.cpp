@@ -13,6 +13,7 @@
 #include <QScrollBar>
 #include <QGraphicsPixmapItem>
 #include <QLabel>
+#include <QGraphicsProxyWidget>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -42,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->graphicsView, &MyGraphicsView::si_mousePressLeft, this, &MainWindow::sl_graphicsScene_mousePressLeft);
     rulerLinePen.setColor(rulerLineColor);
     rulerLinePen.setWidth(rulerLIneWidth);
+    rulerLinePen.setCapStyle(Qt::RoundCap);
     ui->toolsGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
     coordLabel.setFrameShape(QFrame::Panel);
     coordLabel.setFrameShadow(QFrame::Raised);
@@ -84,16 +86,17 @@ void MainWindow::on_actionOpen_image_triggered()
 //    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
 //    currImg.load(fileName);
 //    currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
-//    renderCurrImg();
+//    renderImages();
 //    analyzer.setTargetImg(&currImg);
 //    resize(currImg.width(), currImg.height());
+//    tools::print("Loaded image file: " + fileName);
 
     // DEBUG //
     fastOpenImage();
     ui->graphicsView->show();
     if(ImageConfig(this).exec() == QDialog::Rejected)
     {
-        removeCurrImage();
+        clearGraphicsView();
         ui->graphicsView->hide();
     }
 }
@@ -101,20 +104,26 @@ void MainWindow::on_actionOpen_image_triggered()
 void MainWindow::fastOpenImage()
 {
     currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
+    tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
     currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     renderImages();
     analyzer.setTargetImg(&currImg);
     resize(currImg.width(), currImg.height());
 }
 
-void MainWindow::removeCurrImage()
+void MainWindow::clearGraphicsView()
 {
-    if(currImgPixmapItem)
+    if(!currImg.isNull())
     {
         scene.clear();
         currImgPixmapItem = nullptr;
         currImg = QImage();
+        mask = nullptr;
+        tubeMask = nullptr;
+        analyzer.resetAll();
+        clearAllRulerLines();
     }
+
 }
 
 void MainWindow::startProgressDialog()
@@ -138,19 +147,43 @@ void MainWindow::setRulerPoint(QPoint point)
 {
     if(currImg.isNull()) return;
 
+    QPointF scenePoint = ui->graphicsView->mapToScene(point);
+
     if(firstRulerLinePoint)
     {
-        QLineF line(firstRulerLinePoint.value(), ui->graphicsView->mapToScene(point));
-        rulerLineItems.push_back(scene.addLine(line, rulerLinePen));
-
-        // Create label with line length;
-
+        QLineF line(firstRulerLinePoint.value(), scenePoint);
+        float lineRealLength = line.length() * analyzer.pixelSize_nm;
+        QString unitOfMeasure = " nm";
+        if(lineRealLength > 1000.0f)
+        {
+            unitOfMeasure = " µm";
+            lineRealLength *= 0.001;
+        }
+        QLabel* label = new QLabel(QString::number(lineRealLength) + unitOfMeasure);
+        label->setStyleSheet("background-color: " + rulerLabelBgColor);
+        label->move(scenePoint.toPoint());
+        QGraphicsLineItem* sceneLine = scene.addLine(line, rulerLinePen);
+        QGraphicsProxyWidget* sceneWidget = scene.addWidget(label);
+        rulerLineItems.push_back(RulerPair(sceneLine, sceneWidget));
         firstRulerLinePoint = std::nullopt;
     }
     else
     {
         firstRulerLinePoint = ui->graphicsView->mapToScene(point);
     }
+}
+
+void MainWindow::clearAllRulerLines()
+{
+    for(RulerPair& pair : rulerLineItems)
+    {
+        scene.removeItem(pair.first);
+        delete pair.first;
+        scene.removeItem(pair.second);
+        delete pair.second;
+
+    }
+    rulerLineItems.clear();
 }
 
 void MainWindow::renderImages()
@@ -302,12 +335,7 @@ void MainWindow::on_actionRuler_toggled(bool arg1)
 
 void MainWindow::on_actionClear_all_ruler_lines_triggered()
 {
-    for(QGraphicsLineItem* lineItem : rulerLineItems)
-    {
-        scene.removeItem(lineItem);
-        delete lineItem;
-    }
-    rulerLineItems.clear();
+    clearAllRulerLines();
 }
 
 

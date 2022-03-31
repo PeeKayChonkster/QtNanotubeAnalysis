@@ -34,6 +34,8 @@ public:
     friend class ManualAnalysisConfig;
     friend class MyGraphicsView;
 
+    using RulerPair = QPair<QGraphicsLineItem*, QGraphicsProxyWidget*>;
+
 private slots:
     void on_actionOpen_image_triggered();
 
@@ -59,7 +61,6 @@ protected:
 
     enum class Tool { None, Ruler, MaskBrush, MaskEraser, TubeAdder };
 
-
 private:
     Ui::MainWindow *ui;
     QImage currImg;
@@ -75,11 +76,14 @@ private:
     QProgressDialog* progressDialog = nullptr;
     QLabel coordLabel;
     Tool activeTool = Tool::None;
-    std::vector<QGraphicsLineItem*> rulerLineItems;
+    std::vector<RulerPair> rulerLineItems;
     std::optional<QPointF> firstRulerLinePoint = std::nullopt;
     QPen rulerLinePen;
+
+    // constants
     const QColor rulerLineColor = QColorConstants::Blue;
-    const uint rulerLIneWidth = 5u;
+    const uint rulerLIneWidth = 2u;
+    const QString rulerLabelBgColor = "rgba(0,0,0,0.7);";
 
     // flags
     bool currImgVisible = true;
@@ -88,10 +92,11 @@ private:
 
     void renderImages();
     void fastOpenImage(); // DEBUG
-    void removeCurrImage();
+    void clearGraphicsView();
     void startProgressDialog();
     void setMask();
     void setTubeMask();
     void setRulerPoint(QPoint point);
+    void clearAllRulerLines();
 };
 #endif // MAINWINDOW_H

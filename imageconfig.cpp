@@ -8,6 +8,7 @@ ImageConfig::ImageConfig(QWidget *parent) :
 {
     ui->setupUi(this);
     setFixedSize(size());
+    setLocale(QLocale::C);
 }
 
 ImageConfig::~ImageConfig()
