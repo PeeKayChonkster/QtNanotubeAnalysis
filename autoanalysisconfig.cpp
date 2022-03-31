@@ -1,10 +1,10 @@
 #include "autoanalysisconfig.h"
 #include "ui_autoanalysisconfig.h"
 #include "mainwindow.h"
+#include "tools.hpp"
 
-AutoAnalysisConfig::AutoAnalysisConfig(MainWindow* parent) :
+AutoAnalysisConfig::AutoAnalysisConfig(QWidget* parent) :
     QDialog(parent),
-    parent(parent),
     ui(new Ui::AutoAnalysisConfig)
 {
     ui->setupUi(this);
@@ -24,11 +24,11 @@ void AutoAnalysisConfig::on_processFullRangeCheckbox_stateChanged(int arg1)
 
 void AutoAnalysisConfig::on_buttonBox_accepted()
 {
-    parent->analyzer.pixelSize_nm = ui->pixelSizeInput->value();
-    parent->analyzer.extremumDeltaStep = ui->deltaStepInput->value();
-    parent->analyzer.extremumOverflowTolerance = ui->overflowToleranceInput->value();
-    parent->analyzer.processFullRange = ui->processFullRangeCheckbox->isChecked();
-    parent->analyzer.minPixelsInTube = ui->minPixelsInput->value();
-    parent->startAutoAnalysis();
+     tools::getMainWindow()->analyzer.pixelSize_nm = ui->pixelSizeInput->value();
+     tools::getMainWindow()->analyzer.extremumDeltaStep = ui->deltaStepInput->value();
+     tools::getMainWindow()->analyzer.extremumOverflowTolerance = ui->overflowToleranceInput->value();
+     tools::getMainWindow()->analyzer.processFullRange = ui->processFullRangeCheckbox->isChecked();
+     tools::getMainWindow()->analyzer.minPixelsInTube = ui->minPixelsInput->value();
+     tools::getMainWindow()->startAutoAnalysis();
 }
 

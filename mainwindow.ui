@@ -42,7 +42,7 @@
     <item row="2" column="0">
      <widget class="MyGraphicsView" name="graphicsView">
       <property name="mouseTracking">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAsNeeded</enum>
@@ -94,12 +94,38 @@
     </property>
     <addaction name="actionShow_console"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionAdd"/>
+    <addaction name="actionMaskBrush"/>
+    <addaction name="actionMaskEraser"/>
+    <addaction name="actionClear_all_ruler_lines"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAnalyze"/>
    <addaction name="menuView"/>
+   <addaction name="menuTools"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="sizeGripEnabled">
+    <bool>true</bool>
+   </property>
+  </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -134,54 +160,73 @@
     <string>Show console</string>
    </property>
   </action>
-  <action name="actionRuler">
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/res/icons/rulerBlue.png</normaloff>:/res/icons/rulerBlue.png</iconset>
-   </property>
+  <action name="actionClear_all_ruler_lines">
    <property name="text">
-    <string>Ruler</string>
-   </property>
-   <property name="toolTip">
-    <string>Measure with ruler</string>
+    <string>Clear all ruler lines</string>
    </property>
   </action>
-  <action name="actionAdd">
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/res/icons/plus.png</normaloff>:/res/icons/plus.png</iconset>
-   </property>
-   <property name="text">
-    <string>TubeAdder</string>
-   </property>
-   <property name="toolTip">
-    <string>Add tube manually</string>
-   </property>
-  </action>
-  <action name="actionMaskBrush">
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/res/icons/brush.png</normaloff>:/res/icons/brush.png</iconset>
-   </property>
-   <property name="text">
-    <string>MaskBrush</string>
-   </property>
-   <property name="toolTip">
-    <string>Paint mask with brush</string>
-   </property>
-  </action>
-  <action name="actionMaskEraser">
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/res/icons/eraser.png</normaloff>:/res/icons/eraser.png</iconset>
-   </property>
-   <property name="text">
-    <string>MaskEraser</string>
-   </property>
-   <property name="toolTip">
-    <string>Erase mask with eraser</string>
-   </property>
-  </action>
+  <actiongroup name="toolsGroup">
+   <action name="actionRuler">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="icon">
+     <iconset resource="Resources.qrc">
+      <normaloff>:/res/icons/rulerBlue.png</normaloff>:/res/icons/rulerBlue.png</iconset>
+    </property>
+    <property name="text">
+     <string>Ruler</string>
+    </property>
+    <property name="toolTip">
+     <string>Measure with ruler</string>
+    </property>
+   </action>
+   <action name="actionAdd">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="icon">
+     <iconset resource="Resources.qrc">
+      <normaloff>:/res/icons/plus.png</normaloff>:/res/icons/plus.png</iconset>
+    </property>
+    <property name="text">
+     <string>TubeAdder</string>
+    </property>
+    <property name="toolTip">
+     <string>Add tube manually</string>
+    </property>
+   </action>
+   <action name="actionMaskBrush">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="icon">
+     <iconset resource="Resources.qrc">
+      <normaloff>:/res/icons/brush.png</normaloff>:/res/icons/brush.png</iconset>
+    </property>
+    <property name="text">
+     <string>MaskBrush</string>
+    </property>
+    <property name="toolTip">
+     <string>Paint mask with brush</string>
+    </property>
+   </action>
+   <action name="actionMaskEraser">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="icon">
+     <iconset resource="Resources.qrc">
+      <normaloff>:/res/icons/eraser.png</normaloff>:/res/icons/eraser.png</iconset>
+    </property>
+    <property name="text">
+     <string>MaskEraser</string>
+    </property>
+    <property name="toolTip">
+     <string>Erase mask with eraser</string>
+    </property>
+   </action>
+  </actiongroup>
  </widget>
  <customwidgets>
   <customwidget>

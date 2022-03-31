@@ -3,6 +3,7 @@
 #include <QScrollBar>
 #include <QWidget>
 #include "mainwindow.h"
+#include "tools.hpp"
 
 MyGraphicsView::MyGraphicsView(QWidget* parent) : QGraphicsView(parent)
 {
@@ -17,6 +18,10 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *event)
     {
         setCursor(Qt::ClosedHandCursor);
         dragging = true;
+    }
+    if(event->button() == Qt::LeftButton)
+    {
+        emit si_mousePressLeft(event->pos());
     }
 }
 
@@ -41,6 +46,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
         verticalScrollBar()->setValue(verticalScrollBar()->value() + delta.y());
     }
     lastPos = event->pos();
+    tools::getMainWindow()->mouseMoveGraphicsViewEvent(event);
 }
 
 void MyGraphicsView::wheelEvent(QWheelEvent *event)

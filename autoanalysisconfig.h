@@ -13,7 +13,7 @@ class AutoAnalysisConfig : public QDialog
 
 public:
     AutoAnalysisConfig() = delete;
-    explicit AutoAnalysisConfig(class MainWindow *parent = nullptr);
+    explicit AutoAnalysisConfig(QWidget*parent);
     ~AutoAnalysisConfig();
 
 private slots:
@@ -22,7 +22,6 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
-    MainWindow* parent = nullptr;
     Ui::AutoAnalysisConfig *ui;
 };
 

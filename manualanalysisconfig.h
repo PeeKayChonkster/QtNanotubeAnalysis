@@ -13,7 +13,7 @@ class ManualAnalysisConfig : public QDialog
 
 public:
     ManualAnalysisConfig() = delete;
-    explicit ManualAnalysisConfig(class MainWindow* parent = nullptr);
+    explicit ManualAnalysisConfig(QWidget* parent);
     ~ManualAnalysisConfig();
 
 private slots:
@@ -25,7 +25,6 @@ private slots:
 
 private:
     Ui::ManualAnalysisConfig *ui;
-    MainWindow* parent = nullptr;
     const int maxSliderValue = 1000;
 };
 

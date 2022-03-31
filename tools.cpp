@@ -21,3 +21,8 @@ void tools::init(MainWindow* mainWindow)
     initialized = true;
     mw = mainWindow;
 }
+
+MainWindow *tools::getMainWindow()
+{
+    return mw;
+}
