@@ -24,15 +24,15 @@ void AutoAnalysisConfig::on_processFullRangeCheckbox_stateChanged(int arg1)
 
 void AutoAnalysisConfig::on_buttonBox_accepted()
 {
-     tools::getMainWindow()->analyzer.pixelSize_nm = ui->pixelSizeInput->value();
-     tools::getMainWindow()->analyzer.extremumDeltaStep = ui->deltaStepInput->value();
-     tools::getMainWindow()->analyzer.extremumOverflowTolerance = ui->overflowToleranceInput->value();
-     tools::getMainWindow()->analyzer.processFullRange = ui->processFullRangeCheckbox->isChecked();
-     tools::getMainWindow()->analyzer.minPixelsInTube = ui->minPixelsInput->value();
+     tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
+     tools::getMainWindow()->setExtremumDeltaStep(ui->deltaStepInput->value());
+     tools::getMainWindow()->setExtremumOverflowTolerance(ui->overflowToleranceInput->value());
+     tools::getMainWindow()->setProcessFullRange(ui->processFullRangeCheckbox->isChecked());
+     tools::getMainWindow()->setMinPixelInTube(ui->minPixelsInput->value());
      tools::getMainWindow()->startAutoAnalysis();
 }
 
 void AutoAnalysisConfig::showEvent(QShowEvent *event)
 {
-    ui->pixelSizeInput->setValue(tools::getMainWindow()->analyzer.pixelSize_nm);
+    ui->pixelSizeInput->setValue(tools::getMainWindow()->getPixelSize());
 }

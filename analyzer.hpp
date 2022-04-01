@@ -39,8 +39,8 @@ public:
     // analysis config
     float pixelSize_nm = 0.0f;
     float extremumDeltaStep = 0.02f;
-    int extremumOverflowTolerance = 5;
-    int minPixelsInTube = 50;
+    uint16_t extremumOverflowTolerance = 5;
+    uint16_t minPixelsInTube = 50;
     bool processFullRange = false;
 
 

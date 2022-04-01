@@ -22,13 +22,13 @@ ConfigWindow::~ConfigWindow()
 
 void ConfigWindow::on_buttonBox_accepted()
 {
-    tools::getMainWindow()->analyzer.pixelSize_nm = ui->pixelSizeInput->value();
+    tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
     tools::getMainWindow()->setBrushRadius(ui->brushSizeInput->value());
 }
 
 void ConfigWindow::showEvent(QShowEvent *event)
 {
-    ui->pixelSizeInput->setValue(tools::getMainWindow()->analyzer.pixelSize_nm);
+    ui->pixelSizeInput->setValue(tools::getMainWindow()->getPixelSize());
     ui->brushSizeInput->setValue(tools::getMainWindow()->getBrushRadius());
     ui->brushSizeSlider->setValue(ui->brushSizeInput->value());
 }

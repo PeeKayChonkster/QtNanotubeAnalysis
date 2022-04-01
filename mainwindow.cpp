@@ -103,6 +103,56 @@ float MainWindow::getBrushRadius() const
     return brushRadius;
 }
 
+void MainWindow::setPixelSize(float size)
+{
+    if(size > 0.0f) analyzer.pixelSize_nm = size;
+}
+
+float MainWindow::getPixelSize() const
+{
+    return analyzer.pixelSize_nm;
+}
+
+void MainWindow::setExtremumDeltaStep(float value)
+{
+    analyzer.extremumDeltaStep = value;
+}
+
+float MainWindow::getExtremumDeltaStep() const
+{
+    return analyzer.extremumDeltaStep;
+}
+
+void MainWindow::setExtremumOverflowTolerance(uint16_t value)
+{
+    analyzer.extremumOverflowTolerance = value;
+}
+
+uint16_t MainWindow::getExtremumOverflowTolerance() const
+{
+    return analyzer.extremumOverflowTolerance;
+}
+
+void MainWindow::setProcessFullRange(bool value)
+{
+    analyzer.processFullRange = value;
+}
+
+bool MainWindow::getProcessFullRange() const
+{
+    return analyzer.processFullRange;
+}
+
+void MainWindow::setMinPixelInTube(uint16_t value)
+{
+    analyzer.minPixelsInTube = value;
+}
+
+uint16_t MainWindow::getMinPixelInTube() const
+{
+    return analyzer.minPixelsInTube;
+}
+
 void MainWindow::on_actionOpen_image_triggered()
 {
 //    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
@@ -119,11 +169,6 @@ void MainWindow::on_actionOpen_image_triggered()
     // DEBUG //
     fastOpenImage();
     ui->graphicsView->show();
-    if(ConfigWindow(this).exec() == QDialog::Rejected)
-    {
-        clearGraphicsView();
-        ui->graphicsView->hide();
-    }
 }
 
 void MainWindow::fastOpenImage()
@@ -133,8 +178,8 @@ void MainWindow::fastOpenImage()
     tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
     currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     analyzer.setTargetImg(&currImg);
-    setMask();
-    setTubeMask();
+    mask = analyzer.getMask();
+    tubeMask = analyzer.getTubeMask();
     renderImages();
     resize(currImg.width(), currImg.height());
     scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
@@ -171,16 +216,6 @@ void MainWindow::startProgressDialog()
     QSize screenSize = QApplication::primaryScreen()->availableSize();
     progressDialog->move((screenSize.width() - progressDialog->width()) / 2, (screenSize.height() - progressDialog->height()) / 2);
     progressDialog->show();
-}
-
-void MainWindow::setMask()
-{
-    mask = analyzer.getMask();
-}
-
-void MainWindow::setTubeMask()
-{
-    tubeMask = analyzer.getTubeMask();
 }
 
 void MainWindow::addRulerPoint(QPoint point)
@@ -235,7 +270,6 @@ void MainWindow::paintMaskAtPos(QPoint pos)
 {
     if(!currImg.isNull())
     {
-        if(!mask) setMask();
         analyzer.paintMaskAtPos(pos, brushRadius);
         renderImages();
     }
@@ -299,6 +333,12 @@ void MainWindow::renderImages()
         }
         tubeMaskPixmapItem = scene.addPixmap(QPixmap::fromImage(*tubeMask));
     }
+}
+
+void MainWindow::calculateMask(float threshold)
+{
+    analyzer.calculateMask(threshold);
+    renderImages();
 }
 
 void MainWindow::on_actionShow_console_triggered()
@@ -448,8 +488,6 @@ void MainWindow::sl_worker_finished()
 {
     futureWatcher.waitForFinished();
     progressDialog->hide();
-    setMask();
-    setTubeMask();
     renderImages();
 }
 

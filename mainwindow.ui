@@ -200,7 +200,7 @@
   </action>
   <action name="actionImage_config">
    <property name="text">
-    <string>Image config</string>
+    <string>Config</string>
    </property>
   </action>
   <actiongroup name="toolsGroup">

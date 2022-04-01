@@ -27,17 +27,30 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    nano::Analyzer analyzer;
     Console console;
 
     void startAutoAnalysis();
     void startManualAnalysis(float threshold);
+    void renderImages();
+    void calculateMask(float threshold);
+
+    // These work with MyGraphicsView mouse events
+    void mouseMoveEventGV(QMouseEvent* event);
+    void mousePressEventGV(QMouseEvent* event);
+    void mouseReleaseEventGV(QMouseEvent* event);
 
     void setBrushRadius(float radius);
     float getBrushRadius() const;
-
-    friend class ManualAnalysisConfig;
-    friend class MyGraphicsView;
+    void setPixelSize(float size);
+    float getPixelSize() const;
+    void setExtremumDeltaStep(float value);
+    float getExtremumDeltaStep() const;
+    void setExtremumOverflowTolerance(uint16_t value);
+    uint16_t getExtremumOverflowTolerance() const;
+    void setProcessFullRange(bool value);
+    bool getProcessFullRange() const;
+    void setMinPixelInTube(uint16_t value);
+    uint16_t getMinPixelInTube() const;
 
     using RulerPair = QPair<QGraphicsLineItem*, QGraphicsProxyWidget*>;
 
@@ -77,15 +90,11 @@ private slots:
 protected:
     void closeEvent(QCloseEvent* event) override;
 
-    // Work with MyGraphicsView mouse events
-    void mouseMoveEventGV(QMouseEvent* event);
-    void mousePressEventGV(QMouseEvent* event);
-    void mouseReleaseEventGV(QMouseEvent* event);
-
     enum class Tool { None, Ruler, MaskBrush, MaskEraser, TubeAdder, TubeRemover };
 
 private:
     Ui::MainWindow *ui;
+    nano::Analyzer analyzer;
     QImage currImg;
     const QImage* mask = nullptr;
     const QImage* tubeMask = nullptr;
@@ -120,12 +129,10 @@ private:
     bool tubeMaskVisible = true;
     bool pressingActionButtonGV = false;
 
-    void renderImages();
+
     void fastOpenImage(); // DEBUG
     void clearGraphicsView();
     void startProgressDialog();
-    void setMask();
-    void setTubeMask();
     void addRulerPoint(QPoint point);
     void clearAllRulerLines();
     void setActiveTool(Tool tool);

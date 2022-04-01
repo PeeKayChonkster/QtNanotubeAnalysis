@@ -18,8 +18,8 @@ ManualAnalysisConfig::~ManualAnalysisConfig()
 
 void ManualAnalysisConfig::on_buttonBox_accepted()
 {
-    tools::getMainWindow()->analyzer.pixelSize_nm = ui->pixelSizeInput->value();
-    tools::getMainWindow()->analyzer.minPixelsInTube = ui->minPixelsInput->value();
+    tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
+    tools::getMainWindow()->setMinPixelInTube(ui->minPixelsInput->value());
     tools::getMainWindow()->startManualAnalysis(ui->thresholdInput->value());
 }
 
@@ -33,10 +33,7 @@ void ManualAnalysisConfig::on_thresholdSlider_valueChanged(int value)
 {
     float fValue = value / (float)maxSliderValue;
     ui->thresholdInput->setValue(fValue);
-    tools::getMainWindow()->analyzer.calculateMask(fValue);
-    tools::getMainWindow()->setMask();
-    tools::getMainWindow()->tubeMask = nullptr;
-    tools::getMainWindow()->renderImages();
+    tools::getMainWindow()->calculateMask(fValue);
 }
 
 void ManualAnalysisConfig::on_thresholdInput_valueChanged(double arg1)
@@ -46,5 +43,5 @@ void ManualAnalysisConfig::on_thresholdInput_valueChanged(double arg1)
 
 void ManualAnalysisConfig::showEvent(QShowEvent *event)
 {
-    ui->pixelSizeInput->setValue(tools::getMainWindow()->analyzer.pixelSize_nm);
+    ui->pixelSizeInput->setValue(tools::getMainWindow()->getPixelSize());
 }

@@ -19,6 +19,7 @@ Console::~Console()
 
 void Console::print(QString line, QColor textColor)
 {
+    show();
     ui->textEdit->setTextColor(textColor);
     ui->textEdit->append(line);
     ui->textEdit->ensureCursorVisible();
