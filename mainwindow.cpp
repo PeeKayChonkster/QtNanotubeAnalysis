@@ -2,7 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "tools.hpp"
 #include "mygraphicsview.h"
-#include "imageconfig.h"
+#include "configwindow.h"
 #include <nameof.hpp>
 #include <QFileDialog>
 #include <QPixmap>
@@ -98,7 +98,7 @@ void MainWindow::on_actionOpen_image_triggered()
     // DEBUG //
     fastOpenImage();
     ui->graphicsView->show();
-    if(ImageConfig(this).exec() == QDialog::Rejected)
+    if(ConfigWindow(this).exec() == QDialog::Rejected)
     {
         clearGraphicsView();
         ui->graphicsView->hide();
@@ -477,7 +477,7 @@ void MainWindow::on_actionImage_config_triggered()
 {
     if(!currImg.isNull())
     {
-        ImageConfig(this).exec();
+        ConfigWindow(this).exec();
     }
     else
     {

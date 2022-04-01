@@ -31,7 +31,7 @@ set(PROJECT_SOURCES
         manualanalysisconfig.h manualanalysisconfig.cpp manualanalysisconfig.ui
         Resources.qrc
         mygraphicsview.h mygraphicsview.cpp
-        imageconfig.h imageconfig.cpp imageconfig.ui
+        configwindow.h configwindow.cpp configwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

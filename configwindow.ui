@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ImageConfig</class>
- <widget class="QDialog" name="ImageConfig">
+ <class>ConfigWindow</class>
+ <widget class="QDialog" name="ConfigWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>184</width>
-    <height>77</height>
+    <width>302</width>
+    <height>138</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,18 +16,15 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
+     <item row="1" column="0">
+      <widget class="QLabel" name="pixelSizeLabel">
        <property name="text">
-        <string>Pixel Size</string>
+        <string>Pixel size (nm)</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="1" column="1">
       <widget class="QDoubleSpinBox" name="pixelSizeInput">
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::NoButtons</enum>
        </property>
@@ -36,6 +33,37 @@
        </property>
        <property name="maximum">
         <double>10000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>5.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="topMargin">
+      <number>10</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="brushSizeLabel">
+       <property name="text">
+        <string>Brush size (px)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="brushSizeSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="brushSizeInput">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
        </property>
       </widget>
      </item>
@@ -61,7 +89,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>ImageConfig</receiver>
+   <receiver>ConfigWindow</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -77,7 +105,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>ImageConfig</receiver>
+   <receiver>ConfigWindow</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
