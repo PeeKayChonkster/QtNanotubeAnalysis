@@ -82,6 +82,26 @@ void MainWindow::startManualAnalysis(float threshold)
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }
 
+void MainWindow::setBrushRadius(float radius)
+{
+    if(radius > 1.0f)
+    {
+        brushRadius = radius;
+        if(brushEllipseItem)
+        {
+            scene.removeItem(brushEllipseItem);
+            delete brushEllipseItem;
+            float brushDiameter = brushRadius * 2.0f;
+            brushEllipseItem = scene.addEllipse(0.0f, 0.0f, brushDiameter, brushDiameter, QPen(brushCursorColor, brushDiameter * brushCursorCircleWidthFactor));
+            brushEllipseItem->setZValue(1.0f);
+        }
+    }
+}
+
+float MainWindow::getBrushRadius() const
+{
+    return brushRadius;
+}
 
 void MainWindow::on_actionOpen_image_triggered()
 {
@@ -93,6 +113,7 @@ void MainWindow::on_actionOpen_image_triggered()
 //    setMask();
 //    setTubeMask();
 //    resize(currImg.width(), currImg.height());
+//    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
 //    tools::print("Loaded image file: " + fileName);
 
     // DEBUG //
@@ -116,6 +137,7 @@ void MainWindow::fastOpenImage()
     setTubeMask();
     renderImages();
     resize(currImg.width(), currImg.height());
+    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
 }
 
 void MainWindow::clearGraphicsView()
@@ -328,6 +350,8 @@ void MainWindow::mouseMoveEventGV(QMouseEvent *event)
             break;
         case Tool::MaskBrush:
         {
+            QPointF brushPos(scenePos.x() - brushRadius, scenePos.y() - brushRadius);
+            brushEllipseItem->setPos(brushPos);
             if(pressingActionButtonGV)
             {
                 paintMaskAtPos(scenePos.toPoint());
@@ -337,6 +361,8 @@ void MainWindow::mouseMoveEventGV(QMouseEvent *event)
 
         case Tool::MaskEraser:
         {
+            QPointF brushPos(scenePos.x() - brushRadius, scenePos.y() - brushRadius);
+            brushEllipseItem->setPos(brushPos);
             if(pressingActionButtonGV)
             {
                 eraseMaskAtPos(scenePos.toPoint());
@@ -447,13 +473,50 @@ void MainWindow::on_actionTubeAdder_toggled(bool arg1)
 
 void MainWindow::on_actionMaskBrush_toggled(bool arg1)
 {
-    setActiveTool(arg1? Tool::MaskBrush : Tool::None);
+    if(arg1 && !currImg.isNull())
+    {
+        activeTool = Tool::MaskBrush;
+        if(!brushEllipseItem)
+        {
+            float brushDiameter = brushRadius * 2.0f;
+            brushEllipseItem = scene.addEllipse(0.0f, 0.0f, brushDiameter, brushDiameter, QPen(brushCursorColor, brushDiameter * brushCursorCircleWidthFactor));
+            brushEllipseItem->setZValue(1.0f);
+            brushEllipseItem->setTransformOriginPoint(brushRadius, brushRadius);
+        }
+    }
+    else
+    {
+        if(brushEllipseItem)
+        {
+            scene.removeItem(brushEllipseItem);
+            delete brushEllipseItem;
+            brushEllipseItem = nullptr;
+        }
+    }
 }
-
 
 void MainWindow::on_actionMaskEraser_toggled(bool arg1)
 {
-    setActiveTool(arg1? Tool::MaskEraser : Tool::None);
+    if(arg1 && !currImg.isNull())
+    {
+        activeTool = Tool::MaskEraser;
+        if(!brushEllipseItem)
+        {
+            float brushDiameter = brushRadius * 2.0f;
+            brushEllipseItem = scene.addEllipse(0.0f, 0.0f, brushDiameter, brushDiameter, QPen(brushCursorColor, brushDiameter * brushCursorCircleWidthFactor));
+            brushEllipseItem->setZValue(1.0f);
+            brushEllipseItem->setTransformOriginPoint(brushRadius, brushRadius);
+        }
+    }
+    else
+    {
+        if(brushEllipseItem)
+        {
+            scene.removeItem(brushEllipseItem);
+            delete brushEllipseItem;
+            brushEllipseItem = nullptr;
+        }
+    }
 }
 
 void MainWindow::on_actionTubeRemover_toggled(bool arg1)

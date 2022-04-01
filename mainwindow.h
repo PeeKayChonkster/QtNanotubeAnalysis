@@ -33,12 +33,13 @@ public:
     void startAutoAnalysis();
     void startManualAnalysis(float threshold);
 
+    void setBrushRadius(float radius);
+    float getBrushRadius() const;
+
     friend class ManualAnalysisConfig;
     friend class MyGraphicsView;
 
     using RulerPair = QPair<QGraphicsLineItem*, QGraphicsProxyWidget*>;
-
-    float brushRadius = 7.0f;
 
 private slots:
     void on_actionOpen_image_triggered();
@@ -91,6 +92,7 @@ private:
     QGraphicsPixmapItem* currImgPixmapItem = nullptr;
     QGraphicsPixmapItem* maskPixmapItem = nullptr;
     QGraphicsPixmapItem* tubeMaskPixmapItem = nullptr;
+    QGraphicsEllipseItem* brushEllipseItem = nullptr;
     AutoAnalysisConfig autoAnalysisConfig;
     ManualAnalysisConfig manualAnalysisConfig;
     QGraphicsScene scene;
@@ -102,9 +104,12 @@ private:
     std::vector<RulerPair> rulerLineItems;
     std::optional<QPointF> firstRulerLinePoint = std::nullopt;
     QPen rulerLinePen;
+    float brushRadius = 7.0f;
 
     // constants
     const QColor rulerLineColor = QColorConstants::Blue;
+    const QColor brushCursorColor = QColor(255, 255, 0, 200);
+    const float brushCursorCircleWidthFactor = 0.02;
     const uint rulerLIneWidth = 2u;
     const QString rulerLabelBgColor = "rgba(0,0,0,0.7);";
     const Qt::MouseButton actionButton = Qt::LeftButton;
