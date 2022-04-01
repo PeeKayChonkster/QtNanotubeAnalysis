@@ -106,6 +106,7 @@ private:
     const uint rulerLIneWidth = 2u;
     const QString rulerLabelBgColor = "rgba(0,0,0,0.7);";
     const Qt::MouseButton actionButton = Qt::LeftButton;
+    const float brushRadius = 7.0f;
 
     // flags
     bool currImgVisible = true;

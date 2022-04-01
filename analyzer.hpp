@@ -27,7 +27,7 @@ private:
     QImage tubeMask;
     std::vector<Nanotube> nanotubes;
 
-    std::vector<Point> checkPixel(int x, int y, bool* checkArray);
+    std::vector<ImgPoint> checkPixel(int x, int y, bool* checkArray);
     void setProgress(int prog);
 
     bool analysisCancelled = false;
@@ -60,6 +60,7 @@ public:
     float getDensity();
     bool areTubesCalculated() const;
     void cancelAnalysis();
+    std::vector<ImgPoint> getPointsInRadius(Point<float> center, float radius) const;
 
 
     void resetAll();

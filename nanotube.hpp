@@ -3,31 +3,45 @@
 #include <vector>
 #include <cinttypes>
 #include <QPoint>
+#include <cmath>
 
 namespace nano
 {
 
+template<class T>
 struct Point
 {
-    uint16_t x;
-    uint16_t y;
+    T x;
+    T y;
 
     Point() = default;
-    Point(uint16_t x, uint16_t y): x(x), y(y) {};
+    Point(T x, T y): x(x), y(y) {};
+    Point(const QPoint& other) : x(other.x()), y(other.y()) {};
 
     Point operator+(const Point& rhs) const { return Point(x + rhs.x, y + rhs.y); }
     Point operator-(const Point& rhs) const { return Point(x - rhs.x, y - rhs.y); }
+    Point operator+(const T number) const { return Point(x + number, y + number); }
+    Point operator-(const T number) const { return *this + (-number); }
+    Point operator+=(const T number) { x += number; y += number; return *this; }
+    Point operator-=(const T number) { return *this += -number; }
     bool operator==(const QPoint& rhs) const { return x == rhs.x() && y == rhs.y(); }
+
+    operator QPoint() const { return QPoint(static_cast<int>(x), static_cast<int>(y)); }
+    operator Point<uint16_t>() { return Point<uint16_t>(x, y); }
+
+    inline float length() const { return std::sqrt(x * x + y * y); }
 };
+
+typedef Point<uint16_t> ImgPoint;
 
 struct Nanotube
 {
-    std::vector<Point> points;
+    std::vector<ImgPoint> points;
 
-    void addPoints(std::vector<Point>&& newPoints);
+    void addPoints(std::vector<ImgPoint>&& newPoints);
 
     Nanotube() = default;
-    Nanotube(std::vector<Point>&& points);
+    Nanotube(std::vector<ImgPoint>&& points);
 };
 
 } // namespace nano

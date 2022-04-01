@@ -69,7 +69,7 @@ void nano::Analyzer::scanMaskForTubes()
             setProgress((int)(idx / (float)numberOfPixels * 100.0f));
             if(!checkArray[idx])
             {
-                std::vector<Point> points = checkPixel(x, y, checkArray);
+                std::vector<ImgPoint> points = checkPixel(x, y, checkArray);
                 if(points.size() >= minPixelsInTube)
                 {
                     for(const auto& point : points)
@@ -85,17 +85,17 @@ void nano::Analyzer::scanMaskForTubes()
     delete[] checkArray;
 }
 
-std::vector<nano::Point> nano::Analyzer::checkPixel(int x, int y, bool* checkArray)
+std::vector<nano::ImgPoint> nano::Analyzer::checkPixel(int x, int y, bool* checkArray)
 {
-    std::stack<Point> pointsStack;
-    std::vector<Point> resultPoints;
+    std::stack<ImgPoint> pointsStack;
+    std::vector<ImgPoint> resultPoints;
 
-    Point start(x, y);
+    ImgPoint start(x, y);
     pointsStack.push(start);
     
     while(!pointsStack.empty())
     {
-        Point currPoint = pointsStack.top(); pointsStack.pop();
+        ImgPoint currPoint = pointsStack.top(); pointsStack.pop();
         int idx = currPoint.x + currPoint.y * mask.width();
 
         if(currPoint.x < mask.width() && currPoint.x >= 0 && currPoint.y < mask.height() && currPoint.y >= 0 && !checkArray[idx] && mask.pixelColor(currPoint.x, currPoint.y).alphaF())
@@ -103,7 +103,7 @@ std::vector<nano::Point> nano::Analyzer::checkPixel(int x, int y, bool* checkArr
             checkArray[idx] = true;
             resultPoints.push_back(currPoint);
 
-            Point adjPoint;
+            ImgPoint adjPoint;
 
             adjPoint = currPoint;
             adjPoint.x += 1u;
@@ -237,7 +237,7 @@ void nano::Analyzer::addTubeAtPos(QPoint pos)
             // search for pos in existing nanotubes
             for(const Nanotube& tube : nanotubes)
             {
-                for(const nano::Point& p : tube.points)
+                for(const nano::ImgPoint& p : tube.points)
                 {
                     if(p == pos) return;
                 }
@@ -247,7 +247,7 @@ void nano::Analyzer::addTubeAtPos(QPoint pos)
             // pos can be added as the new nanotube
             uint32_t numberOfPixels = targetImg->width() * targetImg->height();
             bool* checkArray = new bool[numberOfPixels] { false };
-            std::vector<Point> points = checkPixel(pos.x(), pos.y(), checkArray);
+            std::vector<ImgPoint> points = checkPixel(pos.x(), pos.y(), checkArray);
             for(const auto& point : points)
             {
                 tubeMask.setPixelColor(point.x, point.y, tubeMaskColorPos);
@@ -272,7 +272,7 @@ void nano::Analyzer::removeTubeAtPos(QPoint pos)
                 {
                     if(nanotubes[i].points[j] == pos)
                     {
-                        for(const Point& p : nanotubes[i].points)
+                        for(const ImgPoint& p : nanotubes[i].points)
                         {
                             tubeMask.setPixelColor(p.x, p.y, maskColorNeg);
                         }
@@ -290,7 +290,11 @@ void nano::Analyzer::paintMaskAtPos(QPoint pos, float radius)
 {
     if(!mask.isNull())
     {
-        mask.setPixelColor(pos, maskColorPos);
+        std::vector<ImgPoint> points(getPointsInRadius(pos, radius));
+        for(const ImgPoint& point : points)
+        {
+            mask.setPixelColor(point, maskColorPos);
+        }
     }
 }
 
@@ -298,7 +302,11 @@ void nano::Analyzer::eraseMaskAtPos(QPoint pos, float radius)
 {
     if(!mask.isNull())
     {
-        mask.setPixelColor(pos, maskColorNeg);
+        std::vector<ImgPoint> points(getPointsInRadius(pos, radius));
+        for(const ImgPoint& point : points)
+        {
+            mask.setPixelColor(point, maskColorNeg);
+        }
     }
 }
 
@@ -356,4 +364,21 @@ bool nano::Analyzer::areTubesCalculated() const
 void nano::Analyzer::cancelAnalysis()
 {
     analysisCancelled = true;
+}
+
+std::vector<nano::ImgPoint> nano::Analyzer::getPointsInRadius(Point<float> center, float radius) const
+{
+    std::vector<ImgPoint> points;
+    QRect rect(center.x - radius, center.y - radius, 2.0f * radius, 2.0f * radius);
+    center -= 0.5f;
+    for(int j = rect.top(); j < rect.bottom(); ++j)
+    {
+        for(int i = rect.left(); i < rect.right(); ++i)
+        {
+            if(i < 0 || i >= targetImg->width() || j < 0 || j >= targetImg->height()) continue;
+            Point<float> point(i, j);
+            if(std::ceil((point - center).length()) < radius) points.push_back(std::move(point));
+        }
+    }
+    return std::move(points);
 }

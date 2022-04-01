@@ -109,6 +109,7 @@ void MainWindow::fastOpenImage()
 {
     currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
     tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
+    tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
     currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     analyzer.setTargetImg(&currImg);
     setMask();
@@ -210,23 +211,19 @@ void MainWindow::removeTubeAtPos(QPoint pos)
 
 void MainWindow::paintMaskAtPos(QPoint pos)
 {
-    // TBI
     if(!currImg.isNull())
     {
         if(!mask) setMask();
-        qDebug() << "Painting mask at pos: " << pos;
-        analyzer.paintMaskAtPos(pos);
+        analyzer.paintMaskAtPos(pos, brushRadius);
         renderImages();
     }
 }
 
 void MainWindow::eraseMaskAtPos(QPoint pos)
 {
-    // TBI
     if(!currImg.isNull())
     {
-        qDebug() << "Erasing mask at pos: " << pos;
-        analyzer.eraseMaskAtPos(pos);
+        analyzer.eraseMaskAtPos(pos, brushRadius);
         renderImages();
     }
 }

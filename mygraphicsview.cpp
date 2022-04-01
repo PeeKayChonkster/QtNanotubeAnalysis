@@ -11,6 +11,11 @@ MyGraphicsView::MyGraphicsView(QWidget* parent) : QGraphicsView(parent)
     setRenderHint(QPainter::Antialiasing, true);
 }
 
+float MyGraphicsView::getScale() const
+{
+    return currScale;
+}
+
 void MyGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     //qDebug() << "Press event";
@@ -82,6 +87,7 @@ void MyGraphicsView::wheelEvent(QWheelEvent *event)
     }
     QPointF viewportPos = event->position();
     QPointF scenePos = mapToScene(QPoint(event->position().x(), event->position().y()));
+    currScale *= factor;
     scale(factor, factor);
     QPointF deltaViewportPos = viewportPos - QPointF(viewport()->width() / 2.0, viewport()->height() / 2.0);
     QPointF viewportCenter = mapFromScene(scenePos) - deltaViewportPos;

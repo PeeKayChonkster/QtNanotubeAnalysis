@@ -1,9 +1,9 @@
 #include "nanotube.hpp"
 
 
-nano::Nanotube::Nanotube(std::vector<Point>&& points) : points(points) {}
+nano::Nanotube::Nanotube(std::vector<ImgPoint>&& points) : points(points) {}
 
-void nano::Nanotube::addPoints(std::vector<Point>&& newPoints)
+void nano::Nanotube::addPoints(std::vector<ImgPoint>&& newPoints)
 {
     if(!newPoints.empty())
     {

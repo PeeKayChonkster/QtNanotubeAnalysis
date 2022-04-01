@@ -10,10 +10,12 @@ class MyGraphicsView : public QGraphicsView {
 public:
     MyGraphicsView(QWidget* parent);
 
+    float getScale() const;
 private:
     bool pressingDragButton = false;
     const Qt::MouseButton dragButton = Qt::RightButton;
     const float zoomDelta = 1.05f;
+    float currScale = 1.0f;
 
     bool eventFilter(QObject *object, QEvent *event) override;
 
