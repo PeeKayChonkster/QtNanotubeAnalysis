@@ -27,8 +27,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    Console console;
-
     void startAutoAnalysis();
     void startManualAnalysis(float threshold);
     void renderImages();
@@ -53,6 +51,8 @@ public:
     uint16_t getMinPixelInTube() const;
 
     using RulerPair = QPair<QGraphicsLineItem*, QGraphicsProxyWidget*>;
+
+    friend class Tools;
 
 private slots:
     void on_actionOpen_image_triggered();
@@ -95,6 +95,7 @@ protected:
 private:
     Ui::MainWindow *ui;
     nano::Analyzer analyzer;
+    Console console;
     QImage currImg;
     const QImage* mask = nullptr;
     const QImage* tubeMask = nullptr;

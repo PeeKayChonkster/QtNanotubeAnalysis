@@ -29,7 +29,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *event)
         emit si_mousePressLeft(event->pos());
     }
 
-    tools::getMainWindow()->mousePressEventGV(event);
+    Tools::getMainWindow()->mousePressEventGV(event);
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
@@ -41,7 +41,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
         pressingDragButton = false;
     }
 
-    tools::getMainWindow()->mouseReleaseEventGV(event);
+    Tools::getMainWindow()->mouseReleaseEventGV(event);
 }
 
 void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
@@ -56,7 +56,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
     }
     lastPos = event->pos();
 
-    tools::getMainWindow()->mouseMoveEventGV(event);
+    Tools::getMainWindow()->mouseMoveEventGV(event);
 }
 
 void MyGraphicsView::wheelEvent(QWheelEvent *event)

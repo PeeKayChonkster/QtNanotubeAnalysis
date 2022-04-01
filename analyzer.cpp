@@ -158,7 +158,7 @@ void nano::Analyzer::startExtremumAnalysis()
     uint8_t stopFlag = 0u;
     uint32_t currNumberOfTubes = nanotubes.size();
     uint32_t prevNumberOfTubes = currNumberOfTubes;
-    tools::print("Threshold = " + tools::floatToString(threshold, 3u) + "; Nanotubes = " + std::to_string(currNumberOfTubes));
+    Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Nanotubes = " + std::to_string(currNumberOfTubes));
     while(true)
     {
         if(analysisCancelled)
@@ -168,7 +168,7 @@ void nano::Analyzer::startExtremumAnalysis()
             mask.fill(maskColorNeg);
             tubeMask.fill(maskColorNeg);
             nanotubes.clear();
-            tools::print("<<<<< Analysis cancelled >>>>>", QColorConstants::Red);
+            Tools::print("<<<<< Analysis cancelled >>>>>", QColorConstants::Red);
             return;
         }
 
@@ -176,7 +176,7 @@ void nano::Analyzer::startExtremumAnalysis()
         calculateMask(threshold);
         scanMaskForTubes();
         currNumberOfTubes = nanotubes.size();
-        tools::print("Threshold = " + tools::floatToString(threshold, 3u) + "; Nanotubes = " + std::to_string(currNumberOfTubes));
+        Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Nanotubes = " + std::to_string(currNumberOfTubes));
 
         if(currNumberOfTubes <= prevNumberOfTubes && currNumberOfTubes > 0u)    // derivative is negative
         {
@@ -196,13 +196,13 @@ void nano::Analyzer::startExtremumAnalysis()
             calculateMask(extremumThreshold);
             scanMaskForTubes();
 
-            tools::print("<<<<< Results >>>>>", QColorConstants::Green);
-            tools::print("Extremum threshold = " + tools::floatToString(extremumThreshold, 3u));
-            tools::print("Extremum number of tubes = " + std::to_string(extremumNumberOfTubes));
-            tools::print("Min pixels in nanotube = " + std::to_string(minPixelsInTube));
-            tools::print("Pixel size = " + tools::floatToString(pixelSize_nm, 3u) + " (nm)");
-            tools::print("Image area = " + tools::floatToString(getImageArea() * 0.000001, 3u) + " (mm2)");
-            tools::print("Nanotube density = " + tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
+            Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
+            Tools::print("Extremum threshold = " + Tools::floatToString(extremumThreshold, 3u));
+            Tools::print("Extremum number of tubes = " + std::to_string(extremumNumberOfTubes));
+            Tools::print("Min pixels in nanotube = " + std::to_string(minPixelsInTube));
+            Tools::print("Pixel size = " + Tools::floatToString(pixelSize_nm, 3u) + " (nm)");
+            Tools::print("Image area = " + Tools::floatToString(getImageArea() * 0.000001, 3u) + " (mm2)");
+            Tools::print("Nanotube density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
             return;
         }
         else                                                                    // resume analysis
@@ -219,13 +219,13 @@ void nano::Analyzer::startManualAnalysis(float threshold)
     nanotubes.clear();
     calculateMask(threshold);
     scanMaskForTubes();
-    tools::print("<<<<< Results >>>>>", QColorConstants::Green);
-    tools::print("Number of tubes = " + std::to_string(nanotubes.size()));
-    tools::print("Threshold = " + tools::floatToString(threshold, 3u));
-    tools::print("Min pixels in nanotube = " + std::to_string(minPixelsInTube));
-    tools::print("Pixel size = " + tools::floatToString(pixelSize_nm, 3u) + " (nm)");
-    tools::print("Image area = " + tools::floatToString(getImageArea() * 0.000001, 3u) + " (mm2)");
-    tools::print("Nanotube density = " + tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
+    Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
+    Tools::print("Number of tubes = " + std::to_string(nanotubes.size()));
+    Tools::print("Threshold = " + Tools::floatToString(threshold, 3u));
+    Tools::print("Min pixels in nanotube = " + std::to_string(minPixelsInTube));
+    Tools::print("Pixel size = " + Tools::floatToString(pixelSize_nm, 3u) + " (nm)");
+    Tools::print("Image area = " + Tools::floatToString(getImageArea() * 0.000001, 3u) + " (mm2)");
+    Tools::print("Nanotube density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
 void nano::Analyzer::addTubeAtPos(QPoint pos)
@@ -253,7 +253,7 @@ void nano::Analyzer::addTubeAtPos(QPoint pos)
                 tubeMask.setPixelColor(point.x, point.y, tubeMaskColorPos);
             }
             nanotubes.push_back(std::move(points));
-            tools::print("Added nanotube; Number of tubes: " + std::to_string(nanotubes.size()));
+            Tools::print("Added nanotube; Number of tubes: " + std::to_string(nanotubes.size()));
             delete[] checkArray;
         }
     }
@@ -277,7 +277,7 @@ void nano::Analyzer::removeTubeAtPos(QPoint pos)
                             tubeMask.setPixelColor(p.x, p.y, maskColorNeg);
                         }
                         nanotubes.erase(nanotubes.begin() + i);
-                        tools::print("Removed tube. Remaining tubes: " + std::to_string(nanotubes.size()));
+                        Tools::print("Removed tube. Remaining tubes: " + std::to_string(nanotubes.size()));
                         return;
                     }
                 }

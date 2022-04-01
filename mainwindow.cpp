@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
 
-    tools::init(this);
+    Tools::init(this);
 
 
 
@@ -164,7 +164,7 @@ void MainWindow::on_actionOpen_image_triggered()
 //    setTubeMask();
 //    resize(currImg.width(), currImg.height());
 //    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
-//    tools::print("Loaded image file: " + fileName);
+//    Tools::print("Loaded image file: " + fileName);
 
     // DEBUG //
     fastOpenImage();
@@ -174,8 +174,8 @@ void MainWindow::on_actionOpen_image_triggered()
 void MainWindow::fastOpenImage()
 {
     currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
-    tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
-    tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
+    Tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
+    Tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
     currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     analyzer.setTargetImg(&currImg);
     mask = analyzer.getMask();

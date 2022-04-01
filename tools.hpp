@@ -6,16 +6,16 @@
 #include <QColor>
 #include "mainwindow.h"
 
-namespace tools
+class Tools
 {
-static MainWindow* mw= nullptr;
-static bool initialized = false;
-
-void init(MainWindow* mainWindow);
-std::string floatToString(float f, uint8_t precision);
-void print(std::string line, QColor colorj = QColorConstants::White);
-MainWindow* getMainWindow();
-
-}   // namespace tools
+private:
+    inline static MainWindow* mw= nullptr;
+    inline static bool initialized = false;
+public:
+    static void init(MainWindow* mainWindow);
+    static std::string floatToString(float f, uint8_t precision);
+    static void print(std::string line, QColor colorj = QColorConstants::White);
+    static MainWindow* getMainWindow();
+};
 
 #endif // TOOLS_HPP
