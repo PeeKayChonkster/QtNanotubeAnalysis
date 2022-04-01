@@ -34,14 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     tools::init(this);
 
-    progressDialog = new QProgressDialog("Calculating", "Cancel", 0, 100, this);
-    progressDialog->setMinimumDuration(0);
-    progressDialog->setMinimumWidth(400);
-    progressDialog->setFixedSize(progressDialog->size());
-    progressDialog->setWindowModality(Qt::WindowModal);
-    progressDialog->setAutoClose(false);
-    progressDialog->setAutoReset(false);
-    progressDialog->close();
+
 
     ui->graphicsView->verticalScrollBar()->installEventFilter(this);
     ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -141,6 +134,17 @@ void MainWindow::clearGraphicsView()
 
 void MainWindow::startProgressDialog()
 {
+    if(!progressDialog)
+    {
+        progressDialog = new QProgressDialog("Calculating", "Cancel", 0, 100, this);
+        progressDialog->setMinimumDuration(0);
+        progressDialog->setMinimumWidth(400);
+        progressDialog->setFixedSize(progressDialog->size());
+        progressDialog->setWindowModality(Qt::WindowModal);
+        progressDialog->setAutoClose(false);
+        progressDialog->setAutoReset(false);
+        connect(progressDialog, &QProgressDialog::canceled, this, &MainWindow::sl_analysis_canceled);
+    }
     QSize screenSize = QApplication::primaryScreen()->availableSize();
     progressDialog->move((screenSize.width() - progressDialog->width()) / 2, (screenSize.height() - progressDialog->height()) / 2);
     progressDialog->show();
@@ -411,10 +415,16 @@ void MainWindow::sl_progress_changed(int progress)
     progressDialog->setValue(progress);
 }
 
+void MainWindow::sl_analysis_canceled()
+{
+    qDebug("Here");
+    analyzer.cancelAnalysis();
+}
+
 void MainWindow::sl_worker_finished()
 {
     futureWatcher.waitForFinished();
-    progressDialog->close();
+    progressDialog->hide();
     setMask();
     setTubeMask();
     renderImages();

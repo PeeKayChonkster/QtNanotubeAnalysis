@@ -19,20 +19,20 @@ Console::~Console()
 
 void Console::print(QString line, QColor textColor)
 {
-    ui->textBrowser->setTextColor(textColor);
-    ui->textBrowser->append(line);
-    ui->textBrowser->ensureCursorVisible();
+    ui->textEdit->setTextColor(textColor);
+    ui->textEdit->append(line);
+    ui->textEdit->ensureCursorVisible();
 }
 
 void Console::on_actionClear_triggered()
 {
-    ui->textBrowser->clear();
+    ui->textEdit->clear();
 }
 
 
 void Console::on_actionSave_to_file_triggered()
 {
-    QTextDocument* textDoc = ui->textBrowser->document();
+    QTextDocument* textDoc = ui->textEdit->document();
     QString text = textDoc->toPlainText();
     QString path = QFileDialog::getSaveFileName(this, "Save to file", ".", "Text file (*.txt)");
     if(!path.isEmpty())

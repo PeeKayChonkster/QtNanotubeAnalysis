@@ -49,6 +49,8 @@ private slots:
 
     void sl_progress_changed(int progress);
 
+    void sl_analysis_canceled();
+
     void on_actionStart_manual_analysis_triggered();
 
     void on_actionClear_all_ruler_lines_triggered();

@@ -34,12 +34,12 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QTextBrowser" name="textBrowser">
-      <property name="enabled">
-       <bool>true</bool>
+     <widget class="QTextEdit" name="textEdit">
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
       </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
      </widget>
     </item>

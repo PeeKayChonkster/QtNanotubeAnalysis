@@ -165,7 +165,8 @@ void nano::Analyzer::startExtremumAnalysis()
         {
             analysisCancelled = false;
             setProgress(0);
-            mask = QImage();
+            mask.fill(maskColorNeg);
+            tubeMask.fill(maskColorNeg);
             nanotubes.clear();
             tools::print("<<<<< Analysis cancelled >>>>>", QColorConstants::Red);
             return;
@@ -285,7 +286,7 @@ void nano::Analyzer::removeTubeAtPos(QPoint pos)
     }
 }
 
-void nano::Analyzer::paintMaskAtPos(QPoint pos)
+void nano::Analyzer::paintMaskAtPos(QPoint pos, float radius)
 {
     if(!mask.isNull())
     {
@@ -293,7 +294,7 @@ void nano::Analyzer::paintMaskAtPos(QPoint pos)
     }
 }
 
-void nano::Analyzer::eraseMaskAtPos(QPoint pos)
+void nano::Analyzer::eraseMaskAtPos(QPoint pos, float radius)
 {
     if(!mask.isNull())
     {

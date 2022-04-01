@@ -51,8 +51,8 @@ public:
     void startManualAnalysis(float threshold);
     void addTubeAtPos(QPoint pos);
     void removeTubeAtPos(QPoint pos);
-    void paintMaskAtPos(QPoint pos);
-    void eraseMaskAtPos(QPoint pos);
+    void paintMaskAtPos(QPoint pos, float radius = 1.0f);
+    void eraseMaskAtPos(QPoint pos, float radius = 1.0f);
     const QImage* getMask() const;
     const QImage* getTubeMask() const;
     const std::vector<Nanotube>* getTubes() const;
