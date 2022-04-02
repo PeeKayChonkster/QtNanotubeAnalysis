@@ -87,6 +87,7 @@
     </property>
     <addaction name="actionStart_extremum_analysis"/>
     <addaction name="actionStart_manual_analysis"/>
+    <addaction name="actionAnalyze_current_mask"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -201,6 +202,11 @@
   <action name="actionImage_config">
    <property name="text">
     <string>Config</string>
+   </property>
+  </action>
+  <action name="actionAnalyze_current_mask">
+   <property name="text">
+    <string>Analyze current mask</string>
    </property>
   </action>
   <actiongroup name="toolsGroup">

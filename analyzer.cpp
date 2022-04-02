@@ -228,6 +228,19 @@ void nano::Analyzer::startManualAnalysis(float threshold)
     Tools::print("Nanotube density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
+void nano::Analyzer::startCurrentMaskAnalysis()
+{
+    setProgress(0);
+    nanotubes.clear();
+    scanMaskForTubes();
+    Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
+    Tools::print("Number of tubes = " + std::to_string(nanotubes.size()));
+    Tools::print("Min pixels in nanotube = " + std::to_string(minPixelsInTube));
+    Tools::print("Pixel size = " + Tools::floatToString(pixelSize_nm, 3u) + " (nm)");
+    Tools::print("Image area = " + Tools::floatToString(getImageArea() * 0.000001, 3u) + " (mm2)");
+    Tools::print("Nanotube density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
+}
+
 void nano::Analyzer::addTubeAtPos(QPoint pos)
 {
     if(!mask.isNull() && !tubeMask.isNull())

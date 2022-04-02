@@ -30,7 +30,7 @@ private:
     void showEvent(QShowEvent* event) override;
 
 private slots:
-    void accept()override;
+    void accept() override;
 };
 
 #endif // MANUALANALYSISCONFIG_H

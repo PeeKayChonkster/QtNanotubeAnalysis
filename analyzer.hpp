@@ -49,6 +49,7 @@ public:
     void scanMaskForTubes();
     void startExtremumAnalysis();
     void startManualAnalysis(float threshold);
+    void startCurrentMaskAnalysis();
     void addTubeAtPos(QPoint pos);
     void removeTubeAtPos(QPoint pos);
     void paintMaskAtPos(QPoint pos, float radius = 1.0f);

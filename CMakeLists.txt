@@ -32,6 +32,7 @@ set(PROJECT_SOURCES
         Resources.qrc
         mygraphicsview.h mygraphicsview.cpp
         configwindow.h configwindow.cpp configwindow.ui
+        currentmaskanalysisconfig.h currentmaskanalysisconfig.cpp currentmaskanalysisconfig.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

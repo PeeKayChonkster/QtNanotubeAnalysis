@@ -5,6 +5,7 @@
 #include "analyzer.hpp"
 #include "autoanalysisconfig.h"
 #include "manualanalysisconfig.h"
+#include "currentmaskanalysisconfig.h"
 #include "console.h"
 #include <QGraphicsScene>
 #include <QFutureWatcher>
@@ -29,8 +30,10 @@ public:
 
     void startAutoAnalysis();
     void startManualAnalysis(float threshold);
+    void startCurrentMaskAnalysis();
     void renderImages();
     void calculateMask(float threshold);
+
 
     // These work with MyGraphicsView mouse events
     void mouseMoveEventGV(QMouseEvent* event);
@@ -87,6 +90,8 @@ private slots:
 
     void on_actionImage_config_triggered();
 
+    void on_actionAnalyze_current_mask_triggered();
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 
@@ -105,6 +110,7 @@ private:
     QGraphicsEllipseItem* brushEllipseItem = nullptr;
     AutoAnalysisConfig autoAnalysisConfig;
     ManualAnalysisConfig manualAnalysisConfig;
+    CurrentMaskAnalysisConfig currentMaskAnalysisConfig;
     QGraphicsScene scene;
     QFutureWatcher<void> futureWatcher;
     QProgressDialog* progressDialog = nullptr;

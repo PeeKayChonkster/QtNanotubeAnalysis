@@ -15,6 +15,7 @@
 #include <QGraphicsPixmapItem>
 #include <QLabel>
 #include <QGraphicsProxyWidget>
+#include <currentmaskanalysisconfig.h>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
       console(this),
       autoAnalysisConfig(this),
       manualAnalysisConfig(this),
+      currentMaskAnalysisConfig(this),
       coordLabel(this),
       toolLabel(this),
       ui(new Ui::MainWindow)
@@ -78,6 +80,17 @@ void MainWindow::startManualAnalysis(float threshold)
     startProgressDialog();
     auto workerLambda = [this, threshold]() -> void {
         analyzer.startManualAnalysis(threshold);
+    };
+    futureWatcher.setFuture(QtConcurrent::run(workerLambda));
+}
+
+void MainWindow::startCurrentMaskAnalysis()
+{
+    console.print();
+    console.print("<<<<< Starting current mask analysis >>>>>", QColorConstants::Green);
+    startProgressDialog();
+    auto workerLambda = [this]() -> void {
+        analyzer.startCurrentMaskAnalysis();
     };
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }
@@ -341,6 +354,7 @@ void MainWindow::calculateMask(float threshold)
     renderImages();
 }
 
+
 void MainWindow::on_actionShow_console_triggered()
 {
     console.show();
@@ -473,6 +487,18 @@ void MainWindow::on_actionStart_manual_analysis_triggered()
     }
 }
 
+void MainWindow::on_actionAnalyze_current_mask_triggered()
+{
+    if(!currImg.isNull())
+    {
+        currentMaskAnalysisConfig.show();
+    }
+    else
+    {
+        QMessageBox::warning(this, "No image!", "There is no image to analyze!");
+    }
+}
+
 void MainWindow::sl_progress_changed(int progress)
 {
     progressDialog->setValue(progress);
@@ -585,4 +611,7 @@ void MainWindow::on_actionImage_config_triggered()
         QMessageBox::warning(this, "No image!", "There is no image to analyze!");
     }
 }
+
+
+
 
