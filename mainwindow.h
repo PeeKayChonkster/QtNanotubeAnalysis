@@ -31,8 +31,9 @@ public:
     void startAutoAnalysis();
     void startManualAnalysis(float threshold);
     void startCurrentMaskAnalysis();
-    void renderImages();
+    void updateTextures();
     void calculateMask(float threshold);
+    void clearMask();
 
 
     // These work with MyGraphicsView mouse events
@@ -93,6 +94,8 @@ private slots:
     void on_actionAnalyze_current_mask_triggered();
 
     void on_actionExit_triggered();
+
+    void on_actionClear_mask_triggered();
 
 protected:
     void closeEvent(QCloseEvent* event) override;

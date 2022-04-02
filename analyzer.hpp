@@ -46,6 +46,7 @@ public:
 
     void setTargetImg(const QImage* targetImg);
     void calculateMask(float threshold);
+    void clearMask();
     void scanMaskForTubes();
     void startExtremumAnalysis();
     void startManualAnalysis(float threshold);

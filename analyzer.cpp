@@ -50,6 +50,17 @@ void nano::Analyzer::calculateMask(float threshold)
     }
 }
 
+void nano::Analyzer::clearMask()
+{
+    for(int j = 0; j < mask.height(); ++j)
+    {
+        for(int i = 0; i < mask.width(); ++i)
+        {
+            mask.setPixelColor(i, j, maskColorNeg);
+        }
+    }
+}
+
 void nano::Analyzer::scanMaskForTubes()
 {
     if(!targetImg) throw PRIM_EXCEPTION("Trying to scan mask without target image.");

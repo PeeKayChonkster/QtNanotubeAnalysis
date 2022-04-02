@@ -107,6 +107,7 @@
     <addaction name="actionMaskBrush"/>
     <addaction name="actionMaskEraser"/>
     <addaction name="actionClear_all_ruler_lines"/>
+    <addaction name="actionClear_mask"/>
    </widget>
    <widget class="QMenu" name="menuConfig">
     <property name="title">
@@ -213,6 +214,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionClear_mask">
+   <property name="text">
+    <string>Clear mask</string>
    </property>
   </action>
   <actiongroup name="toolsGroup">

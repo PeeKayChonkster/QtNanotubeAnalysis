@@ -193,7 +193,7 @@ void MainWindow::fastOpenImage()
     analyzer.setTargetImg(&currImg);
     mask = analyzer.getMask();
     tubeMask = analyzer.getTubeMask();
-    renderImages();
+    updateTextures();
     resize(currImg.width(), currImg.height());
     scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
 }
@@ -266,7 +266,7 @@ void MainWindow::addTubeAtPos(QPoint pos)
     if(mask && tubeMask)
     {
         analyzer.addTubeAtPos(pos);
-        renderImages();
+        updateTextures();
     }
 }
 
@@ -275,7 +275,7 @@ void MainWindow::removeTubeAtPos(QPoint pos)
     if(mask && tubeMask)
     {
         analyzer.removeTubeAtPos(pos);
-        renderImages();
+        updateTextures();
     }
 }
 
@@ -284,7 +284,7 @@ void MainWindow::paintMaskAtPos(QPoint pos)
     if(!currImg.isNull())
     {
         analyzer.paintMaskAtPos(pos, brushRadius);
-        renderImages();
+        updateTextures();
     }
 }
 
@@ -293,7 +293,7 @@ void MainWindow::eraseMaskAtPos(QPoint pos)
     if(!currImg.isNull())
     {
         analyzer.eraseMaskAtPos(pos, brushRadius);
-        renderImages();
+        updateTextures();
     }
 }
 
@@ -317,7 +317,7 @@ void MainWindow::setActiveTool(Tool tool)
     toolLabel.setText(toolString.c_str());
 }
 
-void MainWindow::renderImages()
+void MainWindow::updateTextures()
 {
     if(!currImg.isNull() && currImgVisible)
     {
@@ -351,7 +351,13 @@ void MainWindow::renderImages()
 void MainWindow::calculateMask(float threshold)
 {
     analyzer.calculateMask(threshold);
-    renderImages();
+    updateTextures();
+}
+
+void MainWindow::clearMask()
+{
+    analyzer.clearMask();
+    updateTextures();
 }
 
 
@@ -514,7 +520,7 @@ void MainWindow::sl_worker_finished()
 {
     futureWatcher.waitForFinished();
     progressDialog->hide();
-    renderImages();
+    updateTextures();
 }
 
 
@@ -591,13 +597,13 @@ void MainWindow::on_actionTubeRemover_toggled(bool arg1)
 void MainWindow::on_actionShow_Hide_mask_toggled(bool arg1)
 {
     maskVisible = arg1;
-    renderImages();
+    updateTextures();
 }
 
 void MainWindow::on_actionShow_Hide_tube_mask_toggled(bool arg1)
 {
     tubeMaskVisible = arg1;
-    renderImages();
+    updateTextures();
 }
 
 void MainWindow::on_actionImage_config_triggered()
@@ -615,5 +621,10 @@ void MainWindow::on_actionImage_config_triggered()
 void MainWindow::on_actionExit_triggered()
 {
     QApplication::quit();
+}
+
+void MainWindow::on_actionClear_mask_triggered()
+{
+    clearMask();
 }
 
