@@ -80,6 +80,7 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_image"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuAnalyze">
     <property name="title">
@@ -207,6 +208,11 @@
   <action name="actionAnalyze_current_mask">
    <property name="text">
     <string>Analyze current mask</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
   <actiongroup name="toolsGroup">

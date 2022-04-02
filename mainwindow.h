@@ -92,6 +92,8 @@ private slots:
 
     void on_actionAnalyze_current_mask_triggered();
 
+    void on_actionExit_triggered();
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 

@@ -612,6 +612,8 @@ void MainWindow::on_actionImage_config_triggered()
     }
 }
 
-
-
+void MainWindow::on_actionExit_triggered()
+{
+    QApplication::quit();
+}
 
