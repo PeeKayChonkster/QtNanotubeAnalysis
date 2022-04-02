@@ -7,7 +7,7 @@
 #include <utility>
 #include "mainwindow.h"
 
-enum class DistanceUnit { pm, nm, mkm, mm, m, km };
+enum class DistanceUnit { pm, nm, um, mm, m, km };
 typedef std::pair<float, DistanceUnit> Distance;
 
 
