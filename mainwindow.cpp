@@ -17,7 +17,6 @@
 #include <QGraphicsProxyWidget>
 #include <currentmaskanalysisconfig.h>
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       console(this),
@@ -118,7 +117,21 @@ float MainWindow::getBrushRadius() const
 
 void MainWindow::setPixelSize(float size)
 {
-    if(size > 0.0f) analyzer.pixelSize_nm = size;
+    if(size > 0.0f)
+    {
+        analyzer.pixelSize_nm = size;
+
+        // adjust ruler line labels
+        for(RulerPair& pair : rulerLineItems)
+        {
+            float newLength = pair.first->line().length() * size;
+            QLabel* label = static_cast<QLabel*>(pair.second->widget());
+            DistanceUnit oldUnit = Tools::stringToDistanceUnit(Tools::splitString(label->text().toStdString(), ' ')[1]);
+            Distance distance = Tools::getRelevantDistance(newLength, oldUnit);
+            label->setText(QString::number(distance.first) + " " + std::string(NAMEOF_ENUM(distance.second)).c_str());
+            label->adjustSize();
+        }
+    }
 }
 
 float MainWindow::getPixelSize() const
@@ -168,28 +181,32 @@ uint16_t MainWindow::getMinPixelInTube() const
 
 void MainWindow::on_actionOpen_image_triggered()
 {
-//    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
-//    currImg.load(fileName);
-//    currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
-//    renderImages();
-//    analyzer.setTargetImg(&currImg);
-//    setMask();
-//    setTubeMask();
-//    resize(currImg.width(), currImg.height());
-//    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
-//    Tools::print("Loaded image file: " + fileName);
+    openImage();
+}
 
-    // DEBUG //
-    fastOpenImage();
-    ui->graphicsView->show();
+void MainWindow::openImage()
+{
+    //    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
+    //    currImg.load(fileName);
+    //    //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
+    //    renderImages();
+    //    analyzer.setTargetImg(&currImg);
+    //    setMask();
+    //    setTubeMask();
+    //    resize(currImg.width(), currImg.height());
+    //    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
+    //    Tools::print("Loaded image file: " + fileName);
+
+        // DEBUG //
+        fastOpenImage();
 }
 
 void MainWindow::fastOpenImage()
 {
     currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
-    Tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
+    Tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg", Colors::lime);
     Tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
-    currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
+    //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     analyzer.setTargetImg(&currImg);
     mask = analyzer.getMask();
     tubeMask = analyzer.getTubeMask();
@@ -238,14 +255,10 @@ void MainWindow::addRulerPoint(QPoint point)
     if(firstRulerLinePoint)
     {
         QLineF line(firstRulerLinePoint.value(), point);
-        float lineRealLength = line.length() * analyzer.pixelSize_nm;
-        QString unitOfMeasure = " nm";
-        if(lineRealLength > 1000.0f)
-        {
-            unitOfMeasure = " µm";
-            lineRealLength *= 0.001;
-        }
-        QLabel* label = new QLabel(QString::number(lineRealLength) + unitOfMeasure);
+        Distance distance = Tools::getRelevantDistance(line.length() * analyzer.pixelSize_nm, DistanceUnit::nm);
+        float lineRealLength = distance.first;
+        QString unitOfMeasure(std::string(NAMEOF_ENUM(distance.second)).c_str());
+        QLabel* label = new QLabel(QString::number(lineRealLength) + " " + unitOfMeasure);
         label->setStyleSheet("background-color: " + rulerLabelBgColor);
         label->move(line.center().toPoint());
         QGraphicsLineItem* sceneLine = scene.addLine(line, rulerLinePen);

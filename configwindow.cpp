@@ -9,6 +9,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Config");
     setLocale(QLocale::C);
+    setFixedSize(size());
     ui->brushSizeSlider->setMinimum(brushMinSize);
     ui->brushSizeSlider->setMaximum(brushMaxSize);
     ui->brushSizeInput->setMinimum(brushMinSize);

@@ -142,6 +142,7 @@ private:
     bool pressingActionButtonGV = false;
 
 
+    void openImage();
     void fastOpenImage(); // DEBUG
     void clearGraphicsView();
     void startProgressDialog();

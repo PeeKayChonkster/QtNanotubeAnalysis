@@ -9,6 +9,7 @@ ManualAnalysisConfig::ManualAnalysisConfig(QWidget *parent) :
 {
     ui->setupUi(this);
     setLocale(QLocale::C);
+    setFixedSize(size());
 }
 
 ManualAnalysisConfig::~ManualAnalysisConfig()

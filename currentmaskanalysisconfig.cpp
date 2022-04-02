@@ -9,6 +9,7 @@ CurrentMaskAnalysisConfig::CurrentMaskAnalysisConfig(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Current mask analysis config");
     setLocale(QLocale::C);
+    setFixedSize(size());
 }
 
 CurrentMaskAnalysisConfig::~CurrentMaskAnalysisConfig()

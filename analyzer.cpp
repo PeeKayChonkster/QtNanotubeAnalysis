@@ -37,7 +37,7 @@ void nano::Analyzer::calculateMask(float threshold)
     {
         for(int x = 0; x < targetImg->width(); ++x)
         {
-            float value = targetImg->pixelColor(x, y).redF();
+            float value = targetImg->pixelColor(x, y).lightnessF();
             if(value >= threshold)
             {
                 mask.setPixelColor(x, y, maskColorPos);
