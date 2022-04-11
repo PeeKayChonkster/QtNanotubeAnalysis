@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <QImage>
-#include "nanotube.hpp"
+#include "element.hpp"
 #include <functional>
 #include <QObject>
 
@@ -18,14 +18,14 @@ class Analyzer: public QObject
 
 private:
     const QColor maskColorPos = { 0, 230, 0, 150 };
-    const QColor tubeMaskColorPos = { 230, 0, 0, 150 };
+    const QColor elementMaskColorPos = { 230, 0, 0, 150 };
     const QColor maskColorNeg = { 0, 0, 0, 0 };
     const QImage::Format maskFormat = QImage::Format_RGBA8888;
 
     const QImage* targetImg = nullptr;
     QImage mask;
-    QImage tubeMask;
-    std::vector<Nanotube> nanotubes;
+    QImage elementMask;
+    std::vector<Element> elements;
 
     std::vector<ImgPoint> checkPixel(int x, int y, bool* checkArray);
     void setProgress(int prog);
@@ -40,27 +40,27 @@ public:
     float pixelSize_nm = 0.0f;
     float extremumDeltaStep = 0.02f;
     uint16_t extremumOverflowTolerance = 5;
-    uint16_t minPixelsInTube = 50;
+    uint16_t minPixelsInElement = 50;
     bool processFullRange = false;
 
 
     void setTargetImg(const QImage* targetImg);
     void calculateMask(float threshold);
     void clearMask();
-    void scanMaskForTubes();
+    void scanMaskForElements();
     void startExtremumAnalysis();
     void startManualAnalysis(float threshold);
     void startCurrentMaskAnalysis();
-    void addTubeAtPos(QPoint pos);
-    void removeTubeAtPos(QPoint pos);
+    void addElementAtPos(QPoint pos);
+    void removeElementAtPos(QPoint pos);
     void paintMaskAtPos(QPoint pos, float radius = 1.0f);
     void eraseMaskAtPos(QPoint pos, float radius = 1.0f);
     const QImage* getMask() const;
-    const QImage* getTubeMask() const;
-    const std::vector<Nanotube>* getTubes() const;
+    const QImage* getElementMask() const;
+    const std::vector<Element>* getElements() const;
     float getImageArea();
     float getDensity();
-    bool areTubesCalculated() const;
+    bool areElementsCalculated() const;
     void cancelAnalysis();
     std::vector<ImgPoint> getPointsInRadius(Point<float> center, float radius) const;
 

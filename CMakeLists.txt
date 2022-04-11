@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(QNanotubeAnalysis VERSION 0.1 LANGUAGES CXX)
+project(QElementAnalysis VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -21,8 +21,8 @@ set(PROJECT_SOURCES
         mainwindow.ui
         analyzer.cpp
         analyzer.hpp
-        nanotube.cpp
-        nanotube.hpp
+        element.cpp
+        element.hpp
         prim_exception.hpp
         tools.cpp
         tools.hpp
@@ -36,31 +36,31 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(QNanotubeAnalysis
+    qt_add_executable(QElementAnalysis
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET QNanotubeAnalysis APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#    set_property(TARGET QElementAnalysis APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
-        add_library(QNanotubeAnalysis SHARED
+        add_library(QElementAnalysis SHARED
             ${PROJECT_SOURCES}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
-        add_executable(QNanotubeAnalysis
+        add_executable(QElementAnalysis
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-target_link_libraries(QNanotubeAnalysis PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(QElementAnalysis PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-set_target_properties(QNanotubeAnalysis PROPERTIES
+set_target_properties(QElementAnalysis PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -69,5 +69,5 @@ set_target_properties(QNanotubeAnalysis PROPERTIES
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(QNanotubeAnalysis)
+    qt_finalize_executable(QElementAnalysis)
 endif()

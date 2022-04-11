@@ -34,14 +34,14 @@ struct Point
 
 typedef Point<uint16_t> ImgPoint;
 
-struct Nanotube
+struct Element
 {
     std::vector<ImgPoint> points;
 
     void addPoints(std::vector<ImgPoint>&& newPoints);
 
-    Nanotube() = default;
-    Nanotube(std::vector<ImgPoint>&& points);
+    Element() = default;
+    Element(std::vector<ImgPoint>&& points);
 };
 
 } // namespace nano

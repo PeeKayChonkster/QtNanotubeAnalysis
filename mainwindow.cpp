@@ -171,12 +171,12 @@ bool MainWindow::getProcessFullRange() const
 
 void MainWindow::setMinPixelInTube(uint16_t value)
 {
-    analyzer.minPixelsInTube = value;
+    analyzer.minPixelsInElement = value;
 }
 
 uint16_t MainWindow::getMinPixelInTube() const
 {
-    return analyzer.minPixelsInTube;
+    return analyzer.minPixelsInElement;
 }
 
 void MainWindow::on_actionOpen_image_triggered()
@@ -209,7 +209,7 @@ void MainWindow::fastOpenImage()
     //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     analyzer.setTargetImg(&currImg);
     mask = analyzer.getMask();
-    tubeMask = analyzer.getTubeMask();
+    tubeMask = analyzer.getElementMask();
     updateTextures();
     resize(currImg.width(), currImg.height());
     scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
@@ -278,7 +278,7 @@ void MainWindow::addTubeAtPos(QPoint pos)
 {
     if(mask && tubeMask)
     {
-        analyzer.addTubeAtPos(pos);
+        analyzer.addElementAtPos(pos);
         updateTextures();
     }
 }
@@ -287,7 +287,7 @@ void MainWindow::removeTubeAtPos(QPoint pos)
 {
     if(mask && tubeMask)
     {
-        analyzer.removeTubeAtPos(pos);
+        analyzer.removeElementAtPos(pos);
         updateTextures();
     }
 }
