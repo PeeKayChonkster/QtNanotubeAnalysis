@@ -103,7 +103,7 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionTubeAdder"/>
+    <addaction name="actionElementAdder"/>
     <addaction name="actionMaskBrush"/>
     <addaction name="actionMaskEraser"/>
     <addaction name="actionClear_all_ruler_lines"/>
@@ -149,8 +149,8 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionRuler"/>
-   <addaction name="actionTubeAdder"/>
-   <addaction name="actionTubeRemover"/>
+   <addaction name="actionElementAdder"/>
+   <addaction name="actionElementRemover"/>
    <addaction name="actionMaskBrush"/>
    <addaction name="actionMaskEraser"/>
   </widget>
@@ -237,7 +237,7 @@
      <string>Measure with ruler</string>
     </property>
    </action>
-   <action name="actionTubeAdder">
+   <action name="actionElementAdder">
     <property name="checkable">
      <bool>true</bool>
     </property>
@@ -246,13 +246,13 @@
       <normaloff>:/res/icons/plus.png</normaloff>:/res/icons/plus.png</iconset>
     </property>
     <property name="text">
-     <string>TubeAdder</string>
+     <string>ElementAdder</string>
     </property>
     <property name="toolTip">
-     <string>Add tube manually</string>
+     <string>Add element manually</string>
     </property>
    </action>
-   <action name="actionTubeRemover">
+   <action name="actionElementRemover">
     <property name="checkable">
      <bool>true</bool>
     </property>
@@ -261,10 +261,10 @@
       <normaloff>:/res/icons/minus.png</normaloff>:/res/icons/minus.png</iconset>
     </property>
     <property name="text">
-     <string>TubeRemover</string>
+     <string>ElementRemover</string>
     </property>
     <property name="toolTip">
-     <string>Remove tube manually</string>
+     <string>Remove element manually</string>
     </property>
    </action>
    <action name="actionMaskBrush">

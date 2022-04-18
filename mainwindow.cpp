@@ -169,12 +169,12 @@ bool MainWindow::getProcessFullRange() const
     return analyzer.processFullRange;
 }
 
-void MainWindow::setMinPixelInTube(uint16_t value)
+void MainWindow::setMinPixelInElement(uint16_t value)
 {
     analyzer.minPixelsInElement = value;
 }
 
-uint16_t MainWindow::getMinPixelInTube() const
+uint16_t MainWindow::getMinPixelInElement() const
 {
     return analyzer.minPixelsInElement;
 }
@@ -186,19 +186,19 @@ void MainWindow::on_actionOpen_image_triggered()
 
 void MainWindow::openImage()
 {
-    //    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
-    //    currImg.load(fileName);
-    //    //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
-    //    renderImages();
-    //    analyzer.setTargetImg(&currImg);
-    //    setMask();
-    //    setTubeMask();
-    //    resize(currImg.width(), currImg.height());
-    //    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
-    //    Tools::print("Loaded image file: " + fileName);
+    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
+    currImg.load(fileName);
+    //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
+    analyzer.setTargetImg(&currImg);
+    mask = analyzer.getMask();
+    elementMask = analyzer.getElementMask();
+    updateTextures();
+    resize(currImg.width(), currImg.height());
+    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
+    Tools::print("Loaded image file: " + fileName.toStdString(), Colors::green);
 
-        // DEBUG //
-        fastOpenImage();
+    // DEBUG //
+    //fastOpenImage();
 }
 
 void MainWindow::fastOpenImage()
@@ -209,7 +209,7 @@ void MainWindow::fastOpenImage()
     //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     analyzer.setTargetImg(&currImg);
     mask = analyzer.getMask();
-    tubeMask = analyzer.getElementMask();
+    elementMask = analyzer.getElementMask();
     updateTextures();
     resize(currImg.width(), currImg.height());
     scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
@@ -223,7 +223,7 @@ void MainWindow::clearGraphicsView()
         currImgPixmapItem = nullptr;
         currImg = QImage();
         mask = nullptr;
-        tubeMask = nullptr;
+        elementMask = nullptr;
         analyzer.resetAll();
         clearAllRulerLines();
     }
@@ -274,18 +274,18 @@ void MainWindow::addRulerPoint(QPoint point)
     }
 }
 
-void MainWindow::addTubeAtPos(QPoint pos)
+void MainWindow::addElementAtPos(QPoint pos)
 {
-    if(mask && tubeMask)
+    if(mask && elementMask)
     {
         analyzer.addElementAtPos(pos);
         updateTextures();
     }
 }
 
-void MainWindow::removeTubeAtPos(QPoint pos)
+void MainWindow::removeElementAtPos(QPoint pos)
 {
-    if(mask && tubeMask)
+    if(mask && elementMask)
     {
         analyzer.removeElementAtPos(pos);
         updateTextures();
@@ -350,14 +350,14 @@ void MainWindow::updateTextures()
         }
         maskPixmapItem = scene.addPixmap(QPixmap::fromImage(*mask));
     }
-    if(tubeMask && tubeMaskVisible)
+    if(elementMask && elementMaskVisible)
     {
-        if(tubeMaskPixmapItem)
+        if(  elementMaskPixmapItem)
         {
-            scene.removeItem(tubeMaskPixmapItem);
-            delete tubeMaskPixmapItem;
+            scene.removeItem(  elementMaskPixmapItem);
+            delete   elementMaskPixmapItem;
         }
-        tubeMaskPixmapItem = scene.addPixmap(QPixmap::fromImage(*tubeMask));
+          elementMaskPixmapItem = scene.addPixmap(QPixmap::fromImage(*  elementMask));
     }
 }
 
@@ -459,10 +459,10 @@ void MainWindow::mousePressEventGV(QMouseEvent *event)
                 addRulerPoint(scenePos);
                 break;
             case Tool::TubeAdder:
-                addTubeAtPos(scenePos);
+                addElementAtPos(scenePos);
                 break;
             case Tool::TubeRemover:
-                removeTubeAtPos(scenePos);
+                removeElementAtPos(scenePos);
                 break;
             case Tool::MaskBrush:
                 paintMaskAtPos(scenePos);
@@ -548,7 +548,7 @@ void MainWindow::on_actionClear_all_ruler_lines_triggered()
     clearAllRulerLines();
 }
 
-void MainWindow::on_actionTubeAdder_toggled(bool arg1)
+void MainWindow::on_actionElementAdder_toggled(bool arg1)
 {
     setActiveTool(arg1? Tool::TubeAdder : Tool::None);
 }
@@ -602,7 +602,7 @@ void MainWindow::on_actionMaskEraser_toggled(bool arg1)
     }
 }
 
-void MainWindow::on_actionTubeRemover_toggled(bool arg1)
+void MainWindow::on_actionElementRemover_toggled(bool arg1)
 {
     setActiveTool(arg1? Tool::TubeRemover : Tool::None);
 }
@@ -615,7 +615,7 @@ void MainWindow::on_actionShow_Hide_mask_toggled(bool arg1)
 
 void MainWindow::on_actionShow_Hide_tube_mask_toggled(bool arg1)
 {
-    tubeMaskVisible = arg1;
+      elementMaskVisible = arg1;
     updateTextures();
 }
 

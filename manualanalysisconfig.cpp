@@ -20,7 +20,7 @@ ManualAnalysisConfig::~ManualAnalysisConfig()
 void ManualAnalysisConfig::on_buttonBox_accepted()
 {
     Tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
-    Tools::getMainWindow()->setMinPixelInTube(ui->minPixelsInput->value());
+    Tools::getMainWindow()->setMinPixelInElement(ui->minPixelsInput->value());
     Tools::getMainWindow()->startManualAnalysis(ui->thresholdInput->value());
 }
 

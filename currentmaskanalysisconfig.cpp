@@ -20,14 +20,14 @@ CurrentMaskAnalysisConfig::~CurrentMaskAnalysisConfig()
 void CurrentMaskAnalysisConfig::on_buttonBox_accepted()
 {
     Tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
-    Tools::getMainWindow()->setMinPixelInTube(ui->minPixelsInput->value());
+    Tools::getMainWindow()->setMinPixelInElement(ui->minPixelsInput->value());
     Tools::getMainWindow()->startCurrentMaskAnalysis();
 }
 
 void CurrentMaskAnalysisConfig::showEvent(QShowEvent *event)
 {
     ui->pixelSizeInput->setValue(Tools::getMainWindow()->getPixelSize());
-    ui->minPixelsInput->setValue(Tools::getMainWindow()->getMinPixelInTube());
+    ui->minPixelsInput->setValue(Tools::getMainWindow()->getMinPixelInElement());
 }
 
 void CurrentMaskAnalysisConfig::accept()

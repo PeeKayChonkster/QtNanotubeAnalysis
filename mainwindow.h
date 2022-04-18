@@ -51,8 +51,8 @@ public:
     uint16_t getExtremumOverflowTolerance() const;
     void setProcessFullRange(bool value);
     bool getProcessFullRange() const;
-    void setMinPixelInTube(uint16_t value);
-    uint16_t getMinPixelInTube() const;
+    void setMinPixelInElement(uint16_t value);
+    uint16_t getMinPixelInElement() const;
 
     using RulerPair = QPair<QGraphicsLineItem*, QGraphicsProxyWidget*>;
 
@@ -77,13 +77,13 @@ private slots:
 
     void on_actionRuler_toggled(bool arg1);
 
-    void on_actionTubeAdder_toggled(bool arg1);
+    void on_actionElementAdder_toggled(bool arg1);
 
     void on_actionMaskBrush_toggled(bool arg1);
 
     void on_actionMaskEraser_toggled(bool arg1);
 
-    void on_actionTubeRemover_toggled(bool arg1);
+    void on_actionElementRemover_toggled(bool arg1);
 
     void on_actionShow_Hide_mask_toggled(bool arg1);
 
@@ -108,10 +108,10 @@ private:
     Console console;
     QImage currImg;
     const QImage* mask = nullptr;
-    const QImage* tubeMask = nullptr;
+    const QImage* elementMask = nullptr;
     QGraphicsPixmapItem* currImgPixmapItem = nullptr;
     QGraphicsPixmapItem* maskPixmapItem = nullptr;
-    QGraphicsPixmapItem* tubeMaskPixmapItem = nullptr;
+    QGraphicsPixmapItem* elementMaskPixmapItem = nullptr;
     QGraphicsEllipseItem* brushEllipseItem = nullptr;
     AutoAnalysisConfig autoAnalysisConfig;
     ManualAnalysisConfig manualAnalysisConfig;
@@ -138,7 +138,7 @@ private:
     // flags
     bool currImgVisible = true;
     bool maskVisible = true;
-    bool tubeMaskVisible = true;
+    bool elementMaskVisible = true;
     bool pressingActionButtonGV = false;
 
 
@@ -149,8 +149,8 @@ private:
     void addRulerPoint(QPoint point);
     void clearAllRulerLines();
     void setActiveTool(Tool tool);
-    void addTubeAtPos(QPoint pos);
-    void removeTubeAtPos(QPoint pos);
+    void addElementAtPos(QPoint pos);
+    void removeElementAtPos(QPoint pos);
     void paintMaskAtPos(QPoint pos);
     void eraseMaskAtPos(QPoint pos);
 };

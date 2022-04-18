@@ -29,7 +29,7 @@ void AutoAnalysisConfig::on_buttonBox_accepted()
      Tools::getMainWindow()->setExtremumDeltaStep(ui->deltaStepInput->value());
      Tools::getMainWindow()->setExtremumOverflowTolerance(ui->overflowToleranceInput->value());
      Tools::getMainWindow()->setProcessFullRange(ui->processFullRangeCheckbox->isChecked());
-     Tools::getMainWindow()->setMinPixelInTube(ui->minPixelsInput->value());
+     Tools::getMainWindow()->setMinPixelInElement(ui->minPixelsInput->value());
      Tools::getMainWindow()->startAutoAnalysis();
 }
 
