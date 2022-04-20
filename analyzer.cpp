@@ -1,6 +1,8 @@
 #include <stack>
 #include <iostream>
 #include <cassert>
+#include <algorithm>
+#include <limits>
 #include <mainwindow.h>
 #include "analyzer.hpp"
 #include "prim_exception.hpp"
@@ -29,13 +31,18 @@ void nano::Analyzer::setTargetImg(const QImage* targetImg)
     mask = QImage(targetImg->width(), targetImg->height(), maskFormat);
 }
 
-void nano::Analyzer::calculateMask(float threshold)
+void nano::Analyzer::calculateMask(float threshold, QRect area)
 {
     if(!targetImg) throw PRIM_EXCEPTION("Trying to calculate mask without target image.");
 
-    for(int y = 0; y < targetImg->height(); ++y)
+    if(area.isEmpty()) area = targetImg->rect();
+    mask = QImage(area.width(), area.height(), maskFormat);
+    elementMask = QImage(area.width(), area.height(), maskFormat);
+    clearMasks();
+
+    for(int y = 0; y < mask.height(); ++y)
     {
-        for(int x = 0; x < targetImg->width(); ++x)
+        for(int x = 0; x < mask.width(); ++x)
         {
             float value = targetImg->pixelColor(x, y).lightnessF();
             if(value >= threshold)
@@ -50,15 +57,11 @@ void nano::Analyzer::calculateMask(float threshold)
     }
 }
 
-void nano::Analyzer::clearMask()
+void nano::Analyzer::clearMasks()
 {
-    for(int j = 0; j < mask.height(); ++j)
-    {
-        for(int i = 0; i < mask.width(); ++i)
-        {
-            mask.setPixelColor(i, j, maskColorNeg);
-        }
-    }
+    mask.fill(maskColorNeg);
+    elementMask.fill(maskColorNeg);
+    elements.clear();
 }
 
 void nano::Analyzer::scanMaskForElements()
@@ -66,7 +69,6 @@ void nano::Analyzer::scanMaskForElements()
     if(!targetImg) throw PRIM_EXCEPTION("Trying to scan mask without target image.");
     if(mask.isNull()) throw PRIM_EXCEPTION("Trying to scan mask for tubes before creating mask.");
 
-    elementMask.fill(maskColorNeg);
     setProgress(0);
     elements.clear();
     uint32_t numberOfPixels = targetImg->width() * targetImg->height();
@@ -169,15 +171,14 @@ void nano::Analyzer::startExtremumAnalysis()
     uint8_t stopFlag = 0u;
     uint32_t currNumberOfElements = elements.size();
     uint32_t prevNumberOfElements = currNumberOfElements;
-    Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Nanotubes = " + std::to_string(currNumberOfElements));
+    Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Elements = " + std::to_string(currNumberOfElements));
     while(true)
     {
         if(analysisCancelled)
         {
             analysisCancelled = false;
             setProgress(0);
-            mask.fill(maskColorNeg);
-            elementMask.fill(maskColorNeg);
+            clearMasks();
             elements.clear();
             Tools::print("<<<<< Analysis cancelled >>>>>", QColorConstants::Red);
             return;
@@ -187,7 +188,7 @@ void nano::Analyzer::startExtremumAnalysis()
         calculateMask(threshold);
         scanMaskForElements();
         currNumberOfElements = elements.size();
-        Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Nanotubes = " + std::to_string(currNumberOfElements));
+        Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Elements = " + std::to_string(currNumberOfElements));
 
         if(currNumberOfElements <= prevNumberOfElements && currNumberOfElements > 0u)    // derivative is negative
         {
@@ -224,6 +225,49 @@ void nano::Analyzer::startExtremumAnalysis()
     
 }
 
+std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalysis(float deltaStep, QRect rect)
+{
+    if(!targetImg) throw PRIM_EXCEPTION("Trying to find nanotube extremum without target image.");
+    if(rect.isEmpty()) rect = targetImg->rect();
+    std::vector<std::tuple<float, uint, float>> results;
+    setProgress(0);
+    float threshold = 1.0f;
+    float extremumThreshold = 1.0f;
+    float area_mm2 = rect.width() * rect.height() * pixelSize_nm * pixelSize_nm * 0.000001;
+    calculateMask(threshold);
+    scanMaskForElements();
+    uint8_t stopFlag = 0u;
+    uint32_t currNumberOfElements = elements.size();
+    Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Elements = " + std::to_string(currNumberOfElements));
+    while(threshold > 0.0f)
+    {
+        if(analysisCancelled)
+        {
+            analysisCancelled = false;
+            setProgress(0);
+            mask.fill(maskColorNeg);
+            elementMask.fill(maskColorNeg);
+            elements.clear();
+            Tools::print("<<<<< Analysis cancelled >>>>>", QColorConstants::Red);
+            return std::vector<std::tuple<float, uint, float>>();
+        }
+
+        threshold -= deltaStep;
+        calculateMask(threshold, rect);
+        scanMaskForElements();
+        currNumberOfElements = elements.size();
+        results.push_back({ threshold, currNumberOfElements, currNumberOfElements / area_mm2 });
+        Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Elements = " + std::to_string(currNumberOfElements));
+    }
+
+    clearMasks();
+
+    Tools::print("<<<<< Analysis completed >>>>>", QColorConstants::Green);
+
+    return std::move(results);
+
+}
+
 void nano::Analyzer::startManualAnalysis(float threshold)
 {
     setProgress(0);
@@ -252,6 +296,59 @@ void nano::Analyzer::startCurrentMaskAnalysis()
     Tools::print("Element density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
+float nano::Analyzer::startAutoThresholdAnalysis()
+{
+    // TEMP
+    const uint divisionCount = 2u;
+    const float deltaStep = 0.02f;
+    bool horizontal = true;
+
+    const uint stepWidth = targetImg->width() / divisionCount;
+    const uint remainder = targetImg->width() % divisionCount;
+
+    std::vector<std::vector<std::tuple<float, uint, float>>> results;
+
+    for(int i = 0; i < divisionCount; ++i)
+    {
+        QRect area;
+        if(horizontal)
+        {
+            area.setX(i * stepWidth);
+            area.setY(0);
+            area.setWidth(stepWidth);
+            area.setHeight(targetImg->height());
+        }
+        else
+        {
+            area.setX(0);
+            area.setY(i * stepWidth);
+            area.setWidth(targetImg->width());
+            area.setHeight(stepWidth);
+        }
+
+        std::vector<std::tuple<float, uint, float>> range = startFullRangeAnalysis(deltaStep, area);
+        results.push_back(std::move(range));
+    }
+
+    float optimalThreshold = 1.0f;
+    float lastDifference = std::numeric_limits<float>::max();
+    for(int i = 0; i < results[0].size(); ++i)
+    {
+        std::vector<float> batch;
+        for(const auto& result : results) batch.push_back(std::get<2>(result[i]));
+        float difference = Tools::getAverageDifference(batch);
+        if(difference < lastDifference)
+        {
+            lastDifference = difference;
+            optimalThreshold = std::get<0>(results[0][i]);
+        }
+    }
+
+    Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
+    Tools::print("Optimal threshold = " + std::to_string(optimalThreshold));
+    return optimalThreshold;
+}
+
 void nano::Analyzer::addElementAtPos(QPoint pos)
 {
     if(!mask.isNull() && !elementMask.isNull())
@@ -277,7 +374,7 @@ void nano::Analyzer::addElementAtPos(QPoint pos)
                 elementMask.setPixelColor(point.x, point.y, elementMaskColorPos);
             }
             elements.push_back(std::move(points));
-            Tools::print("Added nanotube; Number of tubes: " + std::to_string(elements.size()));
+            Tools::print("Added element; Number of elements: " + std::to_string(elements.size()));
             delete[] checkArray;
         }
     }

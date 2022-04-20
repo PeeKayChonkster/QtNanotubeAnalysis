@@ -89,6 +89,9 @@
     <addaction name="actionStart_extremum_analysis"/>
     <addaction name="actionStart_manual_analysis"/>
     <addaction name="actionAnalyze_current_mask"/>
+    <addaction name="actionStart_auto_threshold_analysis"/>
+    <addaction name="actionStart_manual_threshold_analysis"/>
+    <addaction name="actionStart_full_range_analysis"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -107,7 +110,7 @@
     <addaction name="actionMaskBrush"/>
     <addaction name="actionMaskEraser"/>
     <addaction name="actionClear_all_ruler_lines"/>
-    <addaction name="actionClear_mask"/>
+    <addaction name="actionClear_masks"/>
    </widget>
    <widget class="QMenu" name="menuConfig">
     <property name="title">
@@ -216,9 +219,24 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionClear_mask">
+  <action name="actionClear_masks">
    <property name="text">
-    <string>Clear mask</string>
+    <string>Clear masks</string>
+   </property>
+  </action>
+  <action name="actionStart_auto_threshold_analysis">
+   <property name="text">
+    <string>Start auto threshold analysis</string>
+   </property>
+  </action>
+  <action name="actionStart_manual_threshold_analysis">
+   <property name="text">
+    <string>Start manual threshold analysis</string>
+   </property>
+  </action>
+  <action name="actionStart_full_range_analysis">
+   <property name="text">
+    <string>Start full range analysis</string>
    </property>
   </action>
   <actiongroup name="toolsGroup">

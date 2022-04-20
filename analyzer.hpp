@@ -6,6 +6,7 @@
 #include "element.hpp"
 #include <functional>
 #include <QObject>
+#include <tuple>
 
 class MainWindow;
 
@@ -45,12 +46,15 @@ public:
 
 
     void setTargetImg(const QImage* targetImg);
-    void calculateMask(float threshold);
-    void clearMask();
+    void calculateMask(float threshold, QRect area = QRect());
+    void clearMasks();
     void scanMaskForElements();
     void startExtremumAnalysis();
+    /// returns { threshold, numberOfElements, elementsDensity }
+    std::vector<std::tuple<float, uint, float>> startFullRangeAnalysis(float deltaStep, QRect area = QRect());
     void startManualAnalysis(float threshold);
     void startCurrentMaskAnalysis();
+    float startAutoThresholdAnalysis();
     void addElementAtPos(QPoint pos);
     void removeElementAtPos(QPoint pos);
     void paintMaskAtPos(QPoint pos, float radius = 1.0f);

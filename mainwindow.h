@@ -31,9 +31,12 @@ public:
     void startAutoAnalysis();
     void startManualAnalysis(float threshold);
     void startCurrentMaskAnalysis();
+    void startAutoThresholdAnalysis();
+    void startManualThresholdAnalysis();
+    void startFullRangeAnalysis();
     void updateTextures();
     void calculateMask(float threshold);
-    void clearMask();
+    void clearMasks();
 
 
     // These work with MyGraphicsView mouse events
@@ -95,7 +98,13 @@ private slots:
 
     void on_actionExit_triggered();
 
-    void on_actionClear_mask_triggered();
+    void on_actionClear_masks_triggered();
+
+    void on_actionStart_auto_threshold_analysis_triggered();
+
+    void on_actionStart_manual_threshold_analysis_triggered();
+
+    void on_actionStart_full_range_analysis_triggered();
 
 protected:
     void closeEvent(QCloseEvent* event) override;
@@ -153,5 +162,6 @@ private:
     void removeElementAtPos(QPoint pos);
     void paintMaskAtPos(QPoint pos);
     void eraseMaskAtPos(QPoint pos);
+    void writeCSVFile(const std::vector<std::tuple<float, uint, float>>& data);
 };
 #endif // MAINWINDOW_H

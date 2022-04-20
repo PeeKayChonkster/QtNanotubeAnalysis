@@ -3,6 +3,7 @@
 #include "tools.hpp"
 #include "mygraphicsview.h"
 #include "configwindow.h"
+#include "prim_exception.hpp"
 #include <nameof.hpp>
 #include <QFileDialog>
 #include <QPixmap>
@@ -16,6 +17,7 @@
 #include <QLabel>
 #include <QGraphicsProxyWidget>
 #include <currentmaskanalysisconfig.h>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -90,6 +92,36 @@ void MainWindow::startCurrentMaskAnalysis()
     startProgressDialog();
     auto workerLambda = [this]() -> void {
         analyzer.startCurrentMaskAnalysis();
+    };
+    futureWatcher.setFuture(QtConcurrent::run(workerLambda));
+}
+
+void MainWindow::startAutoThresholdAnalysis()
+{
+    console.print();
+    console.print("<<<<< Starting auto threshold analysis >>>>>", QColorConstants::Green);
+    startProgressDialog();
+    auto workerLambda = [this]() -> void {
+        analyzer.startAutoThresholdAnalysis();
+    };
+    futureWatcher.setFuture(QtConcurrent::run(workerLambda));
+}
+
+void MainWindow::startManualThresholdAnalysis()
+{
+
+}
+
+void MainWindow::startFullRangeAnalysis()
+{
+    // TEMP
+    const float deltaStep = 0.05f;
+    console.print();
+    console.print("<<<<< Starting full range analysis >>>>>", QColorConstants::Green);
+    startProgressDialog();
+    auto workerLambda = [this, deltaStep]() -> void {
+        std::vector<std::tuple<float, uint, float>> results = analyzer.startFullRangeAnalysis(deltaStep);
+        writeCSVFile(results);
     };
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }
@@ -310,6 +342,36 @@ void MainWindow::eraseMaskAtPos(QPoint pos)
     }
 }
 
+void MainWindow::writeCSVFile(const std::vector<std::tuple<float, uint, float>>& data)
+{
+    static const QString filePrefix = "table";
+    static const QString fileSuffix = ".csv";
+    uint fileNumber = 0;
+    QString fileName = filePrefix + fileSuffix;
+    QFile file(fileName);
+    while(file.exists())
+    {
+        fileName = filePrefix + QString::number(++fileNumber) + fileSuffix;
+        file.setFileName(fileName);
+    }
+    if(file.open(QIODevice::ReadWrite | QIODevice::Append))
+    {
+
+        QTextStream stream(&file);
+        stream << "Threshold,Number of elements,Density(1/mm2)\n";
+        for(const auto& chunk : data)
+        {
+            stream << std::get<0>(chunk) << ',' << std::get<1>(chunk) << ',' << std::get<2>(chunk) << '\n';
+        }
+        file.close();
+        Tools::print("Saved results table to " + fileName.toStdString() + " file.", Colors::lime);
+    }
+    else
+    {
+        throw PRIM_EXCEPTION("Could't open file with name:" + file.fileName().toStdString());
+    }
+}
+
 void MainWindow::clearAllRulerLines()
 {
     for(RulerPair& pair : rulerLineItems)
@@ -367,9 +429,9 @@ void MainWindow::calculateMask(float threshold)
     updateTextures();
 }
 
-void MainWindow::clearMask()
+void MainWindow::clearMasks()
 {
-    analyzer.clearMask();
+    analyzer.clearMasks();
     updateTextures();
 }
 
@@ -615,7 +677,7 @@ void MainWindow::on_actionShow_Hide_mask_toggled(bool arg1)
 
 void MainWindow::on_actionShow_Hide_tube_mask_toggled(bool arg1)
 {
-      elementMaskVisible = arg1;
+    elementMaskVisible = arg1;
     updateTextures();
 }
 
@@ -636,8 +698,40 @@ void MainWindow::on_actionExit_triggered()
     QApplication::quit();
 }
 
-void MainWindow::on_actionClear_mask_triggered()
+void MainWindow::on_actionClear_masks_triggered()
 {
-    clearMask();
+    clearMasks();
+}
+
+
+void MainWindow::on_actionStart_auto_threshold_analysis_triggered()
+{
+    if(!currImg.isNull())
+    {
+        startAutoThresholdAnalysis();
+    }
+    else
+    {
+        QMessageBox::warning(this, "No image!", "There is no image to analyze!");
+    }
+}
+
+
+void MainWindow::on_actionStart_manual_threshold_analysis_triggered()
+{
+    if(!currImg.isNull())
+    {
+        startManualThresholdAnalysis();
+    }
+    else
+    {
+        QMessageBox::warning(this, "No image!", "There is no image to analyze!");
+    }
+}
+
+
+void MainWindow::on_actionStart_full_range_analysis_triggered()
+{
+    startFullRangeAnalysis();
 }
 

@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <nameof.hpp>
 #include <sstream>
+#include <initializer_list>
 
 std::string Tools::floatToString(float f, uint8_t precision)
 {
@@ -92,4 +93,18 @@ DistanceUnit Tools::stringToDistanceUnit(const std::string& str)
             return (DistanceUnit)i;
     }
     return DistanceUnit::nm;
+}
+
+float Tools::getAverageDifference(const std::vector<float>& values)
+{
+    if(values.size() < 2) return *values.begin();
+    float summ = 0.0f;
+    for(int i = 0; i < values.size(); ++i)
+    {
+        for(int j = i + 1; j < values.size(); ++j)
+        {
+            summ += std::abs(values[i] - values[j]);
+        }
+    }
+    return summ / (values.size() * (values.size() - 1) + 0.5f);
 }
