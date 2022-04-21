@@ -106,7 +106,9 @@
     <property name="title">
      <string>Tools</string>
     </property>
+    <addaction name="actionRuler"/>
     <addaction name="actionElementAdder"/>
+    <addaction name="actionElementRemover"/>
     <addaction name="actionMaskBrush"/>
     <addaction name="actionMaskEraser"/>
     <addaction name="actionClear_all_ruler_lines"/>

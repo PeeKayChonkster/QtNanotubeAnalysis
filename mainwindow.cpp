@@ -17,7 +17,6 @@
 #include <QLabel>
 #include <QGraphicsProxyWidget>
 #include <currentmaskanalysisconfig.h>
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -358,6 +357,7 @@ void MainWindow::writeCSVFile(const std::vector<std::tuple<float, uint, float>>&
     {
 
         QTextStream stream(&file);
+        stream.setRealNumberPrecision(3);
         stream << "Threshold,Number of elements,Density(1/mm2)\n";
         for(const auto& chunk : data)
         {
