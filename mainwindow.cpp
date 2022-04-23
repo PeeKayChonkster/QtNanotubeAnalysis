@@ -97,13 +97,13 @@ void MainWindow::startCurrentMaskAnalysis()
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }
 
-void MainWindow::startThresholdAnalysis(float deltaStep)
+void MainWindow::startThresholdAnalysis(float deltaStep, uint divisionCount, bool horizontal)
 {
     console.print();
     console.print("<<<<< Starting threshold analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
-    auto workerLambda = [this, deltaStep]() -> void {
-        analyzer.startThresholdAnalysis(deltaStep);
+    auto workerLambda = [=]() -> void {
+        analyzer.startThresholdAnalysis(deltaStep, divisionCount, horizontal);
     };
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }

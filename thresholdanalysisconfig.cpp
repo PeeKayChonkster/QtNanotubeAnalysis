@@ -33,7 +33,9 @@ void ThresholdAnalysisConfig::on_buttonBox_accepted()
 
     Tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
     Tools::getMainWindow()->setMinPixelInElement(ui->minPixelsInput->value());
-    Tools::getMainWindow()->startThresholdAnalysis(ui->deltaStepInput->value());
+    Tools::getMainWindow()->startThresholdAnalysis(ui->deltaStepInput->value(),
+                                                   ui->divisionCountInput->value(),
+                                                   ui->divisionTypeCombobox->currentIndex() == 0);
 }
 
 void ThresholdAnalysisConfig::showEvent(QShowEvent *event)

@@ -306,14 +306,10 @@ void nano::Analyzer::startCurrentMaskAnalysis()
     Tools::print("Element density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
-float nano::Analyzer::startThresholdAnalysis(float deltaStep)
+float nano::Analyzer::startThresholdAnalysis(float deltaStep, uint divisionCount, bool horizontal)
 {
-    // TEMP
-    const uint divisionCount = 2u;
-    bool horizontal = true;
-
-    const uint stepWidth = targetImg->width() / divisionCount;
-    const uint remainder = targetImg->width() % divisionCount;
+    const uint stepWidth = horizontal? targetImg->width() / divisionCount : targetImg->height() / divisionCount;
+    const uint remainder = horizontal? targetImg->width() % divisionCount : targetImg->height() % divisionCount;
 
     std::vector<std::vector<std::tuple<float, uint, float>>> ranges;
 
