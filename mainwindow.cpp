@@ -96,7 +96,7 @@ void MainWindow::startCurrentMaskAnalysis()
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }
 
-void MainWindow::startAutoThresholdAnalysis()
+void MainWindow::startThresholdAnalysis()
 {
     console.print();
     console.print("<<<<< Starting auto threshold analysis >>>>>", QColorConstants::Green);
@@ -105,11 +105,6 @@ void MainWindow::startAutoThresholdAnalysis()
         analyzer.startAutoThresholdAnalysis();
     };
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
-}
-
-void MainWindow::startManualThresholdAnalysis()
-{
-
 }
 
 void MainWindow::startFullRangeAnalysis(bool writeTable)
@@ -706,24 +701,11 @@ void MainWindow::on_actionClear_masks_triggered()
 }
 
 
-void MainWindow::on_actionStart_auto_threshold_analysis_triggered()
+void MainWindow::on_actionStart_threshold_analysis_triggered()
 {
     if(!currImg.isNull())
     {
         startAutoThresholdAnalysis();
-    }
-    else
-    {
-        QMessageBox::warning(this, "No image!", "There is no image to analyze!");
-    }
-}
-
-
-void MainWindow::on_actionStart_manual_threshold_analysis_triggered()
-{
-    if(!currImg.isNull())
-    {
-        startManualThresholdAnalysis();
     }
     else
     {

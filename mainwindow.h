@@ -32,8 +32,7 @@ public:
     void startAutoAnalysis();
     void startManualAnalysis(float threshold);
     void startCurrentMaskAnalysis();
-    void startAutoThresholdAnalysis();
-    void startManualThresholdAnalysis();
+    void startThresholdAnalysis();
     void startFullRangeAnalysis(bool writeTable);
     void updateTextures();
     void calculateMask(float threshold);
@@ -101,9 +100,7 @@ private slots:
 
     void on_actionClear_masks_triggered();
 
-    void on_actionStart_auto_threshold_analysis_triggered();
-
-    void on_actionStart_manual_threshold_analysis_triggered();
+    void on_actionStart_threshold_analysis_triggered();
 
     void on_actionStart_full_range_analysis_triggered();
 
