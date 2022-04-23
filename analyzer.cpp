@@ -44,7 +44,7 @@ void nano::Analyzer::calculateMask(float threshold, QRect area)
     {
         for(int x = 0; x < mask.width(); ++x)
         {
-            float value = targetImg->pixelColor(x, y).lightnessF();
+            float value = targetImg->pixelColor(x + area.x(), y + area.y()).lightnessF();
             if(value >= threshold)
             {
                 mask.setPixelColor(x, y, maskColorPos);
@@ -228,13 +228,18 @@ void nano::Analyzer::startExtremumAnalysis()
 std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalysis(float deltaStep, QRect rect)
 {
     if(!targetImg) throw PRIM_EXCEPTION("Trying to find nanotube extremum without target image.");
+    Tools::print("<<< Starting full range analysis >>>", Colors::lime);
+    Tools::print("Area: x=" + std::to_string(rect.x()) +
+                 "; y=" + std::to_string(rect.y()) +
+                 "; width=" + std::to_string(rect.width()) +
+                 "; height=" + std::to_string(rect.height()), Colors::gray);
     if(rect.isEmpty()) rect = targetImg->rect();
     std::vector<std::tuple<float, uint, float>> results;
     setProgress(0);
     float threshold = 1.0f;
     float extremumThreshold = 1.0f;
     float area_mm2 = rect.width() * rect.height() * pixelSize_nm * pixelSize_nm * 0.000001;
-    calculateMask(threshold);
+    calculateMask(threshold, rect);
     scanMaskForElements();
     uint8_t stopFlag = 0u;
     uint32_t currNumberOfElements = elements.size();
@@ -262,7 +267,7 @@ std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalys
 
     clearMasks();
 
-    Tools::print("<<<<< Analysis completed >>>>>", QColorConstants::Green);
+    Tools::print("<<<<< Full range analysis completed >>>>>", QColorConstants::Green);
 
     return std::move(results);
 
@@ -305,7 +310,7 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep)
     const uint stepWidth = targetImg->width() / divisionCount;
     const uint remainder = targetImg->width() % divisionCount;
 
-    std::vector<std::vector<std::tuple<float, uint, float>>> results;
+    std::vector<std::vector<std::tuple<float, uint, float>>> ranges;
 
     for(int i = 0; i < divisionCount; ++i)
     {
@@ -314,7 +319,7 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep)
         {
             area.setX(i * stepWidth);
             area.setY(0);
-            area.setWidth(stepWidth);
+            area.setWidth(i == divisionCount - 1? stepWidth + remainder : stepWidth);
             area.setHeight(targetImg->height());
         }
         else
@@ -322,29 +327,49 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep)
             area.setX(0);
             area.setY(i * stepWidth);
             area.setWidth(targetImg->width());
-            area.setHeight(stepWidth);
+            area.setHeight(i == divisionCount - 1? stepWidth + remainder : stepWidth);
         }
 
-        std::vector<std::tuple<float, uint, float>> range = startFullRangeAnalysis(deltaStep, area);
-        results.push_back(std::move(range));
+        std::vector<std::tuple<float, uint, float>> range(startFullRangeAnalysis(deltaStep, area));
+        ranges.push_back(std::move(range));
     }
 
-    float optimalThreshold = 1.0f;
-    float lastDifference = std::numeric_limits<float>::max();
-    for(int i = 0; i < results[0].size(); ++i)
+    std::vector<std::pair<float, float>> averageRange;
+    averageRange.reserve(ranges[0].size());
+    std::vector<std::pair<float, float>> averageDifferenceRange;
+    averageDifferenceRange.reserve(ranges[0].size());
+
+    // Calculate average range and average difference range
+    for(int i = 0; i < ranges[0].size(); ++i)
     {
         std::vector<float> batch;
-        for(const auto& result : results) batch.push_back(std::get<2>(result[i]));
-        float difference = Tools::getAverageDifference(batch);
-        if(difference < lastDifference)
+        batch.reserve(ranges.size());
+        for(int j = 0; j < ranges.size(); ++j)
         {
-            lastDifference = difference;
-            optimalThreshold = std::get<0>(results[0][i]);
+            batch.push_back(std::get<2>(ranges[j][i]));
+        }
+        averageRange.push_back({ std::get<0>(ranges[0][i]), Tools::getAverage(batch) });
+        averageDifferenceRange.push_back({ std::get<0>(ranges[0][i]), Tools::getAverageDifference(batch) });
+    }
+
+    // get max difference point between average and averageDifference
+    float maxDifference = 0.0f;
+    float optimalThreshold = 1.0f;
+    float optimalDensity = 0.0f;
+    for(int i = 0; i < averageRange.size(); ++i)
+    {
+        float difference = averageRange[i].second - averageDifferenceRange[i].second;
+        if(difference > maxDifference)
+        {
+            maxDifference = difference;
+            optimalThreshold = averageRange[i].first;
+            optimalDensity = averageRange[i].second;
         }
     }
 
     Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
-    Tools::print("Optimal threshold = " + std::to_string(optimalThreshold));
+    Tools::print("Optimal threshold = " + Tools::floatToString(optimalThreshold, 3));
+    Tools::print("Optimal density (1/mm2) = " + Tools::floatToString(optimalDensity, 3));
     return optimalThreshold;
 }
 
