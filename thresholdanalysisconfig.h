@@ -20,6 +20,8 @@ private slots:
 
 private:
     Ui::ThresholdAnalysisConfig *ui;
+
+    void showEvent(QShowEvent *event) override;
 };
 
 #endif // THRESHOLDANALYSISCONFIG_H

@@ -100,18 +100,16 @@ void MainWindow::startCurrentMaskAnalysis()
 void MainWindow::startThresholdAnalysis()
 {
     console.print();
-    console.print("<<<<< Starting auto threshold analysis >>>>>", QColorConstants::Green);
+    console.print("<<<<< Starting threshold analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
     auto workerLambda = [this]() -> void {
-        analyzer.startAutoThresholdAnalysis();
+        analyzer.startThresholdAnalysis();
     };
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }
 
-void MainWindow::startFullRangeAnalysis(bool writeTable)
+void MainWindow::startFullRangeAnalysis(float deltaStep, bool writeTable)
 {
-    // TEMP
-    const float deltaStep = 0.05f;
     console.print();
     console.print("<<<<< Starting full range analysis >>>>>", QColorConstants::Green);
     startProgressDialog();

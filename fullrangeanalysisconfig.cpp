@@ -1,6 +1,7 @@
 #include "fullrangeanalysisconfig.h"
 #include "ui_fullrangeanalysisconfig.h"
 #include "tools.hpp"
+#include <QMessageBox>
 
 FullRangeAnalysisConfig::FullRangeAnalysisConfig(QWidget *parent) :
     QDialog(parent),
@@ -19,8 +20,19 @@ FullRangeAnalysisConfig::~FullRangeAnalysisConfig()
 
 void FullRangeAnalysisConfig::on_buttonBox_accepted()
 {
+    if(ui->deltaStepInput->value() <= 0.0f)
+    {
+        QMessageBox::critical(this, "Cancelling", "Delta step shoud be only positive! Cancelling...");
+        return;
+    }
     Tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
     Tools::getMainWindow()->setMinPixelInElement(ui->minPixelsInput->value());
-    Tools::getMainWindow()->startFullRangeAnalysis(ui->createTableCheckbox->isChecked());
+    Tools::getMainWindow()->startFullRangeAnalysis(ui->deltaStepInput->value(), ui->createTableCheckbox->isChecked());
+}
+
+void FullRangeAnalysisConfig::showEvent(QShowEvent *event)
+{
+    ui->pixelSizeInput->setValue(Tools::getMainWindow()->getPixelSize());
+    ui->minPixelsInput->setValue(Tools::getMainWindow()->getMinPixelInElement());
 }
 

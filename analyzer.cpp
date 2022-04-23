@@ -296,7 +296,7 @@ void nano::Analyzer::startCurrentMaskAnalysis()
     Tools::print("Element density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
-float nano::Analyzer::startAutoThresholdAnalysis()
+float nano::Analyzer::startThresholdAnalysis()
 {
     // TEMP
     const uint divisionCount = 2u;

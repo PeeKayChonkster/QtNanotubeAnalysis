@@ -33,3 +33,9 @@ void ThresholdAnalysisConfig::on_buttonBox_accepted()
     }
 }
 
+void ThresholdAnalysisConfig::showEvent(QShowEvent *event)
+{
+    ui->pixelSizeInput->setValue(Tools::getMainWindow()->getPixelSize());
+    ui->minPixelsInput->setValue(Tools::getMainWindow()->getMinPixelInElement());
+}
+

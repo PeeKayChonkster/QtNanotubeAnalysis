@@ -20,6 +20,8 @@ private slots:
 
 private:
     Ui::FullRangeAnalysisConfig *ui;
+
+    void showEvent(QShowEvent *event) override;
 };
 
 #endif // FULLRANGEANALYSISCONFIG_H
