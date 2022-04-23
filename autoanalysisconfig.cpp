@@ -36,4 +36,5 @@ void AutoAnalysisConfig::on_buttonBox_accepted()
 void AutoAnalysisConfig::showEvent(QShowEvent *event)
 {
     ui->pixelSizeInput->setValue(Tools::getMainWindow()->getPixelSize());
+    ui->minPixelsInput->setValue(Tools::getMainWindow()->getMinPixelInElement());
 }

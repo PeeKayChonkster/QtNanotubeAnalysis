@@ -45,4 +45,5 @@ void ManualAnalysisConfig::on_thresholdInput_valueChanged(double arg1)
 void ManualAnalysisConfig::showEvent(QShowEvent *event)
 {
     ui->pixelSizeInput->setValue(Tools::getMainWindow()->getPixelSize());
+    ui->minPixelsInput->setValue(Tools::getMainWindow()->getMinPixelInElement());
 }
