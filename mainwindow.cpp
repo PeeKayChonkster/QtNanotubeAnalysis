@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
       manualAnalysisConfig(this),
       currentMaskAnalysisConfig(this),
       fullRangeAnalysisConfig(this),
+      thresholdAnalysisConfig(this),
       coordLabel(this),
       toolLabel(this),
       ui(new Ui::MainWindow)
@@ -705,7 +706,7 @@ void MainWindow::on_actionStart_threshold_analysis_triggered()
 {
     if(!currImg.isNull())
     {
-        startAutoThresholdAnalysis();
+        thresholdAnalysisConfig.exec();
     }
     else
     {

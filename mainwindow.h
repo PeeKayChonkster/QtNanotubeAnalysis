@@ -7,6 +7,7 @@
 #include "manualanalysisconfig.h"
 #include "currentmaskanalysisconfig.h"
 #include "fullrangeanalysisconfig.h"
+#include "thresholdanalysisconfig.h"
 #include "console.h"
 #include <QGraphicsScene>
 #include <QFutureWatcher>
@@ -124,6 +125,7 @@ private:
     ManualAnalysisConfig manualAnalysisConfig;
     CurrentMaskAnalysisConfig currentMaskAnalysisConfig;
     FullRangeAnalysisConfig fullRangeAnalysisConfig;
+    ThresholdAnalysisConfig thresholdAnalysisConfig;
     QGraphicsScene scene;
     QFutureWatcher<void> futureWatcher;
     QProgressDialog* progressDialog = nullptr;

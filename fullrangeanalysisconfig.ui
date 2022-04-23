@@ -48,6 +48,9 @@
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::PlusMinus</enum>
        </property>
+       <property name="decimals">
+        <number>3</number>
+       </property>
        <property name="maximum">
         <double>999999.000000000000000</double>
        </property>

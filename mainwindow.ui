@@ -89,8 +89,7 @@
     <addaction name="actionStart_extremum_analysis"/>
     <addaction name="actionStart_manual_analysis"/>
     <addaction name="actionAnalyze_current_mask"/>
-    <addaction name="actionStart_auto_threshold_analysis"/>
-    <addaction name="actionStart_manual_threshold_analysis"/>
+    <addaction name="actionStart_threshold_analysis"/>
     <addaction name="actionStart_full_range_analysis"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -226,14 +225,9 @@
     <string>Clear masks</string>
    </property>
   </action>
-  <action name="actionStart_auto_threshold_analysis">
+  <action name="actionStart_threshold_analysis">
    <property name="text">
-    <string>Start auto threshold analysis</string>
-   </property>
-  </action>
-  <action name="actionStart_manual_threshold_analysis">
-   <property name="text">
-    <string>Start manual threshold analysis</string>
+    <string>Start threshold analysis</string>
    </property>
   </action>
   <action name="actionStart_full_range_analysis">

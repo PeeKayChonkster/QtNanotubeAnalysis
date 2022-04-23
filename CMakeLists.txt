@@ -34,6 +34,7 @@ set(PROJECT_SOURCES
         configwindow.h configwindow.cpp configwindow.ui
         currentmaskanalysisconfig.h currentmaskanalysisconfig.cpp currentmaskanalysisconfig.ui
         fullrangeanalysisconfig.h fullrangeanalysisconfig.cpp fullrangeanalysisconfig.ui
+        thresholdanalysisconfig.h thresholdanalysisconfig.cpp thresholdanalysisconfig.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
