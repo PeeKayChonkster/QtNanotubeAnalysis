@@ -17,4 +17,12 @@ int main(int argc, char *argv[])
     {
         qDebug() << e.what().c_str();
     }
+    catch (QException& e)
+    {
+        qDebug() << e.what();
+    }
+    catch (std::exception& e)
+    {
+        qDebug() << e.what();
+    }
 }
