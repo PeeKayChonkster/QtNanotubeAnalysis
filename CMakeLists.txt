@@ -33,6 +33,7 @@ set(PROJECT_SOURCES
         mygraphicsview.h mygraphicsview.cpp
         configwindow.h configwindow.cpp configwindow.ui
         currentmaskanalysisconfig.h currentmaskanalysisconfig.cpp currentmaskanalysisconfig.ui
+        fullrangeanalysisconfig.h fullrangeanalysisconfig.cpp fullrangeanalysisconfig.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

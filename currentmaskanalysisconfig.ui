@@ -39,7 +39,7 @@
      <item row="1" column="0">
       <widget class="QLabel" name="minPixelsLabel">
        <property name="text">
-        <string>Min pixels in nanotube</string>
+        <string>Min pixels in element</string>
        </property>
       </widget>
      </item>
