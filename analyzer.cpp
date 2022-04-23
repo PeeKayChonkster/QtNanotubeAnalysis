@@ -27,8 +27,10 @@ nano::Analyzer::Analyzer(const QImage* targetImg):
 void nano::Analyzer::setTargetImg(const QImage* targetImg)
 {
     this->targetImg = targetImg;
-    elementMask = QImage(targetImg->width(), targetImg->height(), maskFormat);
     mask = QImage(targetImg->width(), targetImg->height(), maskFormat);
+    elementMask = QImage(targetImg->width(), targetImg->height(), maskFormat);
+    mask.fill(maskColorNeg);
+    elementMask.fill(maskColorNeg);
 }
 
 void nano::Analyzer::calculateMask(float threshold, QRect area)
@@ -208,6 +210,7 @@ void nano::Analyzer::startExtremumAnalysis()
             calculateMask(extremumThreshold);
             scanMaskForElements();
 
+            Tools::print("<<<<< Extremum analysis completed >>>>>", Colors::lime);
             Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
             Tools::print("Extremum threshold = " + Tools::floatToString(extremumThreshold, 3u));
             Tools::print("Extremum number of elements = " + std::to_string(extremumNumberOfTubes));
@@ -228,11 +231,11 @@ void nano::Analyzer::startExtremumAnalysis()
 std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalysis(float deltaStep, QRect rect)
 {
     if(!targetImg) throw PRIM_EXCEPTION("Trying to find nanotube extremum without target image.");
-    Tools::print("<<< Starting full range analysis >>>", Colors::lime);
+    Tools::print("<<<<< Starting full range analysis >>>>>", Colors::lime);
     Tools::print("Area: x=" + std::to_string(rect.x()) +
                  "; y=" + std::to_string(rect.y()) +
                  "; width=" + std::to_string(rect.width()) +
-                 "; height=" + std::to_string(rect.height()), Colors::gray);
+                 "; height=" + std::to_string(rect.height()), Colors::olive);
     if(rect.isEmpty()) rect = targetImg->rect();
     std::vector<std::tuple<float, uint, float>> results;
     setProgress(0);
@@ -279,6 +282,7 @@ void nano::Analyzer::startManualAnalysis(float threshold)
     elements.clear();
     calculateMask(threshold);
     scanMaskForElements();
+    Tools::print("<<<<< Manual analysis completed >>>>>", Colors::lime);
     Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
     Tools::print("Number of elements = " + std::to_string(elements.size()));
     Tools::print("Threshold = " + Tools::floatToString(threshold, 3u));
@@ -293,6 +297,7 @@ void nano::Analyzer::startCurrentMaskAnalysis()
     setProgress(0);
     elements.clear();
     scanMaskForElements();
+    Tools::print("<<<<< Current mask analysis completed >>>>>", Colors::lime);
     Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
     Tools::print("Number of elements = " + std::to_string(elements.size()));
     Tools::print("Min pixels in element = " + std::to_string(minPixelsInElement));
@@ -367,6 +372,7 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep)
         }
     }
 
+    Tools::print("<<<<< Threshold analysis completed >>>>>", Colors::lime);
     Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
     Tools::print("Optimal threshold = " + Tools::floatToString(optimalThreshold, 3));
     Tools::print("Optimal density (1/mm2) = " + Tools::floatToString(optimalDensity, 3));

@@ -247,6 +247,9 @@ void MainWindow::clearGraphicsView()
     {
         scene.clear();
         currImgPixmapItem = nullptr;
+        maskPixmapItem = nullptr;
+        elementMaskPixmapItem = nullptr;
+        ui->graphicsView->setScene(&scene);
         currImg = QImage();
         mask = nullptr;
         elementMask = nullptr;
@@ -394,7 +397,6 @@ void MainWindow::updateTextures()
     {
         if(currImgPixmapItem)
         {
-            scene.removeItem(currImgPixmapItem);
             delete currImgPixmapItem;
         }
         currImgPixmapItem = scene.addPixmap(QPixmap::fromImage(currImg));
@@ -403,19 +405,17 @@ void MainWindow::updateTextures()
     {
         if(maskPixmapItem)
         {
-            scene.removeItem(maskPixmapItem);
             delete maskPixmapItem;
         }
         maskPixmapItem = scene.addPixmap(QPixmap::fromImage(*mask));
     }
     if(elementMask && elementMaskVisible)
     {
-        if(  elementMaskPixmapItem)
+        if(elementMaskPixmapItem)
         {
-            scene.removeItem(  elementMaskPixmapItem);
-            delete   elementMaskPixmapItem;
+            delete elementMaskPixmapItem;
         }
-          elementMaskPixmapItem = scene.addPixmap(QPixmap::fromImage(*  elementMask));
+        elementMaskPixmapItem = scene.addPixmap(QPixmap::fromImage(*elementMask));
     }
 }
 
