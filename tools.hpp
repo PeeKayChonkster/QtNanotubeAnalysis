@@ -28,6 +28,7 @@ public:
     static Distance getRelevantDistance(Distance distance);
     static std::vector<std::string> splitString(const std::string& str, char separator);
     static DistanceUnit stringToDistanceUnit(const std::string& str);
+    static float getAverage(const std::vector<float>& values);
     static float getAverageDifference(const std::vector<float>& values);
 };
 

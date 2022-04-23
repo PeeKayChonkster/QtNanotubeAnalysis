@@ -95,6 +95,18 @@ DistanceUnit Tools::stringToDistanceUnit(const std::string& str)
     return DistanceUnit::nm;
 }
 
+float Tools::getAverage(const std::vector<float> &values)
+{
+    if(values.size() == 0) return 0.0f;
+    if(values.size() == 1) return values[0];
+    float summ = 0.0f;
+    for(int i = 0; i < values.size(); ++i)
+    {
+        summ += values[i];
+    }
+    return summ / values.size();
+}
+
 float Tools::getAverageDifference(const std::vector<float>& values)
 {
     if(values.size() < 2) return *values.begin();
