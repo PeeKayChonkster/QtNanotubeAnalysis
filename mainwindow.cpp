@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
       autoAnalysisConfig(this),
       manualAnalysisConfig(this),
       currentMaskAnalysisConfig(this),
+      fullRangeAnalysisConfig(this),
       coordLabel(this),
       toolLabel(this),
       ui(new Ui::MainWindow)
@@ -733,6 +734,13 @@ void MainWindow::on_actionStart_manual_threshold_analysis_triggered()
 
 void MainWindow::on_actionStart_full_range_analysis_triggered()
 {
-    startFullRangeAnalysis();
+    if(!currImg.isNull())
+    {
+        fullRangeAnalysisConfig.exec();
+    }
+    else
+    {
+        QMessageBox::warning(this, "No image!", "There is no image to analyze!");
+    }
 }
 

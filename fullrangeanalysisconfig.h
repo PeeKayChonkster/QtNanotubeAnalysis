@@ -15,6 +15,9 @@ public:
     explicit FullRangeAnalysisConfig(QWidget *parent = nullptr);
     ~FullRangeAnalysisConfig();
 
+private slots:
+    void on_buttonBox_accepted();
+
 private:
     Ui::FullRangeAnalysisConfig *ui;
 };
