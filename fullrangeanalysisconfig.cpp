@@ -21,6 +21,6 @@ void FullRangeAnalysisConfig::on_buttonBox_accepted()
 {
     Tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
     Tools::getMainWindow()->setMinPixelInElement(ui->minPixelsInput->value());
-    Tools::getMainWindow()->startFullRangeAnalysis();
+    Tools::getMainWindow()->startFullRangeAnalysis(ui->createTableCheckbox->isChecked());
 }
 

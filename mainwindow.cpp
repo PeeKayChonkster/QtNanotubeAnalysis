@@ -112,16 +112,16 @@ void MainWindow::startManualThresholdAnalysis()
 
 }
 
-void MainWindow::startFullRangeAnalysis()
+void MainWindow::startFullRangeAnalysis(bool writeTable)
 {
     // TEMP
     const float deltaStep = 0.05f;
     console.print();
     console.print("<<<<< Starting full range analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
-    auto workerLambda = [this, deltaStep]() -> void {
+    auto workerLambda = [this, deltaStep, writeTable]() -> void {
         std::vector<std::tuple<float, uint, float>> results = analyzer.startFullRangeAnalysis(deltaStep);
-        writeCSVFile(results);
+        if(writeTable) writeCSVFile(results);
     };
     futureWatcher.setFuture(QtConcurrent::run(workerLambda));
 }

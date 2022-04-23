@@ -34,7 +34,7 @@ public:
     void startCurrentMaskAnalysis();
     void startAutoThresholdAnalysis();
     void startManualThresholdAnalysis();
-    void startFullRangeAnalysis();
+    void startFullRangeAnalysis(bool writeTable);
     void updateTextures();
     void calculateMask(float threshold);
     void clearMasks();
