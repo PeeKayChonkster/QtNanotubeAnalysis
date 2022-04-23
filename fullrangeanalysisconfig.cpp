@@ -22,7 +22,7 @@ void FullRangeAnalysisConfig::on_buttonBox_accepted()
 {
     if(ui->deltaStepInput->value() <= 0.0f)
     {
-        QMessageBox::critical(this, "Cancelling", "Delta step shoud be only positive! Cancelling...");
+        QMessageBox::critical(this, "Cancelling", "Delta step must be greater than zero. Cancelling...");
         return;
     }
     Tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());

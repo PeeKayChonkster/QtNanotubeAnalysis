@@ -54,7 +54,7 @@ public:
     std::vector<std::tuple<float, uint, float>> startFullRangeAnalysis(float deltaStep, QRect area = QRect());
     void startManualAnalysis(float threshold);
     void startCurrentMaskAnalysis();
-    float startThresholdAnalysis();
+    float startThresholdAnalysis(float deltaStep);
     void addElementAtPos(QPoint pos);
     void removeElementAtPos(QPoint pos);
     void paintMaskAtPos(QPoint pos, float radius = 1.0f);

@@ -22,15 +22,18 @@ void ThresholdAnalysisConfig::on_buttonBox_accepted()
 {
     if(ui->pixelSizeInput->value() <= 0.0f)
     {
-        QMessageBox::critical(this, "Warning!", "Pixel size wasn't specified or isn't greater than zero. Cancelling...");
+        QMessageBox::critical(this, "Warning!", "Pixel size must be greater than zero. Cancelling...");
         return;
     }
-    else
+    if(ui->deltaStepInput->value() <= 0.0f)
     {
-        Tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
-        Tools::getMainWindow()->setMinPixelInElement(ui->minPixelsInput->value());
-        Tools::getMainWindow()->startThresholdAnalysis();
+        QMessageBox::critical(this, "Warning!", "Delta step must must be greater than zero. Cancelling...");
+        return;
     }
+
+    Tools::getMainWindow()->setPixelSize(ui->pixelSizeInput->value());
+    Tools::getMainWindow()->setMinPixelInElement(ui->minPixelsInput->value());
+    Tools::getMainWindow()->startThresholdAnalysis(ui->deltaStepInput->value());
 }
 
 void ThresholdAnalysisConfig::showEvent(QShowEvent *event)

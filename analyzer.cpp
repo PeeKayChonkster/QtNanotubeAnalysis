@@ -296,11 +296,10 @@ void nano::Analyzer::startCurrentMaskAnalysis()
     Tools::print("Element density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
-float nano::Analyzer::startThresholdAnalysis()
+float nano::Analyzer::startThresholdAnalysis(float deltaStep)
 {
     // TEMP
     const uint divisionCount = 2u;
-    const float deltaStep = 0.02f;
     bool horizontal = true;
 
     const uint stepWidth = targetImg->width() / divisionCount;
