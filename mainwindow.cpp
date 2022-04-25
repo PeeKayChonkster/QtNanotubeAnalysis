@@ -26,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
       currentMaskAnalysisConfig(new CurrentMaskAnalysisConfig(this)),
       fullRangeAnalysisConfig(new FullRangeAnalysisConfig(this)),
       thresholdAnalysisConfig(new ThresholdAnalysisConfig(this)),
-      coordLabel(this),
-      toolLabel(this),
+      coordLabel(new QLabel(this)),
+      toolLabel(new QLabel(this)),
       chartWindow(new ChartWindow(this)),
       ui(new Ui::MainWindow)
 {
@@ -50,10 +50,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->toolsGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
 
-    coordLabel.setAlignment(Qt::AlignRight);
-    toolLabel.setText("Active tool: None");
-    statusBar()->addPermanentWidget(&toolLabel);
-    statusBar()->addPermanentWidget(&coordLabel, 1);
+    coordLabel->setAlignment(Qt::AlignRight);
+    toolLabel->setText("Active tool: None");
+    statusBar()->addPermanentWidget(toolLabel);
+    statusBar()->addPermanentWidget(coordLabel, 1);
 }
 
 MainWindow::~MainWindow()
@@ -402,7 +402,7 @@ void MainWindow::setActiveTool(Tool tool)
 {
     activeTool = tool;
     std::string toolString = "Active tool: " + std::string(NAMEOF_ENUM(activeTool));
-    toolLabel.setText(toolString.c_str());
+    toolLabel->setText(toolString.c_str());
 }
 
 void MainWindow::updateTextures()
@@ -459,7 +459,7 @@ void MainWindow::on_actionShow_console_triggered()
 void MainWindow::mouseMoveEventGV(QMouseEvent *event)
 {
     QPointF scenePos = ui->graphicsView->mapToScene(event->pos());
-    coordLabel.setText(QString("x:%1|y:%2").arg(scenePos.x(), 5).arg(scenePos.y(), 5));
+    coordLabel->setText(QString("x:%1|y:%2").arg(scenePos.x(), 5).arg(scenePos.y(), 5));
 
     switch(activeTool)
     {

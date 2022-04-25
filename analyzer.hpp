@@ -51,7 +51,7 @@ public:
     void scanMaskForElements();
     void startExtremumAnalysis();
     /// returns { threshold, numberOfElements, elementsDensity }
-    std::vector<std::tuple<float, uint, float>> startFullRangeAnalysis(float deltaStep, QRect area = QRect());
+    std::vector<std::tuple<float, uint, float>> startFullRangeAnalysis(float deltaStep, QRect area = QRect(), bool makeChart = true);
     void startManualAnalysis(float threshold);
     void startCurrentMaskAnalysis();
     float startThresholdAnalysis(float deltaStep, uint divisionCount, bool horizontal);

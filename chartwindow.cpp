@@ -42,7 +42,7 @@ void ChartWindow::addSeries(const std::vector<std::pair<float, float>>& series, 
     chart->addSeries(lineSeries);
     chart->createDefaultAxes();
     ((QValueAxis*)chart->axes(Qt::Horizontal)[0])->setRange(minX, maxX);
-    ((QValueAxis*)chart->axes(Qt::Horizontal)[0])->setTickCount(10);
+    ((QValueAxis*)chart->axes(Qt::Horizontal)[0])->setTickCount(11);
     ((QValueAxis*)chart->axes(Qt::Horizontal)[0])->setTitleText(xName);
     ((QValueAxis*)chart->axes(Qt::Vertical)[0])->setTitleText(yName);
 }

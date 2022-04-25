@@ -134,8 +134,8 @@ private:
     QGraphicsScene scene;
     QFutureWatcher<void> futureWatcher;
     QProgressDialog* progressDialog = nullptr;
-    QLabel coordLabel;
-    QLabel toolLabel;
+    QLabel* coordLabel;
+    QLabel* toolLabel;
     Tool activeTool = Tool::None;
     std::vector<RulerPair> rulerLineItems;
     std::optional<QPointF> firstRulerLinePoint = std::nullopt;

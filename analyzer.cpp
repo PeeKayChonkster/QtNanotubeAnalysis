@@ -227,7 +227,7 @@ void nano::Analyzer::startExtremumAnalysis()
     
 }
 
-std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalysis(float deltaStep, QRect rect)
+std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalysis(float deltaStep, QRect rect, bool makeChart)
 {
     if(!targetImg) throw PRIM_EXCEPTION("Trying to find nanotube extremum without target image.");
     Tools::print("<<<<< Starting full range analysis >>>>>", Colors::lime);
@@ -273,10 +273,14 @@ std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalys
 
     Tools::print("<<<<< Full range analysis completed >>>>>", QColorConstants::Green);
 
-    Tools::getMainWindow()->clearChart();
-    std::vector<std::pair<float, float>> densitySeries;
-    for(int i = 0; i < results.size(); ++i) densitySeries.push_back(std::pair<float, float>(std::get<0>(results[i]), std::get<2>(results[i])));
-    emit si_chart_series_output(densitySeries, "FullRangeAnalysis", "Brightness", "Element density");
+    if(makeChart)
+    {
+        Tools::getMainWindow()->clearChart();
+        std::vector<std::pair<float, float>> densitySeries;
+        for(int i = 0; i < results.size(); ++i) densitySeries.push_back(std::pair<float, float>(std::get<0>(results[i]), std::get<2>(results[i])));
+        emit si_chart_series_output(densitySeries, "FullRangeAnalysis", "Brightness", "Element density");
+    }
+
     return std::move(results);
 
 }
@@ -336,7 +340,7 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep, uint divisionCount
             area.setHeight(i == divisionCount - 1? stepWidth + remainder : stepWidth);
         }
 
-        std::vector<std::tuple<float, uint, float>> range(startFullRangeAnalysis(deltaStep, area));
+        std::vector<std::tuple<float, uint, float>> range(startFullRangeAnalysis(deltaStep, area, false));
         ranges.push_back(std::move(range));
     }
 
@@ -372,6 +376,20 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep, uint divisionCount
             optimalDensity = averageRange[i].second;
         }
     }
+
+    // make chart
+    Tools::getMainWindow()->clearChart();
+    for(int i = 0; i < ranges.size(); ++i)
+    {
+        std::vector<std::pair<float, float>> series;
+        for(int j = 0; j < ranges[i].size(); ++j)
+        {
+            series.push_back(std::pair<float, float>(std::get<0>(ranges[i][j]), std::get<2>(ranges[i][j])));
+        }
+        emit si_chart_series_output(series, "Full range; Offset: " + QString::number(i*stepWidth), "Brightness", "Element density", Colors::gray);
+    }
+    emit si_chart_series_output(averageRange, "Average", "Brightness", "Element density", Colors::red);
+    emit si_chart_series_output(averageDifferenceRange, "Average difference", "Brightness", "Element density", Colors::blue);
 
     Tools::print("<<<<< Threshold analysis completed >>>>>", Colors::lime);
     Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
