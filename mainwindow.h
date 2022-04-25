@@ -38,6 +38,7 @@ public:
     void updateTextures();
     void calculateMask(float threshold);
     void clearMasks();
+    QColor getSystemBackgroundColor() const;
 
 
     // These work with MyGraphicsView mouse events
@@ -78,7 +79,7 @@ private slots:
 
     void sl_analysis_canceled();
 
-    void sl_add_chart_series(const std::vector<std::pair<float, float>>& series, QColor color);
+    void sl_add_chart_series(const std::vector<std::pair<float, float>>& series, QString legendName, QString xName, QString yName, QColor color);
 
     void on_actionStart_manual_analysis_triggered();
 

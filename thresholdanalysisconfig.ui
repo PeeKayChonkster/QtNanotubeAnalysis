@@ -140,6 +140,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pixelSizeInput</tabstop>
+  <tabstop>minPixelsInput</tabstop>
+  <tabstop>deltaStepInput</tabstop>
+  <tabstop>divisionCountInput</tabstop>
+  <tabstop>divisionTypeCombobox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

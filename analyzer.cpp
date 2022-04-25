@@ -8,7 +8,6 @@
 #include "prim_exception.hpp"
 #include "tools.hpp"
 
-
 nano::Analyzer::Analyzer()
 {
     mask = mask.convertToFormat(maskFormat);
@@ -260,11 +259,13 @@ std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalys
             return std::vector<std::tuple<float, uint, float>>();
         }
 
+        results.push_back({ threshold, currNumberOfElements, currNumberOfElements / area_mm2 });
+
         threshold -= deltaStep;
         calculateMask(threshold, rect);
         scanMaskForElements();
         currNumberOfElements = elements.size();
-        results.push_back({ threshold, currNumberOfElements, currNumberOfElements / area_mm2 });
+
         Tools::print("Threshold = " + Tools::floatToString(threshold, 3u) + "; Elements = " + std::to_string(currNumberOfElements));
     }
 
@@ -272,6 +273,10 @@ std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalys
 
     Tools::print("<<<<< Full range analysis completed >>>>>", QColorConstants::Green);
 
+    Tools::getMainWindow()->clearChart();
+    std::vector<std::pair<float, float>> densitySeries;
+    for(int i = 0; i < results.size(); ++i) densitySeries.push_back(std::pair<float, float>(std::get<0>(results[i]), std::get<2>(results[i])));
+    emit si_chart_series_output(densitySeries, "FullRangeAnalysis", "Brightness", "Element density");
     return std::move(results);
 
 }

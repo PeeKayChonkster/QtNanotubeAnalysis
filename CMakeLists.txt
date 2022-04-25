@@ -11,8 +11,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5  COMPONENTS Widgets  REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts REQUIRED)
+
 
 set(PROJECT_SOURCES
         main.cpp
@@ -35,6 +36,7 @@ set(PROJECT_SOURCES
         currentmaskanalysisconfig.h currentmaskanalysisconfig.cpp currentmaskanalysisconfig.ui
         fullrangeanalysisconfig.h fullrangeanalysisconfig.cpp fullrangeanalysisconfig.ui
         thresholdanalysisconfig.h thresholdanalysisconfig.cpp thresholdanalysisconfig.ui
+        chartwindow.h chartwindow.cpp chartwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -60,7 +62,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(QElementAnalysis PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(QElementAnalysis PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
 
 set_target_properties(QElementAnalysis PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

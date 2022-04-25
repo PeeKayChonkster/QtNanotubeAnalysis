@@ -226,25 +226,25 @@ void MainWindow::on_actionOpen_image_triggered()
 
 void MainWindow::openImage()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
-    currImg.load(fileName);
-    //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
-    analyzer.setTargetImg(&currImg);
-    mask = analyzer.getMask();
-    elementMask = analyzer.getElementMask();
-    updateTextures();
-    resize(currImg.width(), currImg.height());
-    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
-    Tools::print("Loaded image file: " + fileName.toStdString(), Colors::green);
+//    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
+//    currImg.load(fileName);
+//    //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
+//    analyzer.setTargetImg(&currImg);
+//    mask = analyzer.getMask();
+//    elementMask = analyzer.getElementMask();
+//    updateTextures();
+//    resize(currImg.width(), currImg.height());
+//    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
+//    Tools::print("Loaded image file: " + fileName.toStdString(), Colors::green);
 
     // DEBUG //
-    //fastOpenImage();
+    fastOpenImage();
 }
 
 void MainWindow::fastOpenImage()
 {
-    currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg");
-    Tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02.jpg", Colors::lime);
+    currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02_PS=5,58.jpg");
+    Tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02_PS=5,58.jpg", Colors::lime);
     Tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
     //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     analyzer.setTargetImg(&currImg);
@@ -445,6 +445,11 @@ void MainWindow::clearMasks()
     updateTextures();
 }
 
+QColor MainWindow::getSystemBackgroundColor() const
+{
+    return palette().base().color();
+}
+
 
 void MainWindow::on_actionShow_console_triggered()
 {
@@ -594,9 +599,9 @@ void MainWindow::sl_analysis_canceled()
     analyzer.cancelAnalysis();
 }
 
-void MainWindow::sl_add_chart_series(const std::vector<std::pair<float, float> > &series, QColor color)
+void MainWindow::sl_add_chart_series(const std::vector<std::pair<float, float>>& series, QString legendName, QString xName, QString yName, QColor color)
 {
-    chartWindow->addSeries(series, color);
+    chartWindow->addSeries(series, legendName, xName, yName, color);
     showChart();
 }
 
