@@ -15,8 +15,8 @@
 #include <vector>
 #include <optional>
 #include <QLabel>
-
-#define NAMEOF(name) #name
+#include "tools.hpp"
+#include "chartwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -57,6 +57,9 @@ public:
     bool getProcessFullRange() const;
     void setMinPixelInElement(uint16_t value);
     uint16_t getMinPixelInElement() const;
+    void showChart();
+    void hideChart();
+    void clearChart();
 
     using RulerPair = QPair<QGraphicsLineItem*, QGraphicsProxyWidget*>;
 
@@ -74,6 +77,8 @@ private slots:
     void sl_progress_changed(int progress);
 
     void sl_analysis_canceled();
+
+    void sl_add_chart_series(const std::vector<std::pair<float, float>>& series, QColor color);
 
     void on_actionStart_manual_analysis_triggered();
 
@@ -106,14 +111,12 @@ private slots:
     void on_actionStart_full_range_analysis_triggered();
 
 protected:
-    void closeEvent(QCloseEvent* event) override;
-
     enum class Tool { None, Ruler, MaskBrush, MaskEraser, TubeAdder, TubeRemover };
 
 private:
     Ui::MainWindow *ui;
     nano::Analyzer analyzer;
-    Console console;
+    Console* console;
     QImage currImg;
     const QImage* mask = nullptr;
     const QImage* elementMask = nullptr;
@@ -121,11 +124,12 @@ private:
     QGraphicsPixmapItem* maskPixmapItem = nullptr;
     QGraphicsPixmapItem* elementMaskPixmapItem = nullptr;
     QGraphicsEllipseItem* brushEllipseItem = nullptr;
-    AutoAnalysisConfig autoAnalysisConfig;
-    ManualAnalysisConfig manualAnalysisConfig;
-    CurrentMaskAnalysisConfig currentMaskAnalysisConfig;
-    FullRangeAnalysisConfig fullRangeAnalysisConfig;
-    ThresholdAnalysisConfig thresholdAnalysisConfig;
+    AutoAnalysisConfig* autoAnalysisConfig;
+    ManualAnalysisConfig* manualAnalysisConfig;
+    CurrentMaskAnalysisConfig* currentMaskAnalysisConfig;
+    FullRangeAnalysisConfig* fullRangeAnalysisConfig;
+    ThresholdAnalysisConfig* thresholdAnalysisConfig;
+    ChartWindow* chartWindow;
     QGraphicsScene scene;
     QFutureWatcher<void> futureWatcher;
     QProgressDialog* progressDialog = nullptr;
@@ -141,7 +145,7 @@ private:
     const QColor rulerLineColor = QColorConstants::Blue;
     const QColor brushCursorColor = QColor(255, 255, 0, 200);
     const float brushCursorCircleWidthFactor = 0.02;
-    const uint rulerLIneWidth = 2u;
+    const uint rulerLineWidth = 2u;
     const QString rulerLabelBgColor = "rgba(0,0,0,0.7);";
     const Qt::MouseButton actionButton = Qt::LeftButton;
 

@@ -20,14 +20,15 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      console(this),
-      autoAnalysisConfig(this),
-      manualAnalysisConfig(this),
-      currentMaskAnalysisConfig(this),
-      fullRangeAnalysisConfig(this),
-      thresholdAnalysisConfig(this),
+      console(new Console(this)),
+      autoAnalysisConfig(new AutoAnalysisConfig(this)),
+      manualAnalysisConfig(new ManualAnalysisConfig(this)),
+      currentMaskAnalysisConfig(new CurrentMaskAnalysisConfig(this)),
+      fullRangeAnalysisConfig(new FullRangeAnalysisConfig(this)),
+      thresholdAnalysisConfig(new ThresholdAnalysisConfig(this)),
       coordLabel(this),
       toolLabel(this),
+      chartWindow(new ChartWindow(this)),
       ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -35,17 +36,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
+    connect(&analyzer, &nano::Analyzer::si_chart_series_output, this, &MainWindow::sl_add_chart_series);
 
     Tools::init(this);
-
-
 
     ui->graphicsView->verticalScrollBar()->installEventFilter(this);
     ui->graphicsView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     ui->graphicsView->setScene(&scene);
 
     rulerLinePen.setColor(rulerLineColor);
-    rulerLinePen.setWidth(rulerLIneWidth);
+    rulerLinePen.setWidth(rulerLineWidth);
     rulerLinePen.setCapStyle(Qt::RoundCap);
 
     ui->toolsGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::ExclusiveOptional);
@@ -59,14 +59,13 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete progressDialog;
 }
 
 void MainWindow::startAutoAnalysis()
 {
-    console.show();
-    console.print();    scene.update();
-    console.print("<<<<< Starting auto analysis >>>>>", QColorConstants::Green);
+    console->show();
+    console->print();    scene.update();
+    console->print("<<<<< Starting auto analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
     auto workerLambda = [this]() -> void {
         analyzer.startExtremumAnalysis();
@@ -76,9 +75,9 @@ void MainWindow::startAutoAnalysis()
 
 void MainWindow::startManualAnalysis(float threshold)
 {
-    console.show();
-    console.print();
-    console.print("<<<<< Starting manual analysis >>>>>", QColorConstants::Green);
+    console->show();
+    console->print();
+    console->print("<<<<< Starting manual analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
     auto workerLambda = [this, threshold]() -> void {
         analyzer.startManualAnalysis(threshold);
@@ -88,8 +87,8 @@ void MainWindow::startManualAnalysis(float threshold)
 
 void MainWindow::startCurrentMaskAnalysis()
 {
-    console.print();
-    console.print("<<<<< Starting current mask analysis >>>>>", QColorConstants::Green);
+    console->print();
+    console->print("<<<<< Starting current mask analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
     auto workerLambda = [this]() -> void {
         analyzer.startCurrentMaskAnalysis();
@@ -99,8 +98,8 @@ void MainWindow::startCurrentMaskAnalysis()
 
 void MainWindow::startThresholdAnalysis(float deltaStep, uint divisionCount, bool horizontal)
 {
-    console.print();
-    console.print("<<<<< Starting threshold analysis >>>>>", QColorConstants::Green);
+    console->print();
+    console->print("<<<<< Starting threshold analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
     auto workerLambda = [=]() -> void {
         analyzer.startThresholdAnalysis(deltaStep, divisionCount, horizontal);
@@ -110,8 +109,8 @@ void MainWindow::startThresholdAnalysis(float deltaStep, uint divisionCount, boo
 
 void MainWindow::startFullRangeAnalysis(float deltaStep, bool writeTable)
 {
-    console.print();
-    console.print("<<<<< Starting full range analysis >>>>>", QColorConstants::Green);
+    console->print();
+    console->print("<<<<< Starting full range analysis >>>>>", QColorConstants::Green);
     startProgressDialog();
     auto workerLambda = [this, deltaStep, writeTable]() -> void {
         std::vector<std::tuple<float, uint, float>> results = analyzer.startFullRangeAnalysis(deltaStep);
@@ -203,6 +202,21 @@ void MainWindow::setMinPixelInElement(uint16_t value)
 uint16_t MainWindow::getMinPixelInElement() const
 {
     return analyzer.minPixelsInElement;
+}
+
+void MainWindow::showChart()
+{
+    chartWindow->show();
+}
+
+void MainWindow::hideChart()
+{
+    chartWindow->hide();
+}
+
+void MainWindow::clearChart()
+{
+    chartWindow->clear();
 }
 
 void MainWindow::on_actionOpen_image_triggered()
@@ -434,14 +448,7 @@ void MainWindow::clearMasks()
 
 void MainWindow::on_actionShow_console_triggered()
 {
-    console.show();
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    console.close();
-    autoAnalysisConfig.close();
-    manualAnalysisConfig.close();
+    console->show();
 }
 
 void MainWindow::mouseMoveEventGV(QMouseEvent *event)
@@ -544,7 +551,7 @@ void MainWindow::on_actionStart_extremum_analysis_triggered()
 {
     if(!currImg.isNull())
     {
-        autoAnalysisConfig.exec();
+        autoAnalysisConfig->exec();
     }
     else
     {
@@ -556,7 +563,7 @@ void MainWindow::on_actionStart_manual_analysis_triggered()
 {
     if(!currImg.isNull())
     {
-        manualAnalysisConfig.show();
+        manualAnalysisConfig->show();
     }
     else
     {
@@ -568,7 +575,7 @@ void MainWindow::on_actionAnalyze_current_mask_triggered()
 {
     if(!currImg.isNull())
     {
-        currentMaskAnalysisConfig.show();
+        currentMaskAnalysisConfig->show();
     }
     else
     {
@@ -585,6 +592,12 @@ void MainWindow::sl_analysis_canceled()
 {
     qDebug("Here");
     analyzer.cancelAnalysis();
+}
+
+void MainWindow::sl_add_chart_series(const std::vector<std::pair<float, float> > &series, QColor color)
+{
+    chartWindow->addSeries(series, color);
+    showChart();
 }
 
 void MainWindow::sl_worker_finished()
@@ -704,7 +717,7 @@ void MainWindow::on_actionStart_threshold_analysis_triggered()
 {
     if(!currImg.isNull())
     {
-        thresholdAnalysisConfig.exec();
+        thresholdAnalysisConfig->exec();
     }
     else
     {
@@ -717,7 +730,7 @@ void MainWindow::on_actionStart_full_range_analysis_triggered()
 {
     if(!currImg.isNull())
     {
-        fullRangeAnalysisConfig.exec();
+        fullRangeAnalysisConfig->exec();
     }
     else
     {

@@ -53,6 +53,7 @@ struct Colors
     inline static const QColor green = QColor(0,128,0);
     inline static const QColor teal = QColor(0,128,128);
     inline static const QColor navy = QColor(0,0,128);
+    inline static const QColor clear = QColor(0,0,0,0);
 };
 
 #endif // TOOLS_HPP
