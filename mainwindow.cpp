@@ -633,7 +633,7 @@ void MainWindow::on_actionMaskBrush_toggled(bool arg1)
 {
     if(arg1 && !currImg.isNull())
     {
-        activeTool = Tool::MaskBrush;
+        setActiveTool(arg1? Tool::MaskBrush : Tool::None);
         if(!brushEllipseItem)
         {
             float brushDiameter = brushRadius * 2.0f;
@@ -657,7 +657,7 @@ void MainWindow::on_actionMaskEraser_toggled(bool arg1)
 {
     if(arg1 && !currImg.isNull())
     {
-        activeTool = Tool::MaskEraser;
+        setActiveTool(arg1? Tool::MaskEraser : Tool::None);
         if(!brushEllipseItem)
         {
             float brushDiameter = brushRadius * 2.0f;
