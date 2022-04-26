@@ -394,6 +394,7 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep, uint divisionCount
     Tools::print("<<<<< Threshold analysis completed >>>>>", Colors::lime);
     Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
     Tools::print("Optimal threshold = " + Tools::floatToString(optimalThreshold, 3));
+    Tools::print("Optimal amount of elements = " + Tools::floatToString(static_cast<int>(optimalDensity * getImageArea()), 3));
     Tools::print("Optimal density (1/mm2) = " + Tools::floatToString(optimalDensity, 3));
     return optimalThreshold;
 }

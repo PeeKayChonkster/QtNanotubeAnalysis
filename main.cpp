@@ -16,13 +16,16 @@ int main(int argc, char *argv[])
     catch (prim::Exception& e)
     {
         qDebug() << e.what().c_str();
+        return 1;
     }
     catch (QException& e)
     {
         qDebug() << e.what();
+        return 1;
     }
     catch (std::exception& e)
     {
         qDebug() << e.what();
+        return 1;
     }
 }
