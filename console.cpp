@@ -10,6 +10,7 @@ Console::Console(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Console");
+    setMinimumSize(size());
 }
 
 Console::~Console()
