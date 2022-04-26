@@ -302,8 +302,7 @@ void MainWindow::addRulerPoint(QPoint point)
         float lineRealLength = distance.first;
         QString unitOfMeasure(std::string(NAMEOF_ENUM(distance.second)).c_str());
         QLabel* label = new QLabel(QString::number(lineRealLength) + " " + unitOfMeasure);
-        label->setStyleSheet("background-color: " + rulerLabelBgColor);
-        label->setStyleSheet("color: white");
+        label->setStyleSheet("background-color: " + rulerLabelBgColor + " color: white;");
         label->move(line.center().toPoint());
         QGraphicsLineItem* sceneLine = scene.addLine(line, rulerLinePen);
         QGraphicsProxyWidget* sceneWidget = scene.addWidget(label);

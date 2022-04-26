@@ -39,7 +39,7 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item row="2" column="0">
+    <item row="3" column="0">
      <widget class="MyGraphicsView" name="graphicsView">
       <property name="mouseTracking">
        <bool>true</bool>

@@ -147,7 +147,7 @@ private:
     const QColor brushCursorColor = QColor(255, 255, 0, 200);
     const float brushCursorCircleWidthFactor = 0.02;
     const uint rulerLineWidth = 2u;
-    const QString rulerLabelBgColor = "rgba(0,0,0,0.7);";
+    const QString rulerLabelBgColor = "rgba(1,1,1,0.5);";
     const Qt::MouseButton actionButton = Qt::LeftButton;
 
     // flags
