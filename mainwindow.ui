@@ -174,8 +174,14 @@
    </property>
   </action>
   <action name="actionShow_console">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Show console</string>
+    <string>Show/Hide console</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/Hide console</string>
    </property>
   </action>
   <action name="actionClear_all_ruler_lines">

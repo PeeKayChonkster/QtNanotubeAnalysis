@@ -55,6 +55,8 @@ MainWindow::MainWindow(QWidget *parent)
     toolLabel->setText("Active tool: None");
     statusBar()->addPermanentWidget(toolLabel);
     statusBar()->addPermanentWidget(coordLabel, 1);
+
+    console->show(); console->hide(); // for console to position itself right later
 }
 
 MainWindow::~MainWindow()
@@ -237,6 +239,7 @@ void MainWindow::openImage()
 //    updateTextures();
 //    resize(currImg.width(), currImg.height());
 //    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
+
 //    Tools::print("Loaded image file: " + fileName.toStdString(), Colors::green);
 //    Tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
 
@@ -247,8 +250,6 @@ void MainWindow::openImage()
 void MainWindow::fastOpenImage()
 {
     currImg.load("../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02_PS=5,58.jpg");
-    Tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02_PS=5,58.jpg", Colors::lime);
-    Tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
     //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
     analyzer.setTargetImg(&currImg);
     mask = analyzer.getMask();
@@ -256,6 +257,9 @@ void MainWindow::fastOpenImage()
     updateTextures();
     resize(currImg.width(), currImg.height());
     scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
+
+    Tools::print(std::string("Loaded image file: ") + "../QNanotubeAnalysis/res/img/SamplesJPEG/S1-ZnAg_02_PS=5,58.jpg", Colors::lime);
+    Tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
 }
 
 void MainWindow::clearGraphicsView()
@@ -452,10 +456,9 @@ QColor MainWindow::getSystemBackgroundColor() const
     return palette().base().color();
 }
 
-
-void MainWindow::on_actionShow_console_triggered()
+void MainWindow::on_actionShow_console_toggled(bool arg1)
 {
-    console->show();
+    console->setVisible(arg1);
 }
 
 void MainWindow::mouseMoveEventGV(QMouseEvent *event)

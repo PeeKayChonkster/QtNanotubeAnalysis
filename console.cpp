@@ -1,5 +1,6 @@
 #include "console.h"
 #include "ui_console.h"
+#include "tools.hpp"
 #include <QFileDialog>
 #include <QFile>
 #include <QMessageBox>
@@ -20,10 +21,23 @@ Console::~Console()
 
 void Console::print(QString line, QColor textColor)
 {
-    show();
+    if(!isVisible()) show();
     ui->textEdit->setTextColor(textColor);
     ui->textEdit->append(line);
     ui->textEdit->ensureCursorVisible();
+    update();
+}
+
+void Console::showEvent(QShowEvent *event)
+{
+    if(!event->spontaneous())
+    {
+        static const int xOffset = 5;
+        QMainWindow* mainWindow = Tools::getMainWindow();
+        QPoint mainWindowPos = mainWindow->pos();
+        resize(width(), mainWindow->height());
+        move(mainWindowPos.x() - width() - xOffset, mainWindowPos.y());
+    }
 }
 
 void Console::on_actionClear_triggered()

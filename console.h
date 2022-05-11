@@ -17,6 +17,8 @@ public:
 
     void print(QString line = "", QColor textColor = {255, 255, 255, 255});
 
+    void showEvent(QShowEvent* event) override;
+
 private slots:
     void on_actionClear_triggered();
 

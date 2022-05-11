@@ -69,9 +69,9 @@ public:
 private slots:
     void on_actionOpen_image_triggered();
 
-    void on_actionShow_console_triggered();
-
     void on_actionStart_extremum_analysis_triggered();
+
+    void on_actionShow_console_toggled(bool arg1);
 
     void sl_worker_finished();
 
