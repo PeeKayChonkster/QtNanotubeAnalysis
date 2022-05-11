@@ -365,7 +365,7 @@ void MainWindow::writeCSVFile(const std::vector<std::tuple<float, uint, float>>&
         fileName = filePrefix + QString::number(++fileNumber) + fileSuffix;
         file.setFileName(fileName);
     }
-    if(file.open(QIODevice::ReadWrite | QIODevice::Append))
+    if(file.open(QIODevice::ReadWrite | QIODevice::Text))
     {
 
         QTextStream stream(&file);
