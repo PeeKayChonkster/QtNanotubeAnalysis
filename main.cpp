@@ -8,6 +8,10 @@ int main(int argc, char *argv[])
     try
     {
         QApplication a(argc, argv);
+
+        QFont mainFont("Arial", 10, QFont::Normal, false);
+        QApplication::setFont(mainFont);
+
         MainWindow w;
         w.show();
         int result = a.exec();
