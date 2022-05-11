@@ -19,8 +19,6 @@ public:
 private slots:
     void on_thresholdSlider_valueChanged(int value);
 
-    void on_thresholdInput_valueChanged(double arg1);
-
     void on_buttonBox_accepted();
 
 private:
@@ -31,6 +29,7 @@ private:
 
 private slots:
     void accept() override;
+    void on_thresholdInput_editingFinished();
 };
 
 #endif // MANUALANALYSISCONFIG_H

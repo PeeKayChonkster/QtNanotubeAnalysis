@@ -30,7 +30,6 @@ void ManualAnalysisConfig::accept()
     if(!ui->leaveWindowOpenCheckbox->isChecked()) close();
 }
 
-
 void ManualAnalysisConfig::on_thresholdSlider_valueChanged(int value)
 {
     float fValue = value / (float)maxSliderValue;
@@ -38,9 +37,9 @@ void ManualAnalysisConfig::on_thresholdSlider_valueChanged(int value)
     Tools::getMainWindow()->calculateMask(fValue);
 }
 
-void ManualAnalysisConfig::on_thresholdInput_valueChanged(double arg1)
+void ManualAnalysisConfig::on_thresholdInput_editingFinished()
 {
-    ui->thresholdSlider->setValue(static_cast<int>(arg1 * maxSliderValue));
+    ui->thresholdSlider->setValue(static_cast<int>(ui->thresholdInput->value() * maxSliderValue));
 }
 
 void ManualAnalysisConfig::showEvent(QShowEvent *event)
@@ -48,3 +47,4 @@ void ManualAnalysisConfig::showEvent(QShowEvent *event)
     ui->pixelSizeInput->setValue(Tools::getMainWindow()->getPixelSize());
     ui->minPixelsInput->setValue(Tools::getMainWindow()->getMinPixelInElement());
 }
+
