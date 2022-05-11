@@ -118,5 +118,5 @@ float Tools::getAverageDifference(const std::vector<float>& values)
             summ += std::abs(values[i] - values[j]);
         }
     }
-    return summ / (values.size() * (values.size() - 1) + 0.5f);
+    return summ / (values.size() * (values.size() - 1) * 0.5f);
 }
