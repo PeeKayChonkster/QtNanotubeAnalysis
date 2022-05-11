@@ -63,7 +63,7 @@ public:
     const QImage* getElementMask() const;
     const std::vector<Element>* getElements() const;
     float getImageArea();
-    float getDensity();
+    float getConcentration();
     bool areElementsCalculated() const;
     void cancelAnalysis();
     std::vector<ImgPoint> getPointsInRadius(Point<float> center, float radius) const;

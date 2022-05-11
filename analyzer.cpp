@@ -216,7 +216,7 @@ void nano::Analyzer::startExtremumAnalysis()
             Tools::print("Min pixels in element = " + std::to_string(minPixelsInElement));
             Tools::print("Pixel size = " + Tools::floatToString(pixelSize_nm, 3u) + " (nm)");
             Tools::print("Image area = " + Tools::floatToString(getImageArea() * 0.000001, 3u) + " (mm2)");
-            Tools::print("Element density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
+            Tools::print("Element areal concentration = " + Tools::floatToString(getConcentration() * 1000000.0f, 3u) + " (1/mm2)\n");
             return;
         }
         else                                                                    // resume analysis
@@ -278,7 +278,7 @@ std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalys
         Tools::getMainWindow()->clearChart();
         std::vector<std::pair<float, float>> densitySeries;
         for(int i = 0; i < results.size(); ++i) densitySeries.push_back(std::pair<float, float>(std::get<0>(results[i]), std::get<2>(results[i])));
-        emit si_chart_series_output(densitySeries, "FullRangeAnalysis", "Brightness", "Element density");
+        emit si_chart_series_output(densitySeries, "FullRangeAnalysis", "Brightness", "Element areal concentration");
     }
 
     return std::move(results);
@@ -298,7 +298,7 @@ void nano::Analyzer::startManualAnalysis(float threshold)
     Tools::print("Min pixels in element = " + std::to_string(minPixelsInElement));
     Tools::print("Pixel size = " + Tools::floatToString(pixelSize_nm, 3u) + " (nm)");
     Tools::print("Image area = " + Tools::floatToString(getImageArea() * 0.000001, 3u) + " (mm2)");
-    Tools::print("Element density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
+    Tools::print("Element areal concentration = " + Tools::floatToString(getConcentration() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
 void nano::Analyzer::startCurrentMaskAnalysis()
@@ -312,7 +312,7 @@ void nano::Analyzer::startCurrentMaskAnalysis()
     Tools::print("Min pixels in element = " + std::to_string(minPixelsInElement));
     Tools::print("Pixel size = " + Tools::floatToString(pixelSize_nm, 3u) + " (nm)");
     Tools::print("Image area = " + Tools::floatToString(getImageArea() * 0.000001, 3u) + " (mm2)");
-    Tools::print("Element density = " + Tools::floatToString(getDensity() * 1000000.0f, 3u) + " (1/mm2)\n");
+    Tools::print("Element areal concentration = " + Tools::floatToString(getConcentration() * 1000000.0f, 3u) + " (1/mm2)\n");
 }
 
 float nano::Analyzer::startThresholdAnalysis(float deltaStep, uint divisionCount, bool horizontal)
@@ -386,16 +386,16 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep, uint divisionCount
         {
             series.push_back(std::pair<float, float>(std::get<0>(ranges[i][j]), std::get<2>(ranges[i][j])));
         }
-        emit si_chart_series_output(series, "Full range; Offset: " + QString::number(i*stepWidth), "Brightness", "Element density", Colors::gray);
+        emit si_chart_series_output(series, "Full range; Offset: " + QString::number(i*stepWidth), "Brightness", "Element areal concentration", Colors::gray);
     }
     emit si_chart_series_output(averageRange, "Average", "Brightness", "Element density", Colors::red);
-    emit si_chart_series_output(averageDifferenceRange, "Average difference", "Brightness", "Element density", Colors::blue);
+    emit si_chart_series_output(averageDifferenceRange, "Average difference", "Brightness", "Element areal concentration", Colors::blue);
 
     Tools::print("<<<<< Threshold analysis completed >>>>>", Colors::lime);
     Tools::print("<<<<< Results >>>>>", QColorConstants::Green);
     Tools::print("Optimal threshold = " + Tools::floatToString(optimalThreshold, 3));
     Tools::print("Optimal amount of elements = " + std::to_string(static_cast<int>(optimalDensity * getImageArea() * 0.000001)));
-    Tools::print("Optimal density (1/mm2) = " + Tools::floatToString(optimalDensity, 3));
+    Tools::print("Optimal areal concentration (1/mm2) = " + Tools::floatToString(optimalDensity, 3));
     return optimalThreshold;
 }
 
@@ -448,7 +448,7 @@ void nano::Analyzer::removeElementAtPos(QPoint pos)
                             elementMask.setPixelColor(p.x, p.y, maskColorNeg);
                         }
                         elements.erase(elements.begin() + i);
-                        Tools::print("Removed tube. Remaining tubes: " + std::to_string(elements.size()));
+                        Tools::print("Removed element. Remaining elements: " + std::to_string(elements.size()));
                         return;
                     }
                 }
@@ -512,7 +512,7 @@ float nano::Analyzer::getImageArea()
     return static_cast<float>(targetImg->width()) * pixelSize_nm * static_cast<float>(targetImg->height()) * pixelSize_nm;
 }
 
-float nano::Analyzer::getDensity()
+float nano::Analyzer::getConcentration()
 {
     return elements.size() / getImageArea();
 }
