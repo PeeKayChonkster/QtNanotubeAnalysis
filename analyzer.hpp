@@ -74,6 +74,7 @@ public:
 signals:
     void si_progress_changed(int progress);
     void si_chart_series_output(const std::vector<std::pair<float, float>>& series, QString lenendName = "NONAME", QString xName = "x", QString yName = "y", QColor color = QColorConstants::Black);
+    void si_chart_clear();
 };
 
 }  // namespace nano

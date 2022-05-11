@@ -81,6 +81,8 @@ private slots:
 
     void sl_add_chart_series(const std::vector<std::pair<float, float>>& series, QString legendName, QString xName, QString yName, QColor color);
 
+    void sl_chart_clear();
+
     void on_actionStart_manual_analysis_triggered();
 
     void on_actionClear_all_ruler_lines_triggered();

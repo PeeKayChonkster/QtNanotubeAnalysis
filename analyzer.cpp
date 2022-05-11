@@ -275,7 +275,7 @@ std::vector<std::tuple<float, uint, float>> nano::Analyzer::startFullRangeAnalys
 
     if(makeChart)
     {
-        Tools::getMainWindow()->clearChart();
+        emit si_chart_clear();
         std::vector<std::pair<float, float>> densitySeries;
         for(int i = 0; i < results.size(); ++i) densitySeries.push_back(std::pair<float, float>(std::get<0>(results[i]), std::get<2>(results[i])));
         emit si_chart_series_output(densitySeries, "FullRangeAnalysis", "Brightness", "Element areal concentration");
@@ -378,7 +378,7 @@ float nano::Analyzer::startThresholdAnalysis(float deltaStep, uint divisionCount
     }
 
     // make chart
-    Tools::getMainWindow()->clearChart();
+    emit si_chart_clear();
     for(int i = 0; i < ranges.size(); ++i)
     {
         std::vector<std::pair<float, float>> series;

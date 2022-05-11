@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&futureWatcher, &QFutureWatcher<void>::finished, this, &MainWindow::sl_worker_finished);
     connect(&analyzer, &nano::Analyzer::si_progress_changed, this, &MainWindow::sl_progress_changed);
     connect(&analyzer, &nano::Analyzer::si_chart_series_output, this, &MainWindow::sl_add_chart_series);
+    connect(&analyzer, &nano::Analyzer::si_chart_clear, this, &MainWindow::sl_chart_clear);
 
     Tools::init(this);
 
@@ -604,6 +605,11 @@ void MainWindow::sl_add_chart_series(const std::vector<std::pair<float, float>>&
 {
     chartWindow->addSeries(series, legendName, xName, yName, color);
     showChart();
+}
+
+void MainWindow::sl_chart_clear()
+{
+    chartWindow->clear();
 }
 
 void MainWindow::sl_worker_finished()
