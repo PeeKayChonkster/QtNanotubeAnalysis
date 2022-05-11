@@ -16,6 +16,7 @@ ChartWindow::ChartWindow(QWidget *parent) :
     layout->setContentsMargins(0,0,0,0);
     setLayout(layout);
     setMinimumSize(size());
+    setWindowTitle("Chart");
     chart->legend()->setAlignment(Qt::AlignRight);
     chart->legend()->setBackgroundVisible(true);
     chart->legend()->attachToChart();
