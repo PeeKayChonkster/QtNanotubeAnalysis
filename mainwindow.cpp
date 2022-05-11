@@ -229,22 +229,22 @@ void MainWindow::on_actionOpen_image_triggered()
 
 void MainWindow::openImage()
 {
-//    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
-//    if(fileName.isNull()) return;
-//    currImg.load(fileName);
-//    //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
-//    analyzer.setTargetImg(&currImg);
-//    mask = analyzer.getMask();
-//    elementMask = analyzer.getElementMask();
-//    updateTextures();
-//    resize(currImg.width(), currImg.height());
-//    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
+    QString fileName = QFileDialog::getOpenFileName(this, "Choose image file", ".", "Image file (*.png *.jpg)");
+    if(fileName.isNull()) return;
+    currImg.load(fileName);
+    //currImg = currImg.convertToFormat(QImage::Format_Grayscale16);
+    analyzer.setTargetImg(&currImg);
+    mask = analyzer.getMask();
+    elementMask = analyzer.getElementMask();
+    updateTextures();
+    resize(currImg.width(), currImg.height());
+    scene.setSceneRect(0.0f, 0.0f, currImg.width(), currImg.height());
 
-//    Tools::print("Loaded image file: " + fileName.toStdString(), Colors::green);
-//    Tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
+    Tools::print("Loaded image file: " + fileName.toStdString(), Colors::green);
+    Tools::print(std::string("Image size: " + std::to_string(currImg.width()) + "x" + std::to_string(currImg.height())));
 
     // DEBUG //
-    fastOpenImage();
+    //fastOpenImage();
 }
 
 void MainWindow::fastOpenImage()
