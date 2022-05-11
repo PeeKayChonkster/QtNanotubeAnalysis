@@ -10,6 +10,7 @@ ManualAnalysisConfig::ManualAnalysisConfig(QWidget *parent) :
     ui->setupUi(this);
     setLocale(QLocale::C);
     setFixedSize(size());
+    setWindowTitle("Manual analysis config");
 }
 
 ManualAnalysisConfig::~ManualAnalysisConfig()
