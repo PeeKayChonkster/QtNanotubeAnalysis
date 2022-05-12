@@ -37,6 +37,7 @@ set(PROJECT_SOURCES
         fullrangeanalysisconfig.h fullrangeanalysisconfig.cpp fullrangeanalysisconfig.ui
         thresholdanalysisconfig.h thresholdanalysisconfig.cpp thresholdanalysisconfig.ui
         chartwindow.h chartwindow.cpp chartwindow.ui
+        AppIconResFile.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

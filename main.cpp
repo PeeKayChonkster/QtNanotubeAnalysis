@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
 
+        a.setWindowIcon(QIcon("./res/icons/analysis.png"));
+
         QFont mainFont("Arial", 10, QFont::Normal, false);
         QApplication::setFont(mainFont);
 
