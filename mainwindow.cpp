@@ -57,6 +57,12 @@ MainWindow::MainWindow(QWidget *parent)
     statusBar()->addPermanentWidget(coordLabel, 1);
 
     console->show(); console->hide(); // for console to position itself right later
+
+    autoAnalysisConfig->installEventFilter(this);
+    manualAnalysisConfig->installEventFilter(this);
+    currentMaskAnalysisConfig->installEventFilter(this);
+    fullRangeAnalysisConfig->installEventFilter(this);
+    thresholdAnalysisConfig->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -220,6 +226,16 @@ void MainWindow::hideChart()
 void MainWindow::clearChart()
 {
     chartWindow->clear();
+}
+
+bool MainWindow::eventFilter(QObject *o, QEvent *e)
+{
+    if (e->type() == QEvent::KeyPress) {
+      if (static_cast<QKeyEvent*>(e)->matches(QKeySequence::InsertParagraphSeparator)) {
+        return true; //block this event
+      }
+    }
+    return false;
 }
 
 void MainWindow::on_actionOpen_image_triggered()

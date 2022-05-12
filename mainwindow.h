@@ -66,6 +66,8 @@ public:
 
     friend class Tools;
 
+    bool eventFilter(QObject* o, QEvent* e);
+
 private slots:
     void on_actionOpen_image_triggered();
 
