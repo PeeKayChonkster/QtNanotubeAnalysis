@@ -24,7 +24,7 @@ void Console::print(QString line, QColor textColor)
     if(!isVisible()) show();
     ui->textEdit->setTextColor(textColor);
     ui->textEdit->append(line);
-    ui->textEdit->ensureCursorVisible();
+    ui->textEdit->verticalScrollBar()->setValue(ui->textEdit->verticalScrollBar()->maximum());
     update();
 }
 
