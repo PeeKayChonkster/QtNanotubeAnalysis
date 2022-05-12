@@ -301,6 +301,7 @@ void MainWindow::startProgressDialog()
     if(!progressDialog)
     {
         progressDialog = new QProgressDialog("Calculating", "Cancel", 0, 100, this);
+        progressDialog->setWindowTitle("Progress");
         progressDialog->setMinimumDuration(0);
         progressDialog->setMinimumWidth(400);
         progressDialog->setFixedSize(progressDialog->size());
